@@ -20,6 +20,7 @@ public class CardComponent : MonoBehaviour, ICard
         MyRenderer = GetComponent<SpriteRenderer>();
         MyRenderers = GetComponentsInChildren<SpriteRenderer>();
         MyInput = GetComponent<IMouseInput>();
+        Hand = transform.parent.GetComponentInChildren<IPlayerHand>();
         
         Scale = new CardMotionScale(this);
         Movement = new CardMotionMovement(this);

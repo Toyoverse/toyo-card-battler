@@ -33,10 +33,8 @@ namespace Card.CardStateMachine.States
 
         public override void OnEnterState()
         {
-            //stop any movement
             Handler.Movement.StopMotion();
 
-            //cache old values
             StartEuler = Handler.transform.eulerAngles;
 
             Handler.RotateTo(Vector3.zero, RotationSpeed);
@@ -46,7 +44,6 @@ namespace Card.CardStateMachine.States
 
         public override void OnExitState()
         {
-            //reset position and rotation
             if (Handler.transform)
             {
                 Handler.RotateTo(StartEuler, RotationSpeed);

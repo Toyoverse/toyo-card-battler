@@ -8,7 +8,6 @@ namespace PlayerHand
 {
     public class PlayerHand : CardPile, IPlayerHand
     {
-        public List<ICard> Cards { get; }
 
         #region Properties
 

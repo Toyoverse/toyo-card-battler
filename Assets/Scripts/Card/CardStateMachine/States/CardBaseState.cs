@@ -12,6 +12,13 @@ namespace Card.CardStateMachine.States
         protected const float ScaleSpeed = 8f;
         protected const float RotationSpeed = 50;
         protected const float RotationSpeedEnemy = 200;
+        protected const float StartSizeWhenDraw = 0.05f;
+        protected const float HoverHeight = 1f; 
+        protected const float HoverSpeed = 15f; 
+        protected const float HoverScale = 1.3f;
+        protected const bool HoverRotation = false;
+        
+        
         
         protected ICard Handler { get; }
         protected BaseStateMachine StateMachine { get; }
