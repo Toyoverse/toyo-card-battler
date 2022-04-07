@@ -6,29 +6,24 @@ namespace Card.CardPile
 {
     public abstract class CardPile : MonoBehaviour, ICardPile
     {
-        event Action<ICard[]> OnPileChanged = hand => { };
+        public List<ICard> Cards { get; private set; }
 
-        
+        protected virtual void Awake()
+        {
+            Cards = new List<ICard>();
+            Clear();
+        }
+
         Action<ICard[]> ICardPile.OnPileChanged
         {
             get => OnPileChanged;
             set => OnPileChanged = value;
         }
-        
-        public List<ICard> Cards { get; private set; }
 
-        protected virtual void Awake()
+        public virtual void AddCard(ICard card)
         {
-            //initialize register
-            Cards = new List<ICard>();
+            card.ValidateCard();
 
-            Clear();
-        }
-        
-        public void AddCard(ICard card)
-        {
-            if (!CardUtils.ValidateCard(card)) return;
-            
             Cards.Add(card);
             card.transform.SetParent(transform);
             NotifyPileChange();
@@ -36,15 +31,17 @@ namespace Card.CardPile
             card.Draw();
         }
 
-        public void RemoveCard(ICard card)
+        public virtual void RemoveCard(ICard card)
         {
-            if (!CardUtils.ValidateCard(card)) return;
+            card.ValidateCard();
 
             Cards.Remove(card);
 
             NotifyPileChange();
         }
-        
+
+        private event Action<ICard[]> OnPileChanged = hand => { };
+
         protected virtual void Clear()
         {
             var childCards = GetComponentsInChildren<ICard>();
@@ -53,8 +50,10 @@ namespace Card.CardPile
 
             Cards.Clear();
         }
-        
-        public void NotifyPileChange() => OnPileChanged?.Invoke(Cards.ToArray());
 
+        public void NotifyPileChange()
+        {
+            OnPileChanged?.Invoke(Cards.ToArray());
+        }
     }
 }

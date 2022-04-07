@@ -1,12 +1,12 @@
 ﻿using Patterns.StateMachine;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace Card.CardStateMachine.States
 {
     public class CardDiscard : CardBaseState
     {
-        public CardDiscard(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler, stateMachine, cardData)
+        public CardDiscard(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler,
+            stateMachine, cardData)
         {
         }
 
@@ -19,13 +19,13 @@ namespace Card.CardStateMachine.States
             SetRotation();
         }
 
-        void SetScale()
+        private void SetScale()
         {
             var _finalScale = Handler.transform.localScale * DiscardedSize;
             Handler.ScaleTo(_finalScale, ScaleSpeed);
         }
 
-        void SetRotation()
+        private void SetRotation()
         {
             var _speed = Handler.IsPlayer ? RotationSpeed : RotationSpeedEnemy;
             Handler.RotateTo(Vector3.zero, _speed);

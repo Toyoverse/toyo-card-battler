@@ -6,12 +6,13 @@ namespace Card.CardStateMachine.States
 {
     public class CardIdle : CardBaseState
     {
-        public CardIdle(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler, stateMachine, cardData)
+        public CardIdle(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler, stateMachine,
+            cardData)
         {
             DefaultSize = Handler.transform.localScale;
         }
-        
-        Vector3 DefaultSize { get; }
+
+        private Vector3 DefaultSize { get; }
 
         //--------------------------------------------------------------------------------------------------------------
 
@@ -43,17 +44,16 @@ namespace Card.CardStateMachine.States
 
         //--------------------------------------------------------------------------------------------------------------
 
-        void OnPointerEnter(PointerEventData obj)
+        private void OnPointerEnter(PointerEventData obj)
         {
             if (StateMachine.IsCurrent(this))
                 Handler.Hover();
         }
 
-        void OnPointerDown(PointerEventData eventData)
+        private void OnPointerDown(PointerEventData eventData)
         {
             if (StateMachine.IsCurrent(this))
                 Handler.Select();
         }
-
     }
 }

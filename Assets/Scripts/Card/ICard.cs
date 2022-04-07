@@ -2,7 +2,7 @@
 
 namespace Card
 {
-    public interface ICard : IStateMachineHandler , ICardComponents, ICardTransform
+    public interface ICard : IStateMachineHandler, ICardComponents, ICardTransform
     {
         //IUiPlayerHand Hand { get; }
         bool IsDragging { get; }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,19 +13,17 @@ public enum CARD_TYPE
 public class CardData : ScriptableObject
 {
     #region Internals
-    
+
     internal int id;
-    
+
     #endregion
 
     #region Public Variables
-    
-    public string localizedName; 
+
+    public string localizedName;
     public float damage;
     public CARD_TYPE type;
     public Image cardImage;
-    
-    #endregion
 
-    
+    #endregion
 }

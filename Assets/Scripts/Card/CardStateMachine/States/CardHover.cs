@@ -7,24 +7,25 @@ namespace Card.CardStateMachine.States
 {
     public class CardHover : CardBaseState
     {
-        public CardHover(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler, stateMachine, cardData)
+        public CardHover(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler, stateMachine,
+            cardData)
         {
         }
-        
-        void OnPointerExit(PointerEventData obj)
+
+        private void OnPointerExit(PointerEventData obj)
         {
             if (StateMachine.IsCurrent(this))
                 Handler.Enable();
         }
 
-        void OnPointerDown(PointerEventData eventData)
+        private void OnPointerDown(PointerEventData eventData)
         {
             if (StateMachine.IsCurrent(this))
                 Handler.Select();
         }
 
 
-        void ResetValues()
+        private void ResetValues()
         {
             var rotationSpeed = Handler.IsPlayer ? RotationSpeed : RotationSpeedEnemy;
             Handler.RotateTo(StartEuler, rotationSpeed);
@@ -32,7 +33,7 @@ namespace Card.CardStateMachine.States
             Handler.ScaleTo(StartScale, ScaleSpeed);
         }
 
-        void SetRotation()
+        private void SetRotation()
         {
             if (HoverRotation)
                 return;
@@ -42,7 +43,7 @@ namespace Card.CardStateMachine.States
             Handler.RotateTo(Vector3.zero, speed);
         }
 
-        void SetPosition()
+        private void SetPosition()
         {
             var camera = Handler.MainCamera;
             var halfCardHeight = new Vector3(0, Handler.Renderer.bounds.size.y / 2);
@@ -57,33 +58,33 @@ namespace Card.CardStateMachine.States
             Handler.MoveTo(final, HoverSpeed);
         }
 
-        void SetScale()
+        private void SetScale()
         {
             var currentScale = Handler.transform.localScale;
             var finalScale = currentScale * HoverScale;
             Handler.ScaleTo(finalScale, ScaleSpeed);
         }
 
-        void CachePreviousValues()
+        private void CachePreviousValues()
         {
             StartPosition = Handler.transform.position;
             StartEuler = Handler.transform.eulerAngles;
             StartScale = Handler.transform.localScale;
         }
 
-        void SubscribeInput()
+        private void SubscribeInput()
         {
             Handler.Input.OnPointerExit += OnPointerExit;
             Handler.Input.OnPointerDown += OnPointerDown;
         }
 
-        void UnsubscribeInput()
+        private void UnsubscribeInput()
         {
             Handler.Input.OnPointerExit -= OnPointerExit;
             Handler.Input.OnPointerDown -= OnPointerDown;
         }
 
-        void CalcEdge()
+        private void CalcEdge()
         {
         }
 
@@ -112,11 +113,10 @@ namespace Card.CardStateMachine.States
 
         #region Properties
 
-        Vector3 StartPosition { get; set; }
-        Vector3 StartEuler { get; set; }
-        Vector3 StartScale { get; set; }
+        private Vector3 StartPosition { get; set; }
+        private Vector3 StartEuler { get; set; }
+        private Vector3 StartScale { get; set; }
 
         #endregion
-
     }
 }

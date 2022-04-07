@@ -1,4 +1,4 @@
-﻿using Tools.UI;
+﻿using Tools;
 using UnityEngine;
 
 namespace Card

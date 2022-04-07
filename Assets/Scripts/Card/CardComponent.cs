@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Extensions;
 using Card;
 using Card.CardStateMachine;
 using Card.CardStateMachine.States;
 using Card.CardUX;
+using Extensions;
 using PlayerHand;
-using Tools.UI;
+using Tools;
 using UnityEngine;
 
 public class CardComponent : MonoBehaviour, ICard
@@ -21,16 +18,15 @@ public class CardComponent : MonoBehaviour, ICard
         MyRenderers = GetComponentsInChildren<SpriteRenderer>();
         MyInput = GetComponent<IMouseInput>();
         Hand = transform.parent.GetComponentInChildren<IPlayerHand>();
-        
+
         Scale = new CardMotionScale(this);
         Movement = new CardMotionMovement(this);
         Rotation = new CardMotionRotation(this);
-        
+
         StateMachine = new CardStateMachine(MainCamera, cardData, this);
-        
     }
 
-    void Update()
+    private void Update()
     {
         StateMachine?.Update();
         Movement?.Update();
@@ -40,37 +36,43 @@ public class CardComponent : MonoBehaviour, ICard
 
     #region Properties
 
-    [Header("Card Settings")]
-    [SerializeField] public CardData cardData;
-    
-    CardStateMachine StateMachine { get; set; }
+    [Header("Card Settings")] [SerializeField]
+    public CardData cardData;
+
+    private CardStateMachine StateMachine { get; set; }
     public string Name => cardData.localizedName ?? "NoName";
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
-    
-    
+
+
     public MonoBehaviour MonoBehavior => this;
     public Camera MainCamera => Camera.main;
-    
-    Transform MyTransform { get; set; }
-    SpriteRenderer[] MyRenderers { get; set; }
-    SpriteRenderer MyRenderer { get;  set;}
-    Collider MyCollider { get;  set;}
-    Rigidbody MyRigidbody { get;  set;}
-    IMouseInput MyInput { get; set; }
+
+    private Transform MyTransform { get; set; }
+    private SpriteRenderer[] MyRenderers { get; set; }
+    private SpriteRenderer MyRenderer { get; set; }
+    private Collider MyCollider { get; set; }
+    private Rigidbody MyRigidbody { get; set; }
+    private IMouseInput MyInput { get; set; }
     private IPlayerHand Hand { get; set; }
 
     public bool IsPlayer => transform.CloserEdge(MainCamera, Screen.width, Screen.height) == 1;
-    
+
     #endregion
 
 
     #region Functions
 
-    public void Disable() => StateMachine.Disable();
+    public void Disable()
+    {
+        StateMachine.Disable();
+    }
 
-    public void Enable() => StateMachine.Enable(); 
+    public void Enable()
+    {
+        StateMachine.Enable();
+    }
 
     public void Select()
     {
@@ -79,47 +81,69 @@ public class CardComponent : MonoBehaviour, ICard
             return;
 
         Hand.SelectCard(this);
-        
+
         StateMachine.Select();
     }
 
-    public void Unselect() => StateMachine.Unselect();
+    public void Unselect()
+    {
+        StateMachine.Unselect();
+    }
 
-    public void Hover() => StateMachine.Hover();
+    public void Hover()
+    {
+        StateMachine.Hover();
+    }
 
-    public void Draw() => StateMachine.Draw();
+    public void Draw()
+    {
+        StateMachine.Draw();
+    }
 
-    public void Discard() => StateMachine.Discard();
+    public void Discard()
+    {
+        StateMachine.Discard();
+    }
 
     #endregion
-    
+
     #region Transform
 
-    public void RotateTo(Vector3 rotation, float speed) => Rotation.Execute(rotation, speed);
+    public void RotateTo(Vector3 rotation, float speed)
+    {
+        Rotation.Execute(rotation, speed);
+    }
 
-    public void MoveTo(Vector3 position, float speed, float delay) => Movement.Execute(position, speed, delay);
+    public void MoveTo(Vector3 position, float speed, float delay)
+    {
+        Movement.Execute(position, speed, delay);
+    }
 
-    public void MoveToWithZ(Vector3 position, float speed, float delay) => Movement.Execute(position, speed, delay, true);
+    public void MoveToWithZ(Vector3 position, float speed, float delay)
+    {
+        Movement.Execute(position, speed, delay, true);
+    }
 
-    public void ScaleTo(Vector3 scale, float speed, float delay) => Scale.Execute(scale, speed, delay);
-    
+    public void ScaleTo(Vector3 scale, float speed, float delay)
+    {
+        Scale.Execute(scale, speed, delay);
+    }
+
 
     public CardMotionBase Movement { get; private set; }
     public CardMotionBase Rotation { get; private set; }
-    public CardMotionBase Scale { get; private set;}
+    public CardMotionBase Scale { get; private set; }
 
     #endregion
 
 
     #region Components
 
-     SpriteRenderer[] ICardComponents.Renderers => MyRenderers;
-     SpriteRenderer ICardComponents.Renderer => MyRenderer;
-     Collider ICardComponents.Collider => MyCollider;
-     Rigidbody ICardComponents.Rigidbody => MyRigidbody;
-     IMouseInput ICardComponents.Input => MyInput;
+    SpriteRenderer[] ICardComponents.Renderers => MyRenderers;
+    SpriteRenderer ICardComponents.Renderer => MyRenderer;
+    Collider ICardComponents.Collider => MyCollider;
+    Rigidbody ICardComponents.Rigidbody => MyRigidbody;
+    IMouseInput ICardComponents.Input => MyInput;
 
     #endregion
-
-
 }

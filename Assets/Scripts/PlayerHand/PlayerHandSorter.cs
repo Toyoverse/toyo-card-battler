@@ -9,41 +9,26 @@ namespace PlayerHand
     [RequireComponent(typeof(IPlayerHand))]
     public class PlayerHandSorter : MonoBehaviour
     {
-        #region Fields and Properties
+        private const int offsetZ = -1;
+        private ICardPile PlayerHand { get; set; }
 
-        [SerializeField] CardData CardData;
-
-        [SerializeField] [Tooltip("The Card Prefab")]
-        GameObject CardPrefab;
-
-        [SerializeField] [Tooltip("Transform used as anchor to position the cards.")]
-        Transform pivot;
-
-        SpriteRenderer CardRenderer { get; set; }
-        float CardWidth => CardRenderer.bounds.size.x;
-
-        #endregion
-        
-        const int offsetZ = -1;
-        ICardPile PlayerHand { get; set; }
-
-        void Awake()
+        private void Awake()
         {
             PlayerHand = GetComponent<IPlayerHand>();
             CardRenderer = CardPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             PlayerHand.OnPileChanged += Sort;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             PlayerHand.OnPileChanged -= Sort;
         }
 
-        void Sort(ICard[] cards)
+        private void Sort(ICard[] cards)
         {
             if (cards == null || cards.Length <= 0) throw new ArgumentNullException("Can't sort empty card list");
 
@@ -62,7 +47,7 @@ namespace PlayerHand
             }
         }
 
-        void SortOffsetZ(ICard card, ref int layerZ)
+        private void SortOffsetZ(ICard card, ref int layerZ)
         {
             var _localCardPosition = card.transform.position;
             _localCardPosition.z = layerZ;
@@ -70,17 +55,17 @@ namespace PlayerHand
             layerZ += offsetZ;
         }
 
-        void Bend(ICard card, int index, int cardsLenght, ref float offsetX, int spacing)
+        private void Bend(ICard card, int index, int cardsLenght, ref float offsetX, int spacing)
         {
             //Todo Transfer to CardData
             const int _fullAngle = -20;
             const float _height = 0.12f;
-            
+
             const int _rotationSpeed = 20;
             const int _rotationSpeedEnemy = 500;
 
             const int _movementSpeed = 4;
-            
+
             var _anglePerCard = _fullAngle / cardsLenght;
             var _firstAngle = CalcFirstAngle(_fullAngle);
 
@@ -98,7 +83,7 @@ namespace PlayerHand
                 var position = new Vector3(xPos, yPos, card.transform.position.z);
 
                 var rotSpeed = card.IsPlayer ? _rotationSpeed : _rotationSpeedEnemy;
-                
+
                 card.RotateTo(rotation, rotSpeed);
                 card.MoveTo(position, _movementSpeed);
             }
@@ -106,19 +91,33 @@ namespace PlayerHand
             //increment offset
             offsetX += CardWidth + spacing;
         }
-        
-        static float CalcFirstAngle(float fullAngle)
+
+        private static float CalcFirstAngle(float fullAngle)
         {
             var magicMathFactor = 0.1f;
             return -(fullAngle / 2) + fullAngle * magicMathFactor;
         }
 
-        float CalcHandWidth(int quantityOfCards, int spacing)
+        private float CalcHandWidth(int quantityOfCards, int spacing)
         {
             var widthCards = quantityOfCards * CardWidth;
             var widthSpacing = (quantityOfCards - 1) * spacing;
             return widthCards + widthSpacing;
         }
 
+        #region Fields and Properties
+
+        [SerializeField] private CardData CardData;
+
+        [SerializeField] [Tooltip("The Card Prefab")]
+        private GameObject CardPrefab;
+
+        [SerializeField] [Tooltip("Transform used as anchor to position the cards.")]
+        private Transform pivot;
+
+        private SpriteRenderer CardRenderer { get; set; }
+        private float CardWidth => CardRenderer.bounds.size.x;
+
+        #endregion
     }
 }

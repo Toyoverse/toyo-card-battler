@@ -4,6 +4,9 @@
     {
         public abstract T Build();
 
-        public static implicit operator T(DataBuilder<T> builder) => builder.Build();
+        public static implicit operator T(DataBuilder<T> builder)
+        {
+            return builder.Build();
+        }
     }
 }

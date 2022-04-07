@@ -5,7 +5,7 @@ namespace Patterns
 {
     //--------------------------------------------------------------------------------------------------------------
 
-    #region Interfaces 
+    #region Interfaces
 
     /// <summary>
     ///     All classes that are listened by IListener.
@@ -49,14 +49,14 @@ namespace Patterns
         ///     This is the Subject-Listener register. It supports both, Monobehaviors and
         ///     Pure C# classes that implement ISubject and IListener interfaces.
         /// </summary>
-        readonly Dictionary<Type, List<IListener>>
-            register = new Dictionary<Type, List<IListener>>();
+        private readonly Dictionary<Type, List<IListener>>
+            register = new();
 
         #endregion
 
         //--------------------------------------------------------------------------------------------------------------
 
-        #region Operations 
+        #region Operations
 
         /// <summary>
         ///     Register a listener as well as its implemented interfaces subjects.
@@ -143,12 +143,12 @@ namespace Patterns
         /// </summary>
         /// <param name="subject"></param>
         /// <param name="listener"></param>
-        void CreateAndAdd(Type subject, IListener listener)
+        private void CreateAndAdd(Type subject, IListener listener)
         {
             if (register.ContainsKey(subject))
                 register[subject].Add(listener);
             else
-                register.Add(subject, new List<IListener> {listener});
+                register.Add(subject, new List<IListener> { listener });
         }
 
         #endregion

@@ -1,28 +1,81 @@
-﻿namespace Patterns
+﻿using UnityEngine;
+
+/// <summary>
+///     Inherit from this base class to create a singleton.
+///     e.g. public class MyClassName : Singleton<MyClassName> {}
+/// </summary>
+public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
+    // Check to see if we're about to be destroyed.
+    private static bool ShuttingDown;
+    private static readonly object Lock = new();
+    private static T instance;
+
     /// <summary>
-    ///     Pure C# Singleton Pattern. Refs below:
-    ///     1. https://stackoverflow.com/questions/2319075/generic-singletont
-    ///     2. https://codereview.stackexchange.com/questions/10554/a-generic-singleton
+    ///     Access singleton instance through this propriety.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class Singleton<T> where T : class, new()
+    public static T Instance
     {
-        //a protected constructor
-        protected Singleton()
+        get
         {
+            if (ShuttingDown)
+            {
+                Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
+                                 "' already destroyed. Returning null.");
+                return null;
+            }
+
+            lock (Lock)
+            {
+                if (instance == null)
+                {
+                    // Search for existing instance.
+                    instance = (T)FindObjectOfType(typeof(T));
+
+                    // Create new instance if one doesn't already exist.
+                    if (instance == null)
+                    {
+                        // Need to create a new GameObject to attach the singleton to.
+                        var singletonObject = new GameObject();
+                        instance = singletonObject.AddComponent<T>();
+                        singletonObject.name = typeof(T) + " (Singleton)";
+
+                        // Make instance persistent.
+                        DontDestroyOnLoad(singletonObject);
+                    }
+                }
+
+                return instance;
+            }
         }
+    }
 
-        //public getter
-        public static T Instance { get; private set; } = CreateInstance();
+    public static bool IsLive => !ShuttingDown;
 
-        static T CreateInstance() => Instance ?? (Instance = new T());
 
-        //Setter used to inject an instance 
-        public void InjectInstance(T instance)
+    private void Awake()
+    {
+        if (instance != null && instance != this)
         {
-            if (instance != null)
-                Instance = instance;
+            Destroy(gameObject);
         }
+        else
+        {
+            instance = this as T;
+            //Makes this persistent if it is manually placed in the scene
+            gameObject.transform.SetParent(null);
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+            ShuttingDown = true;
+    }
+
+    private void OnApplicationQuit()
+    {
+        ShuttingDown = true;
     }
 }

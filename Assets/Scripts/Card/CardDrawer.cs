@@ -1,5 +1,5 @@
 ﻿using PlayerHand;
-using Tools.UI;
+using Tools;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,16 +7,19 @@ namespace Card
 {
     public class CardDrawer : MonoBehaviour
     {
-        PlayerHandUtils Drawer { get; set; }
-        IMouseInput Input { get; set; }
+        private PlayerHandUtils Drawer { get; set; }
+        private IMouseInput Input { get; set; }
 
-        void Awake()
+        private void Awake()
         {
             Drawer = transform.parent.GetComponentInChildren<PlayerHandUtils>();
             Input = GetComponent<IMouseInput>();
             Input.OnPointerClick += DrawCard;
         }
 
-        void DrawCard(PointerEventData obj) => Drawer.DrawCard();
+        private void DrawCard(PointerEventData obj)
+        {
+            Drawer.DrawCard();
+        }
     }
 }

@@ -13,17 +13,10 @@ namespace Card.CardStateMachine.States
         protected const float RotationSpeed = 50;
         protected const float RotationSpeedEnemy = 200;
         protected const float StartSizeWhenDraw = 0.05f;
-        protected const float HoverHeight = 1f; 
-        protected const float HoverSpeed = 15f; 
+        protected const float HoverHeight = 1f;
+        protected const float HoverSpeed = 15f;
         protected const float HoverScale = 1.3f;
         protected const bool HoverRotation = false;
-        
-        
-        
-        protected ICard Handler { get; }
-        protected BaseStateMachine StateMachine { get; }
-        protected CardData CardData { get; }
-        public bool IsInitialized { get; }
 
         protected CardBaseState(ICard handler, BaseStateMachine stateMachine, CardData cardData)
         {
@@ -33,8 +26,14 @@ namespace Card.CardStateMachine.States
             IsInitialized = true;
         }
 
+
+        protected ICard Handler { get; }
+        protected BaseStateMachine StateMachine { get; }
+        protected CardData CardData { get; }
+        public bool IsInitialized { get; }
+
         #region Functions
-        
+
         protected void Enable()
         {
             if (Handler.Collider)
@@ -45,7 +44,7 @@ namespace Card.CardStateMachine.States
             MakeRenderNormal();
             RemoveAllTransparency();
         }
-        
+
         protected virtual void Disable()
         {
             DisableCollision();
@@ -58,11 +57,17 @@ namespace Card.CardStateMachine.States
                 renderer.color = myColor;
             }
         }
-        
-        protected void DisableCollision() => Handler.Collider.enabled = false;
 
-        protected void EnableCollision() => Handler.Collider.enabled = true;
-        
+        protected void DisableCollision()
+        {
+            Handler.Collider.enabled = false;
+        }
+
+        protected void EnableCollision()
+        {
+            Handler.Collider.enabled = true;
+        }
+
         protected void RemoveAllTransparency()
         {
             foreach (var _renderer in Handler.Renderers)
@@ -73,7 +78,7 @@ namespace Card.CardStateMachine.States
                     _renderer.color = _myColor;
                 }
         }
-        
+
         /// <summary>
         ///     Renders the textures in the first layer. Each card state is responsible to handle its own layer activity.
         /// </summary>
@@ -82,7 +87,7 @@ namespace Card.CardStateMachine.States
             for (var i = 0; i < Handler.Renderers.Length; i++)
                 Handler.Renderers[i].sortingOrder = LayerToRenderTop;
         }
-        
+
         /// <summary>
         ///     Renders the textures in the regular layer. Each card state is responsible to handle its own layer activity.
         /// </summary>
@@ -96,7 +101,7 @@ namespace Card.CardStateMachine.States
         #endregion
 
         #region StateMachine
-        
+
         public virtual void OnInitialize()
         {
         }
@@ -122,8 +127,5 @@ namespace Card.CardStateMachine.States
         }
 
         #endregion
-
-
-        
     }
 }

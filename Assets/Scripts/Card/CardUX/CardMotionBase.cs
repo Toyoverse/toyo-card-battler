@@ -9,12 +9,15 @@ namespace Card.CardUX
         public Action OnFinishMotion = () => { };
 
 
-        protected CardMotionBase(ICard handler) => Handler = handler;
+        protected CardMotionBase(ICard handler)
+        {
+            Handler = handler;
+        }
 
         public bool IsOperating { get; protected set; }
-        
+
         protected virtual float Threshold => 0.01f;
-        
+
         protected Vector3 Target { get; set; }
 
         protected ICard Handler { get; }
@@ -35,7 +38,10 @@ namespace Card.CardUX
 
         protected abstract bool CheckFinalState();
 
-        protected virtual void OnMotionEnds() => OnFinishMotion?.Invoke();
+        protected virtual void OnMotionEnds()
+        {
+            OnFinishMotion?.Invoke();
+        }
 
         protected abstract void KeepMotion();
 
@@ -49,7 +55,7 @@ namespace Card.CardUX
                 Handler.MonoBehavior.StartCoroutine(AllowMotion(delay));
         }
 
-        IEnumerator AllowMotion(float delay)
+        private IEnumerator AllowMotion(float delay)
         {
             yield return new WaitForSeconds(delay);
             IsOperating = true;
@@ -59,6 +65,9 @@ namespace Card.CardUX
         ///     Stop the motion. It won't trigger OnFinishMotion.
         ///     TODO: Cancel the Delay Coroutine.
         /// </summary>
-        public virtual void StopMotion() => IsOperating = false;
+        public virtual void StopMotion()
+        {
+            IsOperating = false;
+        }
     }
 }

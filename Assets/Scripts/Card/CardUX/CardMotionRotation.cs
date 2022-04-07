@@ -16,12 +16,12 @@ namespace Card.CardUX
             IsOperating = false;
             OnFinishMotion?.Invoke();
         }
-        
+
         protected override bool CheckFinalState()
         {
             var _distance = Target - Handler.transform.eulerAngles;
             var _smallerThanLimit = _distance.magnitude <= Threshold;
-            var _equals360 = (int) _distance.magnitude == 360;
+            var _equals360 = (int)_distance.magnitude == 360;
             var _isFinal = _smallerThanLimit || _equals360;
             return _isFinal;
         }

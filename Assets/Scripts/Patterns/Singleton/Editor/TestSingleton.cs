@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using Patterns;
 
 namespace Test
 {
@@ -35,7 +34,7 @@ namespace Test
             Assert.False(TestableSingleton.Instance.SomeProperty == singleton1.SomeProperty);
 
             //inject singleton instance
-            TestableSingleton.Instance.InjectInstance(singleton1);
+//            TestableSingleton.Instance.InjectInstance(singleton1);
 
             //assert if the instances point to the same adress
             Assert.True(ReferenceEquals(TestableSingleton.Instance, singleton1));

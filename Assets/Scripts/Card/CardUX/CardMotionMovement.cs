@@ -14,7 +14,7 @@ namespace Card.CardUX
         {
             //Store the global moveZ variable
             moveZ = _moveZ;
-            base.Execute(position,speed,delay,_moveZ);
+            base.Execute(position, speed, delay, _moveZ);
         }
 
         protected override void OnMotionEnds()

@@ -2,12 +2,11 @@
 
 namespace Card
 {
-    public class CardUtils
+    public static class CardUtils
     {
-        public static bool ValidateCard(ICard card)
+        public static void ValidateCard(this ICard card)
         {
             if (card == null) throw new ArgumentNullException("Card is null");
-            return true;
         }
     }
 }

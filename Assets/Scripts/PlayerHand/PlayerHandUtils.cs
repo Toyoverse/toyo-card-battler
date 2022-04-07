@@ -10,26 +10,29 @@ namespace PlayerHand
     {
         #region Settings
 
-        int Count { get; set; }
+        private int Count { get; set; }
 
         [SerializeField] [Tooltip("Prefab of the Card C#")]
-        GameObject cardPrefabCs;
+        private GameObject cardPrefabCs;
 
         [SerializeField] [Tooltip("World point where the deck is positioned")]
-        Transform deckPosition;
+        private Transform deckPosition;
 
         [SerializeField] [Tooltip("Game view transform")]
-        Transform gameView;
+        private Transform gameView;
 
-        IPlayerHand PlayerHand { get; set; }
+        private IPlayerHand PlayerHand { get; set; }
 
         #endregion
 
         #region Unitycallbacks
 
-        void Awake() => PlayerHand = transform.parent.GetComponentInChildren<IPlayerHand>();
+        private void Awake()
+        {
+            PlayerHand = transform.parent.GetComponentInChildren<IPlayerHand>();
+        }
 
-        IEnumerator Start()
+        private IEnumerator Start()
         {
             //starting cards
             for (var i = 0; i < 5; i++)
@@ -62,14 +65,18 @@ namespace PlayerHand
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Tab)) DrawCard();
             if (Input.GetKeyDown(KeyCode.Space)) PlayCard();
             if (Input.GetKeyDown(KeyCode.Escape)) Restart();
         }
 
-        public void Restart() => SceneManager.LoadScene(0);
+
+        public void Restart()
+        {
+            SceneManager.LoadScene(0);
+        }
 
         #endregion
 
