@@ -1,4 +1,5 @@
-﻿using Patterns.StateMachine;
+﻿using DefaultNamespace;
+using Patterns.StateMachine;
 using UnityEngine;
 
 namespace Card.CardStateMachine.States
@@ -21,13 +22,13 @@ namespace Card.CardStateMachine.States
 
         private void SetScale()
         {
-            var _finalScale = Handler.transform.localScale * DiscardedSize;
-            Handler.ScaleTo(_finalScale, ScaleSpeed);
+            var _finalScale = Handler.transform.localScale * GlobalCardData.DiscardedSize;
+            Handler.ScaleTo(_finalScale, GlobalCardData.ScaleSpeed);
         }
 
         private void SetRotation()
         {
-            var _speed = Handler.IsPlayer ? RotationSpeed : RotationSpeedEnemy;
+            var _speed = Handler.IsPlayer ? GlobalCardData.RotationSpeed : GlobalCardData.RotationSpeedEnemy;
             Handler.RotateTo(Vector3.zero, _speed);
         }
 

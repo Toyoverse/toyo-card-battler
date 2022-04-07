@@ -1,4 +1,5 @@
-﻿using Extensions;
+﻿using DefaultNamespace;
+using Extensions;
 using Patterns.StateMachine;
 using UnityEngine;
 
@@ -41,7 +42,7 @@ namespace Card.CardStateMachine.States
 
             StartEuler = Handler.transform.eulerAngles;
 
-            Handler.RotateTo(Vector3.zero, RotationSpeed);
+            Handler.RotateTo(Vector3.zero, GlobalCardData.RotationSpeed);
             MakeRenderFirst();
             RemoveAllTransparency();
         }
@@ -50,7 +51,7 @@ namespace Card.CardStateMachine.States
         {
             if (Handler.transform)
             {
-                Handler.RotateTo(StartEuler, RotationSpeed);
+                Handler.RotateTo(StartEuler, GlobalCardData.RotationSpeed);
                 MakeRenderNormal();
             }
 

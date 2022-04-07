@@ -1,22 +1,10 @@
-﻿using Patterns.StateMachine;
+﻿using DefaultNamespace;
+using Patterns.StateMachine;
 
 namespace Card.CardStateMachine.States
 {
     public abstract class CardBaseState : IState
     {
-        //CardData.DisabledAlpha
-        protected const float DisabledAlpha = 0.3f;
-        protected const int LayerToRenderNormal = 0;
-        protected const int LayerToRenderTop = 1;
-        protected const float DiscardedSize = 0.5f;
-        protected const float ScaleSpeed = 8f;
-        protected const float RotationSpeed = 50;
-        protected const float RotationSpeedEnemy = 200;
-        protected const float StartSizeWhenDraw = 0.05f;
-        protected const float HoverHeight = 1f;
-        protected const float HoverSpeed = 15f;
-        protected const float HoverScale = 1.3f;
-        protected const bool HoverRotation = false;
 
         protected CardBaseState(ICard handler, BaseStateMachine stateMachine, CardData cardData)
         {
@@ -53,7 +41,7 @@ namespace Card.CardStateMachine.States
             foreach (var renderer in Handler.Renderers)
             {
                 var myColor = renderer.color;
-                myColor.a = DisabledAlpha;
+                myColor.a = GlobalCardData.DisabledAlpha;
                 renderer.color = myColor;
             }
         }
@@ -85,7 +73,7 @@ namespace Card.CardStateMachine.States
         protected virtual void MakeRenderFirst()
         {
             for (var i = 0; i < Handler.Renderers.Length; i++)
-                Handler.Renderers[i].sortingOrder = LayerToRenderTop;
+                Handler.Renderers[i].sortingOrder = GlobalCardData.LayerToRenderTop;
         }
 
         /// <summary>
@@ -95,7 +83,7 @@ namespace Card.CardStateMachine.States
         {
             for (var i = 0; i < Handler.Renderers.Length; i++)
                 if (Handler.Renderers[i])
-                    Handler.Renderers[i].sortingOrder = LayerToRenderNormal;
+                    Handler.Renderers[i].sortingOrder = GlobalCardData.LayerToRenderNormal;
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using Card;
 using Card.CardPile;
+using DefaultNamespace;
 using Extensions;
 using UnityEngine;
 
@@ -57,23 +58,14 @@ namespace PlayerHand
 
         private void Bend(ICard card, int index, int cardsLenght, ref float offsetX, int spacing)
         {
-            //Todo Transfer to CardData
-            const int _fullAngle = -20;
-            const float _height = 0.12f;
-
-            const int _rotationSpeed = 20;
-            const int _rotationSpeedEnemy = 500;
-
-            const int _movementSpeed = 4;
-
-            var _anglePerCard = _fullAngle / cardsLenght;
-            var _firstAngle = CalcFirstAngle(_fullAngle);
+            var _anglePerCard = GlobalCardData.FullAngle / cardsLenght;
+            var _firstAngle = CalcFirstAngle(GlobalCardData.FullAngle);
 
             var pivotLocationFactor = pivot.CloserEdge(Camera.main, Screen.width, Screen.height);
 
             var angleTwist = (_firstAngle + index * _anglePerCard) * pivotLocationFactor;
             var xPos = offsetX + CardWidth / 2;
-            var yDistance = Mathf.Abs(angleTwist) * _height;
+            var yDistance = Mathf.Abs(angleTwist) * GlobalCardData.Height;
             var yPos = pivot.position.y - yDistance * pivotLocationFactor;
 
             if (!card.IsDragging && !card.IsHovering)
@@ -82,10 +74,10 @@ namespace PlayerHand
                 var rotation = new Vector3(0, 0, angleTwist - zAxisRot);
                 var position = new Vector3(xPos, yPos, card.transform.position.z);
 
-                var rotSpeed = card.IsPlayer ? _rotationSpeed : _rotationSpeedEnemy;
+                var rotSpeed = card.IsPlayer ? GlobalCardData.RotationSpeed : GlobalCardData.RotationSpeedEnemy;
 
                 card.RotateTo(rotation, rotSpeed);
-                card.MoveTo(position, _movementSpeed);
+                card.MoveTo(position, GlobalCardData.MovementSpeed);
             }
 
             //increment offset

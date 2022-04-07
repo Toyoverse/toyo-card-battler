@@ -1,4 +1,5 @@
-﻿using Patterns.StateMachine;
+﻿using DefaultNamespace;
+using Patterns.StateMachine;
 using UnityEngine;
 
 namespace Card.CardStateMachine.States
@@ -35,12 +36,12 @@ namespace Card.CardStateMachine.States
         private void CachePreviousValue()
         {
             StartScale = Handler.transform.localScale;
-            Handler.transform.localScale *= StartSizeWhenDraw;
+            Handler.transform.localScale *= GlobalCardData.StartSizeWhenDraw;
         }
 
         private void SetScale()
         {
-            Handler.ScaleTo(StartScale, ScaleSpeed);
+            Handler.ScaleTo(StartScale, GlobalCardData.ScaleSpeed);
         }
 
         #endregion

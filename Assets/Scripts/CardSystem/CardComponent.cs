@@ -40,7 +40,7 @@ public class CardComponent : MonoBehaviour, ICard
     public CardData cardData;
 
     private CardStateMachine StateMachine { get; set; }
-    public string Name => cardData.localizedName ?? "NoName";
+    public string Name => cardData.LocalizedName ?? "NoName";
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();

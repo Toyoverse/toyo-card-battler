@@ -12,7 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template
   m_EditorClassIdentifier: 
-  localizedName: 
-  damage: 0
-  type: 0
+  localizedName: Test
+  cardtype: 3
   cardImage: {fileID: 0}
+  apCost: 0
+  attacktype: 0
+  attackAnimation: {fileID: 0}
+  hitListInfos:
+  - frameToHit: 21
+    damage: 58
+  - frameToHit: 50
+    damage: 42
+  - frameToHit: 80
+    damage: 53

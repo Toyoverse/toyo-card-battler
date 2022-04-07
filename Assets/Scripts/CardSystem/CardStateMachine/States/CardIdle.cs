@@ -1,4 +1,5 @@
-﻿using Patterns.StateMachine;
+﻿using DefaultNamespace;
+using Patterns.StateMachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -32,7 +33,7 @@ namespace Card.CardStateMachine.States
             }
 
             MakeRenderNormal();
-            Handler.ScaleTo(DefaultSize, ScaleSpeed);
+            Handler.ScaleTo(DefaultSize, GlobalCardData.ScaleSpeed);
         }
 
         public override void OnExitState()

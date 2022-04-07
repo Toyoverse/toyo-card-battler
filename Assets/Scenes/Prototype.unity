@@ -737,6 +737,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: globalCardDataSO
+      value: 
+      objectReference: {fileID: 11400000, guid: cf818cf7922fbf547a2685d17b178add, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
 --- !u!1001 &2532777999524559739

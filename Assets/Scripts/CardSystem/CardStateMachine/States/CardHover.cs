@@ -1,4 +1,5 @@
-﻿using Extensions;
+﻿using DefaultNamespace;
+using Extensions;
 using Patterns.StateMachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,18 +28,18 @@ namespace Card.CardStateMachine.States
 
         private void ResetValues()
         {
-            var rotationSpeed = Handler.IsPlayer ? RotationSpeed : RotationSpeedEnemy;
+            var rotationSpeed = Handler.IsPlayer ? GlobalCardData.RotationSpeed : GlobalCardData.RotationSpeedEnemy;
             Handler.RotateTo(StartEuler, rotationSpeed);
-            Handler.MoveTo(StartPosition, HoverSpeed);
-            Handler.ScaleTo(StartScale, ScaleSpeed);
+            Handler.MoveTo(StartPosition, GlobalCardData.HoverSpeed);
+            Handler.ScaleTo(StartScale, GlobalCardData.ScaleSpeed);
         }
 
         private void SetRotation()
         {
-            if (HoverRotation)
+            if (GlobalCardData.HoverRotation)
                 return;
 
-            var speed = Handler.IsPlayer ? RotationSpeed : RotationSpeedEnemy;
+            var speed = Handler.IsPlayer ? GlobalCardData.RotationSpeed : GlobalCardData.RotationSpeedEnemy;
 
             Handler.RotateTo(Vector3.zero, speed);
         }
@@ -53,16 +54,16 @@ namespace Card.CardStateMachine.States
             var myEdge = edgeFactor == 1 ? bottomEdge : topEdge;
             var edgeY = new Vector3(0, myEdge.y);
             var currentPosWithoutY = new Vector3(Handler.transform.position.x, 0, Handler.transform.position.z);
-            var hoverHeightParameter = new Vector3(0, HoverHeight);
+            var hoverHeightParameter = new Vector3(0, GlobalCardData.HoverHeight);
             var final = currentPosWithoutY + edgeY + (halfCardHeight + hoverHeightParameter) * edgeFactor;
-            Handler.MoveTo(final, HoverSpeed);
+            Handler.MoveTo(final, GlobalCardData.HoverSpeed);
         }
 
         private void SetScale()
         {
             var currentScale = Handler.transform.localScale;
-            var finalScale = currentScale * HoverScale;
-            Handler.ScaleTo(finalScale, ScaleSpeed);
+            var finalScale = currentScale * GlobalCardData.HoverScale;
+            Handler.ScaleTo(finalScale, GlobalCardData.ScaleSpeed);
         }
 
         private void CachePreviousValues()

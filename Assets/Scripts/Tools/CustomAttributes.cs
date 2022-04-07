@@ -17,10 +17,10 @@ namespace Tools
 
     #region Custom Class
 
-    [CustomEditor(typeof(ScriptableObject), true)]
+    /*[CustomEditor(typeof(ScriptableObject), true)]
     public class CustomEditorScriptObj : CustomToyoEditor
     {
-    }
+    }*/
 
     [CustomEditor(typeof(MonoBehaviour), true)]
     public class CustoBaseClass : CustomToyoEditor
