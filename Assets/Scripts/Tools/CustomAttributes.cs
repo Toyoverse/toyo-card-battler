@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Tools;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -927,4 +928,11 @@ namespace Tools
             return type.GetProperties(flags).Union(GetAllProperties(type.BaseType));
         }
     }
+}
+
+public class ScriptableObjectId : PropertyAttribute { }
+
+public class UniqueScriptableObject : ScriptableObject {
+    [ScriptableObjectId]
+    public string Id;
 }

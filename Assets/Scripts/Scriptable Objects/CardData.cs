@@ -2,31 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public enum CARD_TYPE
-{
-    HEAVY,
-    FAST,
-    BLOCK,
-    TECHNICAL,
-    SUPER
-}
-
-public enum ATTACK_TYPE
-{
-    CYBER,
-    PHYSICAL
-}
+using Tools;
 
 [CreateAssetMenu(fileName = "CardData", menuName = "ScriptableObject/CardData", order = 0)]
-public class CardData : ScriptableObject
+public class CardData : UniqueScriptableObject
 {
-    #region Internals
-
-    internal int id;
-
-    #endregion
-
     #region Public Variables
 
     [Header("Card Description")] [SerializeField]
@@ -84,6 +64,8 @@ public class CardData : ScriptableObject
     #endregion
 }
 
+
+
 [Serializable]
 public class HitListInfo
 {
@@ -97,4 +79,35 @@ public class HitListInfo
         get => damage;
         set => damage = value;
     }
+}
+
+public enum CARD_TYPE
+{
+    HEAVY,
+    FAST,
+    DEFENSE,
+    BOND,
+    SUPER
+}
+
+public enum ATTACK_TYPE
+{
+    CYBER,
+    PHYSICAL
+}
+
+public enum DEFENSE_TYPE
+{
+    BLOCK,
+    DODGE
+}
+
+public enum ATTACK_SUB_TYPE
+{
+    NEUTRAL,
+    PIERCING,
+    SMASHING,
+    SLASHING,
+    MAGNETIC,
+    ELECTRIC
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Tools;
 using UnityEditor;
 using UnityEngine;
 
@@ -27,6 +29,7 @@ namespace Tools
 [CustomPropertyDrawer(typeof(HorizontalLine), true)]
 [CustomPropertyDrawer(typeof(Search))]
 [CustomPropertyDrawer(typeof(IsDebug))]
+[CustomPropertyDrawer(typeof(ScriptableObjectId))]
 public class ToyoCustomPropertyDrawer : PropertyDrawer
 {
     float armor = -1;
@@ -34,283 +37,280 @@ public class ToyoCustomPropertyDrawer : PropertyDrawer
     {
 
         GUI.enabled = true;
-        int selected = 999;
         var color = GUI.color;
         color.a = 1f;
-        if (this.fieldInfo.GetCustomAttribute<IgnoreAttributes>() != null)
+
+        var _customAttributes = fieldInfo.GetCustomAttributes().ToArray();
+        if (_customAttributes.OfType<IgnoreAttributes>().Any())
         {
             base.OnGUI(position, property, label);
             return;
-
         }
 
-        if (this.fieldInfo.GetCustomAttribute<Search>() !=  null && this.fieldInfo.FieldType.ToString().Contains("[") == false && CustoBaseClass.search != "")
-        {
-            if (label.text.ToUpper().Contains(CustoBaseClass.search.ToUpper()) == false)
-            {
+        if (_customAttributes.OfType<Search>().Any()&& fieldInfo.FieldType.ToString().Contains("[") == false && CustoBaseClass.search != "" && label.text.ToUpper().Contains(CustoBaseClass.search.ToUpper()) == false)
                 color.a = 0.1f;
-                
-            }
 
-        }
         GUI.color = color;
-        if (this.fieldInfo.GetCustomAttribute<HideInInspector>() != null)
+        
+        if (_customAttributes.OfType<HideInInspector>().Any())
             return;
+        
+        if (_customAttributes.OfType<ScriptableObjectId>().Any())
+            GUI.enabled = false;
 
-        if (this.fieldInfo.GetType().IsArray == false)
+        if (fieldInfo.GetType().IsArray == false)
         {
-            if (this.fieldInfo.GetCustomAttribute<EnableIf>() != null)
-            {
-                if (!isOk(property))
-                {
-                    GUI.enabled = false;
-                }
-            }
+            if (_customAttributes.OfType<EnableIf>().Any() && !ValidadeEnableIf(property))
+                GUI.enabled = false;
 
-            if (this.fieldInfo.GetCustomAttribute<DisableIf>() != null)
-            {
+            if (_customAttributes.OfType<DisableIf>().Any() && ValidadeDisableIf(property))
+                GUI.enabled = false;
 
-                if (isNOk(property))
-                {
-
-                    GUI.enabled = false;
-                }
-            }
-
-            if (this.fieldInfo.GetCustomAttribute<ShowIf>() != null)
-            {
-                if (!isOkS(property))
-                {
-                    return;
-                }
-            }
-
-            if (this.fieldInfo.GetCustomAttribute<HideIf>() != null)
-            {
-
-                if (isNOkS(property))
-                {
-
-                    return;
-                }
-            }
-        }
-        if (this.fieldInfo.GetCustomAttribute<CustomType>() != null)
-        {
-            CustomType ct = this.fieldInfo.GetCustomAttribute<CustomType>();
-            EditorGUI.BeginProperty(position, label, property);
-
-            Debug.Log(ct.tp);
-            if (ct.tp != "Tag" && ct.tp != "Layer" && !System.IO.File.Exists(Application.streamingAssetsPath + "/CustomTypes/" + ct.tp))
-            {
-                EditorGUI.LabelField(position, "System Type " + ct.tp + " not found");
+            if (_customAttributes.OfType<ShowIf>().Any() && !ValidadeShowIf(property))
                 return;
-            }
 
-
-            string[] options = ct.tp == "Tag" ? UnityEditorInternal.InternalEditorUtility.tags : (ct.tp == "Layer") ? UnityEditorInternal.InternalEditorUtility.layers : System.IO.File.ReadAllLines(Application.streamingAssetsPath + "/CustomTypes/" + ct.tp);
-            if (ct.typeField == CustomTypeField.STRING)
-            {
-                if (selected == 999)
-                    selected = GetSel(property.stringValue, options);
-                selected = EditorGUI.Popup(position, label.text, selected, options);// EditorGUILayout.Popup(label.text, selected, options);
-                property.stringValue = options[selected];
-            }
-            else
-            {
-                if (selected == 999)
-                    selected = GetSelArray(property.stringValue, options);
-                selected = EditorGUILayout.MaskField(label.text, selected, options);
-                property.ClearArray();
-                List<string> selectedOptions = new List<string>();
-                for (int i = 0; i < options.Length; i++)
-                {
-                    if ((selected & (1 << i)) == (1 << i)) selectedOptions.Add(options[i]);
-                }
-                property.arraySize = selectedOptions.Count;
-                property.stringValue = "";
-                for (int i = 0; i <= selectedOptions.Count - 1; i++)
-                {
-                    property.stringValue += i == 0 ? selectedOptions[i] : ";" + selectedOptions[i];
-
-                }
-            }
-            EditorGUI.EndProperty();
+            if (_customAttributes.OfType<HideIf>().Any() && ValidadeHideIf(property))
+                return;
+            
+        }
+        if (_customAttributes.OfType<CustomType>().Any())
+        {
+            ProcessCustomType(property, position, label);
             return;
         }
 
         EditorGUI.BeginProperty(position, label, property);
 
-        if (this.fieldInfo.GetCustomAttribute<ReadOnly>() != null)
+        if (_customAttributes.OfType<ReadOnly>().Any())
             GUI.enabled = false;
-        if(this.fieldInfo.GetCustomAttribute<DisplayAsString>() != null)
-        {
-            GUIStyle style = GUI.skin.box;
-            style.fontStyle = FontStyle.Bold;         
-            EditorGUI.LabelField(new Rect(position.x, position.y, position.width, position.height), property.stringValue,style);
-            return;
-        }
-        if (this.fieldInfo.GetCustomAttribute<IsDebug>() != null)
-        {
-            IsDebug infoBox = attribute as IsDebug;
-            if (infoBox.Parameter == "PlayerManager.IsDebug")
-            {
-                var cond = PlayerPrefs.GetInt("PlayerManagerIsDebug") == 1;
-                GUIStyle style = GUI.skin.box;
-                style.fontStyle = FontStyle.Bold;
-                GUI.color = cond ? Color.red : Color.green;
-                EditorGUI.LabelField(new Rect(position.x, position.y, position.width, position.height), cond ? infoBox.IsTrue : infoBox.IsFalse, style);
-                GUI.color = Color.white;
-            }
-            return;
-        }
-        //InfoBox
-        if (GUI.enabled && this.fieldInfo.GetCustomAttribute<InfoBox>() != null)
-        {
-            InfoBox infoBox = attribute as InfoBox;
-            if (infoBox != null)
-            {
-                 EditorGUI.HelpBox(new Rect( position.x,position.y,position.width,27), infoBox.info, MessageType.Info);
-                //GUI.Button(new Rect(position.x, position.y, position.width, 27), infoBox.info);
-                position.y += 30;
-            }
-        }
-
-        //Horizontal
-        if (this.fieldInfo.GetCustomAttribute<HorizontalLine>() != null)
-        {
-            EditorGUI.DrawRect(new Rect(position.x, position.y, position.width, 1f), Color.grey);
-            position.y += 5;
-        }
-
-
         
-
-
-
-        var gc = this.fieldInfo.GetCustomAttribute<GUIColor>();
-        if (gc != null)
+        if(_customAttributes.OfType<DisplayAsString>().Any())
         {
-            GUI.color = gc.color;
+            ProcessDisplayAsString(property, position);
+            return;
         }
-
-
-        //MaxValue
-        MaxValue max = this.fieldInfo.GetCustomAttribute<MaxValue>();
-        if (max != null)
+        
+        if (_customAttributes.OfType<IsDebug>().Any() && attribute is IsDebug _isDebug)
         {
-            {
-                if (property.propertyType == SerializedPropertyType.Integer)
-                    if (property.intValue > max.value)
-                    {
-                        property.intValue = max.value;
-                    }
-
-                if (property.propertyType == SerializedPropertyType.Float)
-                    if (property.floatValue > max.valueFloat)
-                    {
-                        property.floatValue = max.valueFloat;
-                    }
-            }
+            ProcessIsDebug(_isDebug, position);
+            return;
         }
-        //MaxValue
-        MinValue min = this.fieldInfo.GetCustomAttribute<MinValue>();
-        if (min != null)
-        {
-            {
-                if (property.propertyType == SerializedPropertyType.Integer)
-                    if (property.intValue < min.value)
-                    {
-                        property.intValue = min.value;
-                    }
+        
+        if (GUI.enabled && _customAttributes.OfType<InfoBox>().Any() && attribute is InfoBox _infoBox)
+            ProcessInfoBox(_infoBox,position);
 
-                if (property.propertyType == SerializedPropertyType.Float)
-                    if (property.floatValue < min.valueFloat)
-                    {
-                        property.floatValue = min.valueFloat;
-                    }
-            }
-        }
+        if (_customAttributes.OfType<HorizontalLine>().Any())
+            ProcessHorizontalLine(position);
+        
+        if (_customAttributes.OfType<GUIColor>().Any())
+            ProcessGuiColor();
 
-        if (this.fieldInfo.GetCustomAttribute<Doc>() != null)
-        {
-            if (GUI.Button(new Rect(position.x, position.y, 30f, position.height), "?"))
-            {
-                Application.OpenURL(fieldInfo.GetCustomAttribute<Doc>().url);
-            }
-            position.width -= 30f;
-            position.x += 30;
+        if (_customAttributes.OfType<MaxValue>().Any())
+            ProcessMaxValue(property);
 
-        }
+        if (_customAttributes.OfType<MinValue>().Any())
+            ProcessMinValue(property);
 
-        if (this.fieldInfo.GetCustomAttribute<LabelText>() != null)
-        {
-            LabelText labelText = attribute as LabelText;
-            label.text = labelText.value;
-        }
+        if (_customAttributes.OfType<Doc>().Any())
+            ProcessDoc(position);
 
-        //HideLabel
-        if (this.fieldInfo.GetCustomAttribute<HideLabel>() != null)
+        if (_customAttributes.OfType<LabelText>().Any())
+            ProcessLabelText(label);
+        
+        if (_customAttributes.OfType<HideLabel>().Any())
         {
             EditorGUI.PropertyField(position, property, GUIContent.none);
             return;
         }
-        if (this.fieldInfo.GetCustomAttribute<MinMax>() != null)
-        {
-            var minmax = this.fieldInfo.GetCustomAttribute<MinMax>();
-            float minValue = property.vector2Value.x;
-            float maxValue = property.vector2Value.y;
-            EditorGUI.MinMaxSlider(new Rect(position.x, position.y, position.width - 80, position.height), label, ref minValue, ref maxValue, minmax.min, minmax.max);
-            EditorGUI.LabelField(new Rect(position.width - 60, position.y, 100, position.height), minValue.ToString("N2") + " | " + maxValue.ToString("N2"));
-            var vec = Vector2.zero;
-            vec.x = minValue;
-            vec.y = maxValue;
-
-            property.vector2Value = vec;
-
-        }
-        else if (this.fieldInfo.GetCustomAttribute<ProgressBar>() != null)
-        {
-            var pb = this.fieldInfo.GetCustomAttribute<ProgressBar>();
-            if (armor == -1)
-                armor = property.floatValue;
-            //  var armor = EditorGUI.IntSlider(position,Mathf.RoundToInt(property.floatValue + property.intValue),Mathf.RoundToInt(pb.min),Mathf.RoundToInt(pb.max));
-            //EditorGUI.ProgressBar(position,Mathf.RoundToInt(property.floatValue/100),pb.title);
-            GUI.Box(position, "");
-            armor = EditorGUI.IntSlider(new Rect(position.x, position.y, position.width - 6, 15), pb.title, Mathf.RoundToInt(property.floatValue), pb.min, pb.max);
-            EditorGUI.ProgressBar(new Rect(position.x, position.y + 20, position.width - 6, 20), ((armor - pb.min) / ((pb.max - pb.min))), pb.title);
-            property.floatValue = armor;
-        }
+        if (_customAttributes.OfType<MinMax>().Any())
+            ProcessMinMax(property, position, label);
+        
+        else if (_customAttributes.OfType<ProgressBar>().Any())
+            ProcessProgressBar(property, position);
+        
         else
-        {
-
             EditorGUI.PropertyField(position, property, label, true);
-        }
 
+        
+        if (_customAttributes.OfType<ScriptableObjectId>().Any())
+            ProcessScriptableObjectId(property, position, label);
+        
         EditorGUI.EndProperty();
         GUI.color = Color.white;
         GUI.enabled = true;
     }
 
+    void ProcessCustomType(SerializedProperty property, Rect position, GUIContent label)
+    {
+        var selected = 0;
+        CustomType ct = fieldInfo.GetCustomAttribute<CustomType>();
+        EditorGUI.BeginProperty(position, label, property);
+
+        if (ct.tp != "Tag" && ct.tp != "Layer" && !System.IO.File.Exists(Application.streamingAssetsPath + "/CustomTypes/" + ct.tp))
+        {
+            EditorGUI.LabelField(position, "System Type " + ct.tp + " not found");
+            return;
+        }
+
+        string[] options = ct.tp == "Tag" ? UnityEditorInternal.InternalEditorUtility.tags : (ct.tp == "Layer") ? UnityEditorInternal.InternalEditorUtility.layers : System.IO.File.ReadAllLines(Application.streamingAssetsPath + "/CustomTypes/" + ct.tp);
+        if (ct.typeField == CustomTypeField.STRING)
+        {
+            selected = GetSel(property.stringValue, options);
+            selected = EditorGUI.Popup(position, label.text, selected, options);
+            property.stringValue = options[selected];
+        }
+        else
+        {
+            selected = GetSelArray(property.stringValue, options);
+            selected = EditorGUILayout.MaskField(label.text, selected, options);
+            property.ClearArray();
+            List<string> selectedOptions = new List<string>();
+            for (int i = 0; i < options.Length; i++)
+            {
+                if ((selected & (1 << i)) == (1 << i)) selectedOptions.Add(options[i]);
+            }
+            property.arraySize = selectedOptions.Count;
+            property.stringValue = "";
+            for (int i = 0; i <= selectedOptions.Count - 1; i++)
+            {
+                property.stringValue += i == 0 ? selectedOptions[i] : ";" + selectedOptions[i];
+
+            }
+        }
+        EditorGUI.EndProperty();
+    }
+
+    void ProcessDisplayAsString(SerializedProperty property, Rect position)
+    {
+        GUIStyle style = GUI.skin.box;
+        style.fontStyle = FontStyle.Bold;         
+        EditorGUI.LabelField(new Rect(position.x, position.y, position.width, position.height), property.stringValue,style);
+    }
+
+    void ProcessIsDebug(IsDebug _isDebug, Rect position)
+    {
+        if (_isDebug.Parameter != "PlayerManager.IsDebug") return;
+        var cond = PlayerPrefs.GetInt("PlayerManagerIsDebug") == 1;
+        GUIStyle style = GUI.skin.box;
+        style.fontStyle = FontStyle.Bold;
+        GUI.color = cond ? Color.red : Color.green;
+        EditorGUI.LabelField(new Rect(position.x, position.y, position.width, position.height), cond ? _isDebug.IsTrue : _isDebug.IsFalse, style);
+        GUI.color = Color.white;
+    }
+
+    void ProcessInfoBox(InfoBox _infoBox, Rect position)
+    {
+        EditorGUI.HelpBox(new Rect( position.x,position.y,position.width,27), _infoBox.info, MessageType.Info);
+        position.y += 30;
+    }
+
+    void ProcessHorizontalLine(Rect position)
+    {
+        EditorGUI.DrawRect(new Rect(position.x, position.y, position.width, 1f), Color.grey);
+        position.y += 5;
+    }
+
+    void ProcessMaxValue(SerializedProperty property)
+    {
+        var max = fieldInfo.GetCustomAttribute<MaxValue>();
+        switch (property.propertyType)
+        {
+            case SerializedPropertyType.Integer when property.intValue > max.value:
+                property.intValue = max.value;
+                break;
+            case SerializedPropertyType.Float when property.floatValue > max.valueFloat:
+                property.floatValue = max.valueFloat;
+                break;
+        }
+    }
+
+    void ProcessGuiColor()
+    {
+        var gc = fieldInfo.GetCustomAttribute<GUIColor>();
+        GUI.color = gc.color;
+    }
+    
+    void ProcessMinValue(SerializedProperty property)
+    {
+        var min = fieldInfo.GetCustomAttribute<MinValue>();
+        switch (property.propertyType)
+        {
+            case SerializedPropertyType.Integer when property.intValue < min.value:
+                property.intValue = min.value;
+                break;
+            case SerializedPropertyType.Float when property.floatValue < min.valueFloat:
+                property.floatValue = min.valueFloat;
+                break;
+        }
+    }
+
+    void ProcessDoc(Rect position)
+    {
+        if (GUI.Button(new Rect(position.x, position.y, 30f, position.height), "?"))
+            Application.OpenURL(fieldInfo.GetCustomAttribute<Doc>().url);
+            
+        position.width -= 30f;
+        position.x += 30;
+    }
+
+    void ProcessLabelText(GUIContent label)
+    {
+        var labelText = attribute as LabelText;
+        label.text = labelText?.value;
+    }
+    
+    void ProcessMinMax(SerializedProperty property, Rect position, GUIContent label)
+    {
+        var minmax = fieldInfo.GetCustomAttribute<MinMax>();
+        var minValue = property.vector2Value.x;
+        var maxValue = property.vector2Value.y;
+        EditorGUI.MinMaxSlider(new Rect(position.x, position.y, position.width - 80, position.height), label, ref minValue, ref maxValue, minmax.min, minmax.max);
+        EditorGUI.LabelField(new Rect(position.width - 60, position.y, 100, position.height), minValue.ToString("N2") + " | " + maxValue.ToString("N2"));
+        var vec = Vector2.zero;
+        vec.x = minValue;
+        vec.y = maxValue;
+
+        property.vector2Value = vec;
+    }
+    
+    void ProcessProgressBar(SerializedProperty property, Rect position)
+    {
+        var pb = fieldInfo.GetCustomAttribute<ProgressBar>();
+        if (armor == -1)
+            armor = property.floatValue;
+        GUI.Box(position, "");
+        armor = EditorGUI.IntSlider(new Rect(position.x, position.y, position.width - 6, 15), pb.title, Mathf.RoundToInt(property.floatValue), pb.min, pb.max);
+        EditorGUI.ProgressBar(new Rect(position.x, position.y + 20, position.width - 6, 20), ((armor - pb.min) / ((pb.max - pb.min))), pb.title);
+        property.floatValue = armor;
+    }
+
+    void ProcessScriptableObjectId(SerializedProperty property, Rect position, GUIContent label)
+    {
+        if (string.IsNullOrEmpty(property.stringValue)) {
+            property.stringValue = Guid.NewGuid().ToString();
+        }
+        EditorGUI.PropertyField(position, property, label, true);
+    }
 
     private int GetSel(string stringValue, string[] options)
     {
-        for (int i = 0; i <= options.Length - 1; i++)
+        for (var i = 0; i <= options.Length - 1; i++)
         {
             if (options[i] == stringValue)
                 return i;
         }
         return 0;
     }
+    
     private int GetSelArray(string stringValue, string[] options)
     {
-        int ret = 0;
+        var ret = 0;
 
         var str = stringValue.Split(';');
-        for (int i = 0; i <= str.Length - 1; i++)
+        for (var i = 0; i <= str.Length - 1; i++)
         {
-            int pot = 1;
-            for (int ii = 0; ii <= options.Length - 1; ii++)
+            var pot = 1;
+            for (var ii = 0; ii <= options.Length - 1; ii++)
             {
                 if (str[i] == options[ii])
                     if (ii == 0)
@@ -333,297 +333,150 @@ public class ToyoCustomPropertyDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-
-      /*  if (this.fieldInfo.FieldType.ToString().Contains("[") == false && CustoBaseClass.search != "")
-        {
-            if (label.text.ToUpper().Contains(CustoBaseClass.search.ToUpper()) == false)
-                return 0;
-
-        }*/
-
         var nt = base.GetPropertyHeight(property, label);
-        if (this.fieldInfo.GetCustomAttribute<ProgressBar>() != null)
+        if (fieldInfo.GetCustomAttribute<ProgressBar>() != null)
         {
-            
             nt += 30f;
             return nt;
         }
         if (property.hasVisibleChildren)
-        {
-           // var nt = base.GetPropertyHeight(property, label);
             nt += (25 * property.CountInProperty());
 
-        }
-
-        if (this.fieldInfo.GetCustomAttribute<HorizontalLine>() != null)
-        {
-           // var nt = base.GetPropertyHeight(property, label);
+        if (fieldInfo.GetCustomAttribute<HorizontalLine>() != null)
             nt += 6f;
-           
-        }
 
-        if (GUI.enabled && this.fieldInfo.GetCustomAttribute<InfoBox>() != null)
-        {
-            InfoBox infoBox = attribute as InfoBox;
-            if (infoBox != null)
-            {
-                //  var nt = base.GetPropertyHeight(property, label);
-                nt += 30f;
-            }
-           // return nt;
-        }
+        if (GUI.enabled && attribute is InfoBox infoBox)
+            nt += 30f;
+        
         return nt;
-      //  return base.GetPropertyHeight(property, label);
 
     }
 
-    bool isOk(SerializedProperty property)
+    bool ValidadeEnableIf(SerializedProperty property)
     {
-        EnableIf snif = attribute as EnableIf;
-        var target = fieldInfo.DeclaringType;
-
-        if (snif != null)
+        if (attribute is not EnableIf snif) return true;
+        
+        if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
         {
-            if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
+            var eE = snif.parameter.Contains("&&");
+            var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
+            var lstr = str.Split('|');
+            var pass = 0;
+            foreach (var ll in lstr)
             {
-                var eE = snif.parameter.Contains("&&");
-                var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
-                var lstr = str.Split('|');
-                int pass = 0;
-                foreach (var ll in lstr)
+                var s2 = ll.Replace("==", "=").Split('=');
+                if (s2.Length < 2)
                 {
-                    var s2 = ll.Replace("==", "=").Split('=');
-                    if (s2.Length < 2)
-                    {
 
-                    }
-                    else
-                    {
-                        var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-                        var field = ReflectionUtility.GetField(objp, s2[0]);
-                        var obj = field.GetValue(objp);
-                        if (obj != null)
-                        {
-                            var res = obj.ToString();
-                            if (res.ToLower() == s2[1].ToLower())
-                            {
-                                pass++;
-                            }
-                        }
-
-                    }
-
-                }
-                if (pass == lstr.Length || (!eE && pass > 0))
-                {
-                    //Not
                 }
                 else
                 {
-                    return false;
+                    var objp = PropertyUtility.GetTargetObjectWithProperty(property);
+                    var field = ReflectionUtility.GetField(objp, s2[0]);
+                    var obj = field.GetValue(objp);
+                    if (string.Equals(obj?.ToString(), s2[1], StringComparison.CurrentCultureIgnoreCase))
+                        pass++;
+
                 }
 
             }
-            else
-            {
-
-                var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-                var field = ReflectionUtility.GetField(objp, snif.parameter);
-                var obj = field.GetValue(objp);
-                if (obj != null)
-                    if (obj.ToString() != snif.condition.ToString())
-                    {
-                        return false;
-                    }
-            }
+            if (!(pass == lstr.Length || !eE && pass > 0))
+                return false;
+        }
+        else
+        {
+            var objp = PropertyUtility.GetTargetObjectWithProperty(property);
+            var field = ReflectionUtility.GetField(objp, snif.parameter);
+            var obj = field.GetValue(objp);
+            if (obj?.ToString() != snif.condition.ToString())
+                return false;
         }
         return true;
     }
-    bool isNOk(SerializedProperty property)
+    bool ValidadeDisableIf(SerializedProperty property)
     {
-        DisableIf snif = attribute as DisableIf;
-        var target = fieldInfo.DeclaringType;
-
-        if (snif != null)
+        if (attribute is not DisableIf snif) return true;
+        
+        if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
         {
-            if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
-            {
-                var eE = snif.parameter.Contains("&&");
-                var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
-                var lstr = str.Split('|');
-                int pass = 0;
-                foreach (var ll in lstr)
-                {
-                    var s2 = ll.Replace("==", "=").Split('=');
-                    if (s2.Length < 2)
-                    {
-
-                    }
-                    else
-                    {
-                        var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-                        var field = ReflectionUtility.GetField(objp, s2[0]);
-                        var obj = field.GetValue(objp);
-                        if (obj != null)
-                        {
-                            var res = obj.ToString();
-                            if (res.ToLower() == s2[1].ToLower())
-                            {
-                                pass++;
-                            }
-                        }
-
-                    }
-
-                }
-                if (pass == lstr.Length || (!eE && pass > 0))
-                {
-                    //Not
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            else
-            {
-
-                var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-                var field = ReflectionUtility.GetField(objp, snif.parameter);
-                var obj = field.GetValue(objp);
-                if (obj != null)
-                    if (obj.ToString() != snif.condition.ToString())
-                    {
-                        return false;
-                    }
-            }
+            var eE = snif.parameter.Contains("&&");
+            var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
+            var lstr = str.Split('|');
+            var pass = (from ll in lstr 
+                select ll.Replace("==", "=").Split('=') into s2 
+                where s2.Length >= 2 let objp = PropertyUtility.GetTargetObjectWithProperty(property) let field = ReflectionUtility.GetField(objp, s2[0]) let obj = field.GetValue(objp) 
+                where obj != null let res = obj.ToString() 
+                where string.Equals(res, s2[1], StringComparison.CurrentCultureIgnoreCase) 
+                select s2).Count();
+            if (!(pass == lstr.Length || !eE && pass > 0))
+                return false;
+        }
+        else
+        {
+            var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
+            var field = ReflectionUtility.GetField(objp, snif.parameter);
+            var obj = field.GetValue(objp);
+            if (obj?.ToString() != snif.condition.ToString())
+                return false;
         }
         return true;
     }
 
 
-    bool isOkS(SerializedProperty property)
+    bool ValidadeShowIf(SerializedProperty property)
     {
-        ShowIf snif = attribute as ShowIf;
-        var target = fieldInfo.DeclaringType;
-
-        if (snif != null)
+        if (attribute is not ShowIf snif) return true;
+        
+        if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
         {
-            if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
-            {
-                var eE = snif.parameter.Contains("&&");
-                var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
-                var lstr = str.Split('|');
-                int pass = 0;
-                foreach (var ll in lstr)
-                {
-                    var s2 = ll.Replace("==", "=").Split('=');
-                    if (s2.Length < 2)
-                    {
+            var eE = snif.parameter.Contains("&&");
+            var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
+            var lstr = str.Split('|');
+            var pass = (from ll in lstr 
+                select ll.Replace("==", "=").Split('=') into s2 
+                where s2.Length >= 2 let objp = PropertyUtility.GetTargetObjectWithProperty(property) let field = ReflectionUtility.GetField(objp, s2[0]) let obj = field.GetValue(objp) 
+                where obj != null let res = obj.ToString()
+                where res.ToLower() == s2[1].ToLower() 
+                select s2).Count();
+            if (!(pass == lstr.Length || !eE && pass > 0))
+                return false;
 
-                    }
-                    else
-                    {
-                        var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-                        var field = ReflectionUtility.GetField(objp, s2[0]);
-                        var obj = field.GetValue(objp);
-                        if (obj != null)
-                        {
-                            var res = obj.ToString();
-                            if (res.ToLower() == s2[1].ToLower())
-                            {
-                                pass++;
-                            }
-                        }
-
-                    }
-
-                }
-                if (pass == lstr.Length || (!eE && pass > 0))
-                {
-                    //Not
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            else
-            {
-
-                var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-                var field = ReflectionUtility.GetField(objp, snif.parameter);
-                var obj = field.GetValue(objp);
-                if (obj != null)
-                    if (obj.ToString() != snif.condition.ToString())
-                    {
-                        return false;
-                    }
-            }
+        }
+        else
+        {
+            var objp = PropertyUtility.GetTargetObjectWithProperty(property);
+            var field = ReflectionUtility.GetField(objp, snif.parameter);
+            var obj = field.GetValue(objp);
+            if (obj?.ToString() != snif.condition.ToString())
+                return false;
         }
         return true;
     }
-    bool isNOkS(SerializedProperty property)
+    
+    bool ValidadeHideIf(SerializedProperty property)
     {
-        HideIf snif = attribute as HideIf;
-        var target = fieldInfo.DeclaringType;
-
-        if (snif != null)
+        if (attribute is not HideIf snif) return true;
+        
+        if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
         {
-            if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
-            {
-                var eE = snif.parameter.Contains("&&");
-                var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
-                var lstr = str.Split('|');
-                int pass = 0;
-                foreach (var ll in lstr)
-                {
-                    var s2 = ll.Replace("==", "=").Split('=');
-                    if (s2.Length < 2)
-                    {
-
-                    }
-                    else
-                    {
-                        var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-                        var field = ReflectionUtility.GetField(objp, s2[0]);
-                        var obj = field.GetValue(objp);
-                        if (obj != null)
-                        {
-                            var res = obj.ToString();
-                            if (res.ToLower() == s2[1].ToLower())
-                            {
-                                pass++;
-                            }
-                        }
-
-                    }
-
-                }
-                if (pass == lstr.Length || (!eE && pass > 0))
-                {
-                    //Not
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            else
-            {
-
-                var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-                var field = ReflectionUtility.GetField(objp, snif.parameter);
-                var obj = field.GetValue(objp);
-                if (obj != null)
-                    if (obj.ToString() != snif.condition.ToString())
-                    {
-                        return false;
-                    }
-            }
+            var eE = snif.parameter.Contains("&&");
+            var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
+            var lstr = str.Split('|');
+            int pass = (from ll in lstr 
+                select ll.Replace("==", "=").Split('=') into s2 
+                where s2.Length >= 2 let objp = PropertyUtility.GetTargetObjectWithProperty(property) let field = ReflectionUtility.GetField(objp, s2[0]) let obj = field.GetValue(objp) 
+                where obj != null let res = obj.ToString() where res.ToLower() == s2[1].ToLower() 
+                select s2).Count();
+            if (!(pass == lstr.Length || !eE && pass > 0))
+                return false;
+        }
+        else
+        {
+            var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
+            var field = ReflectionUtility.GetField(objp, snif.parameter);
+            var obj = field.GetValue(objp);
+            if (obj?.ToString() != snif.condition.ToString())
+                return false;
         }
         return true;
     }
@@ -658,3 +511,4 @@ public class ToyoCustomPropertyDrawer : PropertyDrawer
     }
 }
 }
+
