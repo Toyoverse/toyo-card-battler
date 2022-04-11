@@ -15,8 +15,6 @@ namespace Card.CardStateMachine.States
 
         private Vector3 DefaultSize { get; }
 
-        //--------------------------------------------------------------------------------------------------------------
-
         public override void OnEnterState()
         {
             Handler.Input.OnPointerDown += OnPointerDown;
@@ -42,8 +40,6 @@ namespace Card.CardStateMachine.States
             Handler.Input.OnPointerEnter -= OnPointerEnter;
             Handler.Movement.OnFinishMotion -= Enable;
         }
-
-        //--------------------------------------------------------------------------------------------------------------
 
         private void OnPointerEnter(PointerEventData obj)
         {

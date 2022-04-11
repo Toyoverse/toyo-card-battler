@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Tools;
 using UnityEditor;
 using UnityEngine;
 
 namespace Tools
 {
-    
 
 [CustomPropertyDrawer(typeof(EnableIf), true)]
 [CustomPropertyDrawer(typeof(DisableIf), false)]
@@ -436,7 +434,7 @@ public class ToyoCustomPropertyDrawer : PropertyDrawer
                 select ll.Replace("==", "=").Split('=') into s2 
                 where s2.Length >= 2 let objp = PropertyUtility.GetTargetObjectWithProperty(property) let field = ReflectionUtility.GetField(objp, s2[0]) let obj = field.GetValue(objp) 
                 where obj != null let res = obj.ToString()
-                where res.ToLower() == s2[1].ToLower() 
+                where string.Equals(res, s2[1], StringComparison.CurrentCultureIgnoreCase) 
                 select s2).Count();
             if (!(pass == lstr.Length || !eE && pass > 0))
                 return false;

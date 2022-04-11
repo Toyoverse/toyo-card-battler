@@ -4,7 +4,6 @@ namespace Card
 {
     public interface ICard : IStateMachineHandler, ICardComponents, ICardTransform
     {
-        //IUiPlayerHand Hand { get; }
         bool IsDragging { get; }
         bool IsHovering { get; }
         bool IsDisabled { get; }

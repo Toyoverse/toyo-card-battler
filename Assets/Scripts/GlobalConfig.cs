@@ -1,5 +1,5 @@
 ﻿using System;
-using DefaultNamespace.Scriptable_Objects;
+using Scriptable_Objects;
 using Tools;
 
 namespace DefaultNamespace
@@ -11,7 +11,6 @@ namespace DefaultNamespace
 
         void Awake()
         {
-            //globalCardDataSO.SetDefaults();
             GlobalCardData.Initialize(globalCardDataSO);
         }
     }

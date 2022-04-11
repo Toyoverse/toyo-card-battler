@@ -61,10 +61,6 @@ namespace Card.CardUX
             IsOperating = true;
         }
 
-        /// <summary>
-        ///     Stop the motion. It won't trigger OnFinishMotion.
-        ///     TODO: Cancel the Delay Coroutine.
-        /// </summary>
         public virtual void StopMotion()
         {
             IsOperating = false;

@@ -12,16 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template
   m_EditorClassIdentifier: 
-  localizedName: Test
-  cardtype: 3
-  cardImage: {fileID: 0}
-  apCost: 0
-  attacktype: 0
-  attackAnimation: {fileID: 0}
-  hitListInfos:
-  - frameToHit: 21
-    damage: 58
-  - frameToHit: 50
-    damage: 42
-  - frameToHit: 80
-    damage: 53
+  Id: 5b87e018-c044-42b7-8858-7366a4b0c1f3
+  LocalizedName: 
+  Cardtype: 0
+  CardImage: {fileID: 0}
+  ApCost: 0
+  AttackType: 0
+  AttackSubType: 0
+  AttackAnimation: {fileID: 0}
+  ApplyEffect: 1
+  EffectData: {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
+  HitListInfos: []

@@ -23,7 +23,8 @@ public static class ReflectionUtility
                            BindingFlags.DeclaredOnly)
                 .Where(predicate);
 
-            foreach (var fieldInfo in fieldInfos) yield return fieldInfo;
+            foreach (var fieldInfo in fieldInfos)
+                yield return fieldInfo;
         }
     }
 
@@ -36,19 +37,14 @@ public static class ReflectionUtility
             return ret;
         }
 
-        var type = target.GetType(); // GetSelfAndBaseTypes(target);
-
-        // for (int i = types.Count - 1; i >= 0; i--)
-        //  {
+        var type = target.GetType();
         var fieldInfos = type
             .GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
                        BindingFlags.DeclaredOnly);
 
 
-        foreach (var fieldInfo in fieldInfos)
-            // GlobalDebug.ShowLog(fieldInfo.Name + "(" + type.Name + ")", Color.yellow);
-            ret.Add(fieldInfo);
-        //  }
+        ret.AddRange(fieldInfos);
+
         return ret;
     }
 
@@ -63,15 +59,12 @@ public static class ReflectionUtility
 
         var type = target.GetType();
 
-        //  for (int i = types.Count - 1; i >= 0; i--)
-        //  {
         var fieldInfos = type
             .GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
                            BindingFlags.DeclaredOnly);
 
+        ret.AddRange(fieldInfos);
 
-        foreach (var fieldInfo in fieldInfos) ret.Add(fieldInfo);
-        //  }
         return ret;
     }
 

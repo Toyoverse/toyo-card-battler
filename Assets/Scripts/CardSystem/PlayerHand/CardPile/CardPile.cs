@@ -40,7 +40,7 @@ namespace Card.CardPile
             NotifyPileChange();
         }
 
-        private event Action<ICard[]> OnPileChanged = hand => { };
+        private event Action<ICard[]> OnPileChanged = _ => { };
 
         protected virtual void Clear()
         {
