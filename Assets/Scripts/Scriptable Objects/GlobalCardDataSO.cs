@@ -48,13 +48,13 @@ namespace Scriptable_Objects
         [SerializeField] [Tooltip("Whether the hovered card keep its rotation.")]
         public bool HoverRotation;
 
-        [SerializeField] [Tooltip("How much a hovered card scales.")] [Range(0.9f, 2f)]
+        [SerializeField] [Tooltip("How much a hovered card scales.")] [Range(0.2f, 4f)]
         public float HoverScale;
 
-        [SerializeField] [Range(0, 25)] 
+        [SerializeField] [Range(0, 50)] 
         public float HoverSpeed;
         
-        [Header("Hover")] [SerializeField] [Tooltip("How much the card will go upwards when hovered.")] [Range(0, 4)]
+        [Header("Hover")] [SerializeField] [Tooltip("How much the card will go upwards when hovered.")] [Range(0, 10)]
         public float HoverHeight;
         
 
@@ -65,7 +65,7 @@ namespace Scriptable_Objects
         [Header("Bend")] [SerializeField] [Tooltip("Height factor between two cards.")] [Range(0f, 1f)]
         public float Height;
 
-        [SerializeField] [Tooltip("Amount of space between the cards on the X axis")] [Range(0f, -5f)]
+        [SerializeField] [Tooltip("Amount of space between the cards on the X axis")] [Range(-20, 20f)]
         public float Spacing;
 
         [SerializeField] [Range(-50, 50)]
@@ -77,16 +77,16 @@ namespace Scriptable_Objects
 
         #region Movement
         
-        [Header("Rotation")] [SerializeField] [Range(0, 60)] [Tooltip("Speed of a card while it is rotating")]
+        [Header("Rotation")] [SerializeField] [Range(0, 120)] [Tooltip("Speed of a card while it is rotating")]
         public float RotationSpeed;
 
         [SerializeField] [Range(0, 1000)] [Tooltip("Speed of a card while it is rotating for player 2")]
         public float RotationSpeedEnemy;
 
-        [Header("Movement")] [SerializeField] [Range(0, 15)] [Tooltip("Speed of a card while it is moving")]
+        [Header("Movement")] [SerializeField] [Range(0, 50)] [Tooltip("Speed of a card while it is moving")]
         public float MovementSpeed;
 
-        [Header("Scale")] [SerializeField] [Range(0, 15)] [Tooltip("Speed of a card while it is scaling")]
+        [Header("Scale")] [SerializeField] [Range(0, 50)] [Tooltip("Speed of a card while it is scaling")]
         public float ScaleSpeed;
 
         #endregion
@@ -101,10 +101,10 @@ namespace Scriptable_Objects
 
         #endregion
         
-        [Header("Layer")] [SerializeField] [Range(0, 5)] 
+        [Header("Layer")] [SerializeField] [Range(-10, 10)] 
         public int LayerToRenderNormal;
         
-        [SerializeField] [Range(0, 5)] 
+        [SerializeField] [Range(-10, 10)] 
         public int LayerToRenderTop;
         
     }

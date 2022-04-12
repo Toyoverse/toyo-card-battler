@@ -29,7 +29,7 @@ namespace PlayerHand
 
         private void Awake()
         {
-            PlayerHand = transform.parent.GetComponentInChildren<IPlayerHand>();
+            PlayerHand = GlobalConfig.Instance.PlayerReferences.hand.GetComponent<IPlayerHand>();
         }
 
         private IEnumerator Start()

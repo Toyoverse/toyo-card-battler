@@ -1,17 +1,22 @@
 ﻿using System;
 using Scriptable_Objects;
 using Tools;
+using UnityEngine;
 
-namespace DefaultNamespace
-{
     [Serializable]
     public class GlobalConfig : Singleton<GlobalConfig>
     {
         [FoldoutGroup("Card Parameters")] public GlobalCardDataSO globalCardDataSO;
 
+        [FoldoutGroup("Game Parameters")] public PlayerReferences PlayerReferences;
+        [FoldoutGroup("Game Parameters")] public GameObject UI;
+        
+        
+        
         void Awake()
         {
             GlobalCardData.Initialize(globalCardDataSO);
+            
         }
     }
 
@@ -53,4 +58,3 @@ namespace DefaultNamespace
             MovementSpeed = _cardDataSO.MovementSpeed;
         }
     }
-}

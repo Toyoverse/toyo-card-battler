@@ -12,7 +12,7 @@ namespace Card
 
         private void Awake()
         {
-            Drawer = transform.parent.GetComponentInChildren<PlayerHandUtils>();
+            Drawer = GlobalConfig.Instance.PlayerReferences.deck.GetComponent<PlayerHandUtils>();
             Input = GetComponent<IMouseInput>();
             Input.OnPointerClick += DrawCard;
         }

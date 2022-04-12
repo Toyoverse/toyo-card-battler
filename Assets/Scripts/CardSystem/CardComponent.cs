@@ -6,6 +6,7 @@ using Extensions;
 using PlayerHand;
 using Tools;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardComponent : MonoBehaviour, ICard
 {
@@ -14,16 +15,16 @@ public class CardComponent : MonoBehaviour, ICard
         MyTransform = transform;
         MyCollider = GetComponent<Collider>();
         MyRigidbody = GetComponent<Rigidbody>();
-        MyRenderer = GetComponent<SpriteRenderer>();
-        MyRenderers = GetComponentsInChildren<SpriteRenderer>();
+        MyImage = GetComponent<SpriteRenderer>();
+        MyImages = GetComponentsInChildren<SpriteRenderer>();
         MyInput = GetComponent<IMouseInput>();
-        Hand = transform.parent.GetComponentInChildren<IPlayerHand>();
+        Hand = GlobalConfig.Instance.PlayerReferences.hand.GetComponent<IPlayerHand>();
 
         Scale = new CardMotionScale(this);
         Movement = new CardMotionMovement(this);
         Rotation = new CardMotionRotation(this);
 
-        StateMachine = new CardStateMachine(MainCamera, cardData, this);
+        StateMachine = new CardStateMachine(MainCamera, MyCardData, this);
     }
 
     private void Update()
@@ -37,21 +38,22 @@ public class CardComponent : MonoBehaviour, ICard
     #region Properties
 
     [Header("Card Settings")] [SerializeField]
-    public CardData cardData;
+    public CardData MyCardData;
 
     private CardStateMachine StateMachine { get; set; }
-    public string Name => cardData.LocalizedName ?? "NoName";
+    public string Name => MyCardData.LocalizedName ?? "NoName";
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
 
 
     public MonoBehaviour MonoBehavior => this;
+    public CardData CardData => MyCardData;
     public Camera MainCamera => Camera.main;
 
     private Transform MyTransform { get; set; }
-    private SpriteRenderer[] MyRenderers { get; set; }
-    private SpriteRenderer MyRenderer { get; set; }
+    private SpriteRenderer[] MyImages { get; set; }
+    private SpriteRenderer MyImage { get; set; }
     private Collider MyCollider { get; set; }
     private Rigidbody MyRigidbody { get; set; }
     private IMouseInput MyInput { get; set; }
@@ -139,8 +141,8 @@ public class CardComponent : MonoBehaviour, ICard
 
     #region Components
 
-    SpriteRenderer[] ICardComponents.Renderers => MyRenderers;
-    SpriteRenderer ICardComponents.Renderer => MyRenderer;
+    SpriteRenderer[] ICardComponents.Images => MyImages;
+    SpriteRenderer ICardComponents.Image => MyImage;
     Collider ICardComponents.Collider => MyCollider;
     Rigidbody ICardComponents.Rigidbody => MyRigidbody;
     IMouseInput ICardComponents.Input => MyInput;

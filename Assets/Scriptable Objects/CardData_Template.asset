@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: CardData_Template
   m_EditorClassIdentifier: 
   Id: 5b87e018-c044-42b7-8858-7366a4b0c1f3
-  LocalizedName: 
+  LocalizedName: Test
   Cardtype: 0
   CardImage: {fileID: 0}
   ApCost: 0
   AttackType: 0
   AttackSubType: 0
   AttackAnimation: {fileID: 0}
-  ApplyEffect: 1
+  ApplyEffect: 0
   EffectData: {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
-  HitListInfos: []
+  HitListInfos:
+  - FrameToHit: 1
+    Damage: 10

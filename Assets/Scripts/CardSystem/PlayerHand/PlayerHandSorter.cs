@@ -4,6 +4,7 @@ using Card.CardPile;
 using DefaultNamespace;
 using Extensions;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PlayerHand
 {
@@ -16,7 +17,7 @@ namespace PlayerHand
         private void Awake()
         {
             PlayerHand = GetComponent<IPlayerHand>();
-            CardRenderer = CardPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
+            CardImage = CardPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
         }
 
         private void OnEnable()
@@ -36,7 +37,7 @@ namespace PlayerHand
             var _layerZ = 0;
             var _index = 0;
             var _cardsLenght = cards.Length;
-            const int _spacing = 0;
+            var _spacing = GlobalConfig.Instance.globalCardDataSO.Spacing;
             var _handWidth = CalcHandWidth(_cardsLenght, _spacing);
             var _offsetX = pivot.position.x - _handWidth / 2;
 
@@ -56,7 +57,7 @@ namespace PlayerHand
             layerZ += offsetZ;
         }
 
-        private void Bend(ICard card, int index, int cardsLenght, ref float offsetX, int spacing)
+        private void Bend(ICard card, int index, int cardsLenght, ref float offsetX, float spacing)
         {
             var _anglePerCard = GlobalCardData.FullAngle / cardsLenght;
             var _firstAngle = CalcFirstAngle(GlobalCardData.FullAngle);
@@ -90,7 +91,7 @@ namespace PlayerHand
             return -(fullAngle / 2) + fullAngle * magicMathFactor;
         }
 
-        private float CalcHandWidth(int quantityOfCards, int spacing)
+        private float CalcHandWidth(int quantityOfCards, float spacing)
         {
             var widthCards = quantityOfCards * CardWidth;
             var widthSpacing = (quantityOfCards - 1) * spacing;
@@ -107,8 +108,8 @@ namespace PlayerHand
         [SerializeField] [Tooltip("Transform used as anchor to position the cards.")]
         private Transform pivot;
 
-        private SpriteRenderer CardRenderer { get; set; }
-        private float CardWidth => CardRenderer.bounds.size.x;
+        private SpriteRenderer CardImage { get; set; }
+        private float CardWidth => CardImage.bounds.size.x;
 
         #endregion
     }

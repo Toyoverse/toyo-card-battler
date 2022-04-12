@@ -1,4 +1,5 @@
 ﻿using DefaultNamespace;
+using Extensions;
 using Patterns.StateMachine;
 
 namespace Card.CardStateMachine.States
@@ -38,7 +39,7 @@ namespace Card.CardStateMachine.States
             DisableCollision();
             Handler.Rigidbody.Sleep();
             MakeRenderNormal();
-            foreach (var renderer in Handler.Renderers)
+            foreach (var renderer in Handler.Images)
             {
                 var myColor = renderer.color;
                 myColor.a = GlobalCardData.DisabledAlpha;
@@ -58,7 +59,7 @@ namespace Card.CardStateMachine.States
 
         protected void RemoveAllTransparency()
         {
-            foreach (var _renderer in Handler.Renderers)
+            foreach (var _renderer in Handler.Images)
                 if (_renderer)
                 {
                     var _myColor = _renderer.color;
@@ -72,8 +73,9 @@ namespace Card.CardStateMachine.States
         /// </summary>
         protected virtual void MakeRenderFirst()
         {
-            for (var i = 0; i < Handler.Renderers.Length; i++)
-                Handler.Renderers[i].sortingOrder = GlobalCardData.LayerToRenderTop;
+            return; //Todo Fix Text
+            for (var i = 0; i < Handler.Images.Length; i++)
+                Handler.Images[i].sortingOrder = GlobalCardData.LayerToRenderTop;
         }
 
         /// <summary>
@@ -81,9 +83,13 @@ namespace Card.CardStateMachine.States
         /// </summary>
         protected virtual void MakeRenderNormal()
         {
-            for (var i = 0; i < Handler.Renderers.Length; i++)
-                if (Handler.Renderers[i])
-                    Handler.Renderers[i].sortingOrder = GlobalCardData.LayerToRenderNormal;
+            return; //Todo Fix Text
+            for (var i = 0; i < Handler.Images.Length; i++)
+                if (Handler.Images[i])
+                    Handler.Images[i].sortingOrder = GlobalCardData.LayerToRenderNormal;
+        
+
+            
         }
 
         #endregion

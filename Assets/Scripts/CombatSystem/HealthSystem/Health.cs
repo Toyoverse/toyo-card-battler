@@ -1,8 +1,10 @@
 using System;
 using HealthSystem;
 using HealthSystem.HealthUI;
+using Tools;
 using UnityEngine;
 
+[UseAttributes]
 public class Health : MonoBehaviour, IHealth
 {
     private float health = 100.0f;
@@ -13,7 +15,10 @@ public class Health : MonoBehaviour, IHealth
     {
         return health;
     }
-    
+
+    private IHealthUI MyHealthUI;
+    IHealthUI IHealth.HealthUI => MyHealthUI;
+
     public void SetHealth(float _health)
     {
         health = _health;
@@ -22,7 +27,12 @@ public class Health : MonoBehaviour, IHealth
     #endregion
 
     #region CallBacks
-    
+
+    void Awake()
+    {
+        MyHealthUI = GetComponent<HealthUI>();
+    }
+
     void OnEnable()
     {
         OnGainHP += GainHP;
@@ -40,12 +50,27 @@ public class Health : MonoBehaviour, IHealth
     void GainHP(float _value)
     {
         health += _value;
-        //IHealthUI
+        MyHealthUI?.OnUpdateHealthUI?.Invoke(health);
     }
 
     void TakeDamage(float _value)
     {
         health -= _value;
+        MyHealthUI?.OnUpdateHealthUI?.Invoke(health);
+    }
+
+    public float testHPValue = 10.0f;
+    
+    [Button]
+    public void TestDamage()
+    {
+        TakeDamage(testHPValue);
+    }
+
+    [Button]
+    public void TestHealing()
+    {
+        GainHP(testHPValue);
     }
 
     public Action<float> OnGainHP { get; set; }

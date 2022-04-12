@@ -13,7 +13,7 @@ namespace DefaultNamespace
 
         protected virtual void Awake()
         {
-            CardHand = transform.parent.GetComponentInChildren<IPlayerHand>();
+            CardHand = GlobalConfig.Instance.PlayerReferences.hand.GetComponent<IPlayerHand>();
             Input = GetComponent<IMouseInput>();
             Input.OnPointerUp += OnPointerUp;
         }
