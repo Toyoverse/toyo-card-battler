@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df3b5853d9fb40ef9f7373445d97dd64, type: 3}
+  m_Name: ListToyoIDData
+  m_EditorClassIdentifier: 
+  ListToyoData:
+  - {fileID: 11400000, guid: df5e4cfe2865bac4393f0d5cd8ab51f9, type: 2}

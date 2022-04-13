@@ -28,3 +28,4 @@ MonoBehaviour:
   DiscardedSize: 0.5
   LayerToRenderNormal: 0
   LayerToRenderTop: 1
+  offsetZ: -1

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Card;
+using Card.DeckSystem;
 using Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,16 +13,8 @@ namespace PlayerHand
 
         private int Count { get; set; }
 
-        [SerializeField] [Tooltip("Prefab of the Card C#")]
-        private GameObject cardPrefabCs;
-
-        [SerializeField] [Tooltip("World point where the deck is positioned")]
-        private Transform deckPosition;
-
-        [SerializeField] [Tooltip("Game view transform")]
-        private Transform gameView;
-
         private IPlayerHand PlayerHand { get; set; }
+        private IDeck Deck { get; set; }
 
         #endregion
 
@@ -30,6 +23,7 @@ namespace PlayerHand
         private void Awake()
         {
             PlayerHand = GlobalConfig.Instance.PlayerReferences.hand.GetComponent<IPlayerHand>();
+            Deck = GlobalConfig.Instance.PlayerReferences.deck.GetComponent<IDeck>();
         }
 
         private IEnumerator Start()
@@ -48,10 +42,19 @@ namespace PlayerHand
 
         public void DrawCard()
         {
-            var cardGo = Instantiate(cardPrefabCs, gameView);
+            var _card = Deck?.GetTopCard();
+            _card?.gameObject.SetActive(true);
+            Count++;
+            PlayerHand.AddCard(_card);
+        }
+
+        //Old
+        void DrawCardDebug()
+        {
+            var cardGo = Instantiate(GlobalConfig.Instance.cardDefaultPrefab, GlobalConfig.Instance.gameView);
             cardGo.name = "Card_" + Count;
             var card = cardGo.GetComponent<ICard>();
-            card.transform.position = deckPosition.position;
+            card.transform.position = GlobalConfig.Instance.deckPosition.position;
             Count++;
             PlayerHand.AddCard(card);
         }

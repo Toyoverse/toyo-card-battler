@@ -7,6 +7,12 @@ using UnityEngine;
     public class GlobalConfig : Singleton<GlobalConfig>
     {
         [FoldoutGroup("Card Parameters")] public GlobalCardDataSO globalCardDataSO;
+        [FoldoutGroup("Card Parameters")] public GameObject cardDefaultPrefab;
+        
+        [FoldoutGroup("Card Transforms")] public Transform gameView;
+        [FoldoutGroup("Card Transforms")] public Transform deckPosition;
+        [FoldoutGroup("Card Transforms")] public Transform handPivot;
+        [FoldoutGroup("Card Transforms")] public Transform graveyardPosition;
 
         [FoldoutGroup("Game Parameters")] public PlayerReferences PlayerReferences;
         [FoldoutGroup("Game Parameters")] public GameObject UI;

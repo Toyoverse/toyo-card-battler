@@ -6,10 +6,7 @@ namespace Card.CardPile.Graveyard
     [RequireComponent(typeof(CardGraveyard))]
     public class CardGraveyardSorter : MonoBehaviour
     {
-        [SerializeField] [Tooltip("World point where the graveyard is positioned")]
-        private Transform graveyardPosition;
-
-        [SerializeField] private CardData cardData;
+        private Transform graveyardPosition => GlobalConfig.Instance.graveyardPosition;
 
         private ICardPile CardGraveyard { get; set; }
 

@@ -11,13 +11,14 @@ namespace PlayerHand
     [RequireComponent(typeof(IPlayerHand))]
     public class PlayerHandSorter : MonoBehaviour
     {
-        private const int offsetZ = -1;
+        private int offsetZ => GlobalConfig.Instance.globalCardDataSO.offsetZ;
+        
         private ICardPile PlayerHand { get; set; }
 
         private void Awake()
         {
             PlayerHand = GetComponent<IPlayerHand>();
-            CardImage = CardPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
+            CardImage = GlobalConfig.Instance.cardDefaultPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
         }
 
         private void OnEnable()
@@ -100,13 +101,7 @@ namespace PlayerHand
 
         #region Fields and Properties
 
-        [SerializeField] private CardData CardData;
-
-        [SerializeField] [Tooltip("The Card Prefab")]
-        private GameObject CardPrefab;
-
-        [SerializeField] [Tooltip("Transform used as anchor to position the cards.")]
-        private Transform pivot;
+        private Transform pivot => GlobalConfig.Instance.handPivot;
 
         private SpriteRenderer CardImage { get; set; }
         private float CardWidth => CardImage.bounds.size.x;

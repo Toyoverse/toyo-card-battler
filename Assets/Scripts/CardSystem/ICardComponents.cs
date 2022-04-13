@@ -1,4 +1,5 @@
-﻿using Tools;
+﻿using TMPro;
+using Tools;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,7 @@ namespace Card
         MonoBehaviour MonoBehavior { get; }
         GameObject gameObject { get; }
         Transform transform { get; }
-        CardData CardData { get; }
+        CardData CardData { get; set; }
+        TextMeshPro DamageValue { get; set; }
     }
 }

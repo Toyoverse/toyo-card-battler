@@ -107,5 +107,8 @@ namespace Scriptable_Objects
         [SerializeField] [Range(-10, 10)] 
         public int LayerToRenderTop;
         
+        [SerializeField] [Range(-5, 5)] 
+        public int offsetZ = -1;
+        
     }
 }

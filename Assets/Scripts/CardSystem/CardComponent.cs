@@ -4,6 +4,7 @@ using Card.CardStateMachine.States;
 using Card.CardUX;
 using Extensions;
 using PlayerHand;
+using TMPro;
 using Tools;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,12 +46,39 @@ public class CardComponent : MonoBehaviour, ICard
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
+    
+    public TextMeshPro DamageValue
+    {
+        get
+        {
+            if (MyDamageValue == null)
+            {
+                MyDamageValue = GetComponentInChildren<TextMeshPro>();
+                if (!MyDamageValue)
+                    MyDamageValue = gameObject.AddComponent<TextMeshPro>();
+            }
+            return MyDamageValue;
+        }
+        set => MyDamageValue = value;
+    }
 
 
     public MonoBehaviour MonoBehavior => this;
-    public CardData CardData => MyCardData;
+    public CardData CardData
+    {
+        get => MyCardData;
+        set
+        {
+            MyCardData = value;
+            DamageValue.text = MyCardData.HitListInfos[0].Damage.ToString(); //Todo consider all damages
+        }
+    }
+
+   
+
     public Camera MainCamera => Camera.main;
 
+    public TextMeshPro MyDamageValue { get; set; }
     private Transform MyTransform { get; set; }
     private SpriteRenderer[] MyImages { get; set; }
     private SpriteRenderer MyImage { get; set; }

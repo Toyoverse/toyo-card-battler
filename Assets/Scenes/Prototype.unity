@@ -510,6 +510,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!4 &898503186 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8474605805722273991, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
+  m_PrefabInstance: {fileID: 2532777999524559739}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,6 +616,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!4 &1021936387 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1355754466711202708, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
+  m_PrefabInstance: {fileID: 2532777999524559739}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1057074879
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,6 +966,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 598252290}
     - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: gameView
+      value: 
+      objectReference: {fileID: 2532777999524559741}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: handPivot
+      value: 
+      objectReference: {fileID: 898503186}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: deckPosition
+      value: 
+      objectReference: {fileID: 2532777999524559742}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
       propertyPath: TopCardCanvas
       value: 
       objectReference: {fileID: 0}
@@ -975,6 +997,14 @@ PrefabInstance:
       propertyPath: RegularCardCanvas
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: cardDefaultPrefab
+      value: 
+      objectReference: {fileID: 8932913532635961775, guid: 631f78885287ff7458945b9ef4328493, type: 3}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: graveyardPosition
+      value: 
+      objectReference: {fileID: 1021936387}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
 --- !u!1001 &2532777999524559739
@@ -987,10 +1017,6 @@ PrefabInstance:
     - target: {fileID: 2532777998327517698, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7169994837990778094, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7719380464801105823, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
       propertyPath: m_RootOrder
@@ -1036,14 +1062,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8169269482817871966, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8474605805722273991, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -5.63
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
 --- !u!114 &2532777999524559740 stripped
@@ -1057,3 +1075,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f297eaf3f522a354e9469ba1e6b93dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2532777999524559741 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7719380464801105823, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
+  m_PrefabInstance: {fileID: 2532777999524559739}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2532777999524559742 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2751017067391260463, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
+  m_PrefabInstance: {fileID: 2532777999524559739}
+  m_PrefabAsset: {fileID: 0}
