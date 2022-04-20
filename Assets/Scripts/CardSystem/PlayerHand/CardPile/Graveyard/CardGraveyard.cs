@@ -5,8 +5,7 @@ namespace Card.CardPile.Graveyard
 {
     public class CardGraveyard : CardPile
     {
-        [SerializeField] [Tooltip("World point where the graveyard is positioned")]
-        private Transform graveyardPosition;
+        private Transform graveyardPosition => GlobalConfig.Instance.graveyardPosition;
 
         private IPlayerHand PlayerHand { get; set; }
 
@@ -23,6 +22,7 @@ namespace Card.CardPile.Graveyard
 
             Cards.Add(card);
             card.transform.SetParent(graveyardPosition);
+            card.gameObject.SetActive(false);
             card.Discard();
             NotifyPileChange();
         }

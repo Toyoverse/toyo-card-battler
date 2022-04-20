@@ -9,6 +9,7 @@ using UnityEngine;
         [FoldoutGroup("Card Parameters")] public GlobalCardDataSO globalCardDataSO;
         [FoldoutGroup("Card Parameters")] public GameObject cardDefaultPrefab;
         
+        
         [FoldoutGroup("Card Transforms")] public Transform gameView;
         [FoldoutGroup("Card Transforms")] public Transform deckPosition;
         [FoldoutGroup("Card Transforms")] public Transform handPivot;
@@ -17,6 +18,11 @@ using UnityEngine;
         [FoldoutGroup("Game Parameters")] public PlayerReferences PlayerReferences;
         [FoldoutGroup("Game Parameters")] public GameObject UI;
         
+        [FoldoutGroup("Temp Settings")] public int maxAP;
+        [FoldoutGroup("Temp Settings")] public float timeForApRegen = 20.0f;
+        
+        [FoldoutGroup("Cheats")] public bool IgnoreAPCost;
+
         
         
         void Awake()

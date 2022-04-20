@@ -8,7 +8,8 @@ namespace ToyoSystem
     {
         TOYO_PIECE ToyoPiece { get; }
         TOYO_TECHNOALLOY ToyoTechnoalloy { get; }
-        Tuple<TOYO_STAT, float> PartStat { get; }
+        List<ToyoPartStat> PartStat { get; }
+        List<ToyoPartStat> BonusPartStat { get; }
         List<ICard> CardsFromPiece { get; set; }
     }
 }

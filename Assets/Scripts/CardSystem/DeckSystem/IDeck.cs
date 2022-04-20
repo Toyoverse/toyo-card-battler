@@ -5,8 +5,7 @@ namespace Card.DeckSystem
 {
     public interface IDeck
     {
-        List<ICard> CardList { get; set; }
-        IFullToyo FullToyo { get; }
+        IFullToyo FullToyo { get; set; }
         bool HasSynergyCards();
         void InitializeDeckFromToyo();
         ICard GetTopCard();

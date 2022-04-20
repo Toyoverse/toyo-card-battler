@@ -38,7 +38,6 @@ public class CardComponent : MonoBehaviour, ICard
 
     #region Properties
 
-    [Header("Card Settings")] [SerializeField]
     public CardData MyCardData;
 
     private CardStateMachine StateMachine { get; set; }
@@ -46,21 +45,9 @@ public class CardComponent : MonoBehaviour, ICard
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
-    
-    public TextMeshPro DamageValue
-    {
-        get
-        {
-            if (MyDamageValue == null)
-            {
-                MyDamageValue = GetComponentInChildren<TextMeshPro>();
-                if (!MyDamageValue)
-                    MyDamageValue = gameObject.AddComponent<TextMeshPro>();
-            }
-            return MyDamageValue;
-        }
-        set => MyDamageValue = value;
-    }
+
+    [Header("Card Settings")] [SerializeField] private TextMeshPro MyDamageValue;
+    [SerializeField] private TextMeshPro MyApCost;
 
 
     public MonoBehaviour MonoBehavior => this;
@@ -71,14 +58,16 @@ public class CardComponent : MonoBehaviour, ICard
         {
             MyCardData = value;
             DamageValue.text = MyCardData.HitListInfos[0].Damage.ToString(); //Todo consider all damages
+            APCost.text = MyCardData.ApCost.ToString();
         }
     }
 
-   
+    public TextMeshPro DamageValue => MyDamageValue;
+    public TextMeshPro APCost => MyApCost;
+
 
     public Camera MainCamera => Camera.main;
 
-    public TextMeshPro MyDamageValue { get; set; }
     private Transform MyTransform { get; set; }
     private SpriteRenderer[] MyImages { get; set; }
     private SpriteRenderer MyImage { get; set; }

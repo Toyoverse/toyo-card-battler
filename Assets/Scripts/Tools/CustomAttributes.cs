@@ -859,8 +859,6 @@ namespace Tools
     #endregion
 
 #if UNITY_EDITOR
-    //[CustomPropertyDrawer(typeof(AnimationClip))]
-    //[CustomPropertyDrawer(typeof(ScriptableObject), true)]
     public class AddButtonSelection : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

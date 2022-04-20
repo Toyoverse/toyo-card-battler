@@ -40,6 +40,8 @@ public class CardData : UniqueScriptableObject
     public List<HitListInfo> HitListInfos; 
 
     #endregion
+
+    internal TOYO_PIECE toyoPart;
 }
 
 [Serializable]

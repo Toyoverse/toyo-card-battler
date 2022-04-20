@@ -7,4 +7,5 @@ public class PlayerReferences : MonoBehaviour
     public GameObject hand;
     public GameObject graveyard;
     public GameObject deck;
+    public GameObject Toyo;
 }

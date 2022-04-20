@@ -33,6 +33,20 @@ namespace Scriptable_Objects
 
             LayerToRenderNormal = 0;
             LayerToRenderTop = 1;
+
+            bondCardDamage = 1.0f;
+            heavyCardSumFactor = 1.0f;
+
+            heavyCardMultiplierFactor = 1.0f;
+            
+            fastCardSumFactor = 0.0f;
+
+            fastCardMultiplierFactor = 1.0f;
+            
+            superCardSumFactor = 0.0f;
+
+            superCardMultiplierFactor = 0.0f;
+
         }
 
         #endregion
@@ -110,5 +124,32 @@ namespace Scriptable_Objects
         [SerializeField] [Range(-5, 5)] 
         public int offsetZ = -1;
         
+        [Header("CombatSettings")]
+        [SerializeField] [Range(0.0f, 5.0f)] 
+        public float bondCardDamage = -1;
+
+        [SerializeField] [Range(1, 20)] 
+        public int comboSystemFactor = 5;
+        
+        [SerializeField] [Range(0.0f, 10.0f)] 
+        public float heavyCardSumFactor = 1.0f;
+
+        [SerializeField] [Range(0.0f, 10.0f)] 
+        public float heavyCardMultiplierFactor = 1.0f;
+        
+        [SerializeField] [Range(0.0f, 10.0f)] 
+        public float fastCardSumFactor = 0.0f;
+
+        [SerializeField] [Range(0.0f, 10.0f)] 
+        public float fastCardMultiplierFactor = 1.0f;
+        
+        [SerializeField] [Range(0.0f, 10.0f)] 
+        public float superCardSumFactor = 0.0f;
+
+        [SerializeField] [Range(0.0f, 10.0f)] 
+        public float superCardMultiplierFactor = 0.0f;
+
+
+
     }
 }

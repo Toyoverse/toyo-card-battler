@@ -1,34 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Card.CardPile;
+using Card.CardPile.Graveyard;
+using Extensions;
 using ToyoSystem;
 using UnityEngine;
 
 namespace Card.DeckSystem
 {
-    public class Deck : MonoBehaviour, IDeck
+    public class Deck : MonoBehaviour, IDeck, ICardPile
     {
-        public List<ICard> CardList { get; set; }
-        public IFullToyo FullToyo { get; }
+        public List<ICard> Cards { get; set; }
+        public IFullToyo FullToyo { get; set; }
+        private ICardPile Graveyard;
+        
+        Action<ICard[]> ICardPile.OnPileChanged
+        {
+            get => OnPileChanged;
+            set => OnPileChanged = value;
+        }
+        
+        public void AddCard(ICard _card)
+        {
+            Cards.Add(_card);
+            _card.transform.SetParent(transform);
+            _card.transform.position = transform.position;
+            _card.gameObject.SetActive(false);
+            NotifyPileChange();
+        }
+
+        public void RemoveCard(ICard _card)
+        {
+            Cards.Remove(_card);
+            NotifyPileChange();
+        }
 
         private const int NumberRequiredForSynergy = 5;
+        private const int MaxNumberDebugCards = 10;
         
         public bool HasSynergyCards()
         {
-            Dictionary<string, int> _countEachPart = CountEachPart();
+            Dictionary<string, int> _countEachPart = FullToyo.CountEachPartToyo();
 
             return _countEachPart.Any(_part => _part.Value >= NumberRequiredForSynergy);
         }
 
         private void Awake()
         {
+            Cards = new List<ICard>();
+            Graveyard = GlobalConfig.Instance.graveyardPosition.GetComponent<ICardPile>();
+            FullToyo = GlobalConfig.Instance.PlayerReferences.Toyo.GetComponent<IFullToyo>();
             InitializeFullToyo();
             InitializeDeckFromToyo();
         }
 
         void InitializeFullToyo()
         {
+            FullToyo.InitializeToyo(this);
             return; //Todo Get Toyo from Database
+            
         }
 
         public void InitializeDeckFromToyo()
@@ -36,67 +67,86 @@ namespace Card.DeckSystem
             if (FullToyo != null)
             {
                 var _toyoParts = FullToyo.ToyoParts;
-                CardList = new List<ICard>();
-
                 foreach (var _part in _toyoParts)
-                    CardList.AddRange(_part.Value.CardsFromPiece);
+                    AddCardsFromPart(_part.Value.CardsFromPiece);
             }
-            else
-                CardList = new List<ICard>();
 
-            if (CardList.Count <= 0)
+            if (Cards.Count <= 0)
                 GenerateDeckDebug();
+        }
+
+        void AddCardsFromPart(List<ICard> _cards)
+        {
+            foreach (var _card in _cards)
+                AddCard(_card);
         }
 
         public ICard GetTopCard()
         {
-            var _card = CardList?.First();
-            CardList?.RemoveAt(0);
+            if (Cards?.Count <= 0)
+            {
+                ShuffleDeckFromGraveyard();
+            }
+            var _card = Cards?.First();
+            RemoveCard(_card);
+            
             return _card;
         }
 
+        void ShuffleDeckFromGraveyard()
+        {
+            var _cards = Graveyard.Cards;
+            for (int i = 0; i < _cards.Count; i++)
+            {
+                AddCard(_cards[i]);
+                Graveyard.RemoveCard(_cards[i]);
+                
+            }
+            ShuffleDeck();
+
+        }
+
+        void ShuffleDeck()
+        {
+            Cards.Shuffle();
+        }
+    
         void GenerateDeckDebug()
         {
             var _deckDebug = Resources.Load<DeckDebugData>("DeckDebugData");
             var _deck = _deckDebug.Deck;
             var _cardPackIndex = 0;
-            while (CardList.Count <= 30)
+            while (Cards.Count <= MaxNumberDebugCards)
             {
                 for (var _index = 0; _index < _deck.Count; _index++)
                 {
-                    var cardGo = Instantiate(GlobalConfig.Instance.cardDefaultPrefab, GlobalConfig.Instance.gameView);
+                    var cardGo = Instantiate(GlobalConfig.Instance.cardDefaultPrefab, transform);
                     cardGo.name = "Card_" + _cardPackIndex+ "_" +_index;
                     var card = cardGo.GetComponent<ICard>();
                     card.CardData = _deck[_index];
-                    CardList.Add(card);
+                    AddCard(card);
                     cardGo.transform.position = GlobalConfig.Instance.deckPosition.position;
-                    cardGo.gameObject.SetActive(false);
                 }
                 _cardPackIndex++;
             }
         }
 
-        Dictionary<string, int> CountEachPart()
+        private event Action<ICard[]> OnPileChanged = _ => { };
+
+        protected virtual void Clear()
         {
-            Dictionary<string, int> CountEachPart = new Dictionary<string, int>();
+            var childCards = GetComponentsInChildren<ICard>();
+            foreach (var uiCardHand in childCards)
+                Destroy(uiCardHand.gameObject);
 
-            var _listToyoData = FullToyo.ToyoIDs.ListToyoData;
-            
-            foreach (var _toyoIDData in _listToyoData)
-            {
-                if (CountEachPart.ContainsKey(_toyoIDData.Id))
-                {
-                    var _value = CountEachPart[_toyoIDData.Id];
-                    _value++;
-                    CountEachPart[_toyoIDData.Id] = _value;
-                }
-                else
-                {
-                    CountEachPart.Add(_toyoIDData.Id, 1);
-                }
-            }
-
-            return CountEachPart;
+            Cards.Clear();
         }
+
+        public void NotifyPileChange()
+        {
+            OnPileChanged?.Invoke(Cards.ToArray());
+        }
+
+
     }
 }

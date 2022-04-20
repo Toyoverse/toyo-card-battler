@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.collab-proxy": {
-      "version": "1.15.13",
+      "version": "1.15.16",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -40,6 +40,12 @@
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.mono-cecil": {
+      "version": "file:D:/Unity/Packages/com.unity.nuget.mono-cecil-1.10.2",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
     },
     "com.unity.services.core": {
       "version": "1.0.1",

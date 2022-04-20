@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Scriptable_Objects;
+using Card.CardPile;
 
 namespace ToyoSystem
 {
@@ -10,5 +10,9 @@ namespace ToyoSystem
         Dictionary<TOYO_STAT, float> ToyoStats { get; set; }
 
         ListToyoIDData ToyoIDs { get; }
+        
+        void InitializeToyo(ICardPile handler);
+
+        Dictionary<string, int> CountEachPartToyo();
     }
 }

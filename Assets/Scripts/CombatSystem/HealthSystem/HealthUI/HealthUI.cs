@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using Tools;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +10,10 @@ namespace HealthSystem.HealthUI
     public class HealthUI : MonoBehaviour, IHealthUI 
     {
         
-        public float tempMaxHealth = 100.0f;
-        public float UISpeed = 4.0f;
+        private float tempMaxHealth = 100.0f;
+        private float UISpeed = 1.0f;
+
+        private TextMeshProUGUI textValue;
         
         public SpriteRenderer MyRenderer { get; set;}
         public IMouseInput MyInput { get; set;}
@@ -23,6 +26,7 @@ namespace HealthSystem.HealthUI
             MyTransform = transform;
             MyRenderer = GetComponent<SpriteRenderer>();
             MyInput = GetComponent<IMouseInput>();
+            textValue = GetComponentInChildren<TextMeshProUGUI>();
         }
         
             
@@ -49,15 +53,21 @@ namespace HealthSystem.HealthUI
         IEnumerator SmoothHealthCoroutine(float _currentHealth)
         {
             var lerpTime = 0.0f;
+            var sliderValue = HealthSlider.value;
             while (lerpTime < UISpeed)
             {
-                var sliderValue = HealthSlider.value;
                 var _newhealth = Mathf.Lerp(sliderValue, _currentHealth, lerpTime/UISpeed);
-                HealthSlider.value = _newhealth;
+                SetSliderValue(_newhealth);
                 lerpTime += Time.deltaTime;
                 yield return null;
             }
-            HealthSlider.value = _currentHealth;
+            SetSliderValue(_currentHealth);
+        }
+
+        void SetSliderValue(float _value)
+        {
+            HealthSlider.value = _value;
+            textValue.text = Mathf.Round(_value).ToString();
         }
 
         void SetMaxHealth()

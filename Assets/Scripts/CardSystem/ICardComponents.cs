@@ -17,6 +17,7 @@ namespace Card
         GameObject gameObject { get; }
         Transform transform { get; }
         CardData CardData { get; set; }
-        TextMeshPro DamageValue { get; set; }
+        TextMeshPro DamageValue { get; }
+        TextMeshPro APCost { get; }
     }
 }

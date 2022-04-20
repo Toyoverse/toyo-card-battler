@@ -16,7 +16,7 @@ MonoBehaviour:
   LocalizedName: Test 5
   Cardtype: 4
   CardImage: {fileID: 0}
-  ApCost: 0
+  ApCost: 3
   AttackType: 0
   AttackSubType: 5
   AttackAnimation: {fileID: 0}

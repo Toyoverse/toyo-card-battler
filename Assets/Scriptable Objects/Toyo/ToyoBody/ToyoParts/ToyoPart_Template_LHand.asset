@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4649254d3a9d42f4bbd5da0c541eb823, type: 3}
+  m_Name: ToyoPart_Template_LHand
+  m_EditorClassIdentifier: 
+  ToyoPiece: 5
+  ToyoId: {fileID: 0}
+  ToyoTechnoalloy: 0
+  ToyoPartStat:
+  - ToyoStat: 0
+    StatValue: 8
+  - ToyoStat: 1
+    StatValue: 8
+  - ToyoStat: 2
+    StatValue: 8
+  - ToyoStat: 3
+    StatValue: 8
+  - ToyoStat: 4
+    StatValue: 8
+  - ToyoStat: 5
+    StatValue: 8
+  - ToyoStat: 6
+    StatValue: 8
+  - ToyoStat: 7
+    StatValue: 8
+  - ToyoStat: 8
+    StatValue: 8
+  - ToyoStat: 9
+    StatValue: 8
+  - ToyoStat: 10
+    StatValue: 8
+  - ToyoStat: 11
+    StatValue: 8
+  CardsFromPiece:
+  - {fileID: 11400000, guid: dee18b4d6b6714a42b209ccfd1602a62, type: 2}
+  - {fileID: 11400000, guid: dee18b4d6b6714a42b209ccfd1602a62, type: 2}
+  - {fileID: 11400000, guid: dee18b4d6b6714a42b209ccfd1602a62, type: 2}

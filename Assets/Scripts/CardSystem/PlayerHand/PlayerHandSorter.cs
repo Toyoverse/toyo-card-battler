@@ -33,7 +33,8 @@ namespace PlayerHand
 
         private void Sort(ICard[] cards)
         {
-            if (cards == null || cards.Length <= 0) throw new ArgumentNullException("Can't sort empty card list");
+            if (cards == null ) throw new ArgumentNullException("Can't sort empty card list");
+            if (cards.Length <= 0) return;
 
             var _layerZ = 0;
             var _index = 0;

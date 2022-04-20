@@ -42,10 +42,14 @@ public enum TOYO_PIECE
 {
     HEAD,
     CHEST,
-    ARM,
-    HAND,
-    LEG,
-    FOOT
+    R_ARM,
+    L_ARM,
+    R_HAND,
+    L_HAND,
+    R_LEG,
+    L_LEG,
+    R_FOOT,
+    L_FOOT
 }
 
 public enum TOYO_RARITY

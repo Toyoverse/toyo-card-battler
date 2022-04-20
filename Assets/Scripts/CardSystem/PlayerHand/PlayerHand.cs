@@ -15,6 +15,7 @@ namespace PlayerHand
         public void PlayCard(ICard card)
         {
             card.ValidateCard();
+            card.ValidateCardAP();
 
             SelectedCard = null;
             RemoveCard(card);
