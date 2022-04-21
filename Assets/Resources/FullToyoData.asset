@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f484d5f773244776af8c8fd9f1c9e643, type: 3}
+  m_Name: FullToyoData
+  m_EditorClassIdentifier: 
+  ToyoParts:
+  - {fileID: 11400000, guid: 274c5e130b117e14c839f49a6e8d898d, type: 2}
+  - {fileID: 11400000, guid: a30fa26c695f86c4188508bd1089c695, type: 2}
+  - {fileID: 11400000, guid: a5575641538eb864e820eb781d5095c3, type: 2}
+  - {fileID: 11400000, guid: a4aefb9b2bfa35045b3c34a690efda10, type: 2}
+  - {fileID: 11400000, guid: 659255aa0e4ba74478981caf3d443a9b, type: 2}
+  - {fileID: 11400000, guid: 6efcc37126ff8394591b37f26948ed4f, type: 2}
+  - {fileID: 11400000, guid: 3037905b09b240e43a0f79dbe3097271, type: 2}
+  - {fileID: 11400000, guid: 6718d451becd1fd46be613d5440b9581, type: 2}
+  - {fileID: 11400000, guid: 7886b5a9d4abb2b4e9c71788553828d2, type: 2}
+  - {fileID: 11400000, guid: c5fc4f8bdc4c1ce45b0760833595d5e7, type: 2}

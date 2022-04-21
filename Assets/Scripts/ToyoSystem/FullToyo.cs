@@ -22,6 +22,7 @@ namespace ToyoSystem
         {
             ToyoParts = new Dictionary<TOYO_PIECE, IToyoPart>();
             ToyoStats = new Dictionary<TOYO_STAT, float>();
+            ToyoBonusStats = new Dictionary<TOYO_STAT, float>();
 
         }
         
