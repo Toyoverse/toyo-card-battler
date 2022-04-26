@@ -9,7 +9,7 @@ namespace APSystem
     [UseAttributes]
     public class Ap : MonoBehaviour, IAp
     {
-        private static int AP;
+        private int AP;
         private int MaxAP;
         private float partialAP;
         private float timeForApRegen;
@@ -17,7 +17,7 @@ namespace APSystem
 
         #region GetterAndSetter
 
-        public static int GetAP()
+        public int GetAP()
         {
             return AP;
         }

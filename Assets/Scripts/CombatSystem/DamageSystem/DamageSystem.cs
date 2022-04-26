@@ -14,15 +14,19 @@ namespace CombatSystem.DamageSystem
     {
         protected IPlayerHand CardHand { get; set; }
         protected IHealth PlayerHealth { get; set; }
+        
+        protected IHealth EnemyHealth { get; set; }
+        
         protected IAp PlayerAP{ get; set; }
         protected IFullToyo FullToyo{ get; set; }
 
         protected virtual void Awake()
         {
-            CardHand = GlobalConfig.Instance.PlayerReferences.hand.GetComponent<IPlayerHand>();
-            PlayerHealth = GlobalConfig.Instance.UI.GetComponentInChildren<IHealth>();
-            PlayerAP = GlobalConfig.Instance.UI.GetComponentInChildren<IAp>();
-            FullToyo = GlobalConfig.Instance.PlayerReferences.Toyo.GetComponent<IFullToyo>();
+            CardHand = GlobalConfig.Instance.playerReferences.hand.GetComponent<IPlayerHand>();
+            PlayerHealth = GlobalConfig.Instance.playerReferences.PlayerUI.GetComponentInChildren<IHealth>();
+            EnemyHealth = GlobalConfig.Instance.playerReferences.EnemyUI.GetComponentInChildren<IHealth>();
+            PlayerAP = GlobalConfig.Instance.playerReferences.PlayerUI.GetComponentInChildren<IAp>();
+            FullToyo = GlobalConfig.Instance.playerReferences.Toyo.GetComponent<IFullToyo>();
         }
 
         void OnEnable()
@@ -60,7 +64,7 @@ namespace CombatSystem.DamageSystem
 
         void DoDamage(HitListInfo hit)
         {
-            PlayerHealth?.OnTakeDamage.Invoke(hit.Damage);
+            EnemyHealth?.OnTakeDamage.Invoke(hit.Damage);
         }
         
     }

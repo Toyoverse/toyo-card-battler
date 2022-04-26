@@ -22,8 +22,8 @@ namespace PlayerHand
 
         private void Awake()
         {
-            PlayerHand = GlobalConfig.Instance.PlayerReferences.hand.GetComponent<IPlayerHand>();
-            Deck = GlobalConfig.Instance.PlayerReferences.deck.GetComponent<IDeck>();
+            PlayerHand = GlobalConfig.Instance.playerReferences.hand.GetComponent<IPlayerHand>();
+            Deck = GlobalConfig.Instance.playerReferences.deck.GetComponent<IDeck>();
         }
 
         private IEnumerator Start()

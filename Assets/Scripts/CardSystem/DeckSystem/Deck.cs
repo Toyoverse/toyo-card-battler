@@ -50,7 +50,7 @@ namespace Card.DeckSystem
         {
             Cards = new List<ICard>();
             Graveyard = GlobalConfig.Instance.graveyardPosition.GetComponent<ICardPile>();
-            FullToyo = GlobalConfig.Instance.PlayerReferences.Toyo.GetComponent<IFullToyo>();
+            FullToyo = GlobalConfig.Instance.playerReferences.Toyo.GetComponent<IFullToyo>();
             InitializeFullToyo();
             InitializeDeckFromToyo();
         }

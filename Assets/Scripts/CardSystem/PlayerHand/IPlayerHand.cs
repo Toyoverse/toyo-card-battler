@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Card;
 using Card.CardPile;
+using Fusion;
 
 namespace PlayerHand
 {
@@ -15,5 +16,6 @@ namespace PlayerHand
         void PlayCard(ICard uiCard);
         void SelectCard(ICard uiCard);
         void UnselectCard(ICard uiCard);
+        PlayerRef MyPlayerRef { get; set; }
     }
 }

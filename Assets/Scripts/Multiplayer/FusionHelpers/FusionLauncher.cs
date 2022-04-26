@@ -12,7 +12,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
     private NetworkRunner Runner;
     private ConnectionStatus Status;
     private FusionObjectPoolRoot Pool;
-    
+
     Action<NetworkRunner, ConnectionStatus, string> IFusionLauncher.OnConnect
     {
         get => OnConnect;

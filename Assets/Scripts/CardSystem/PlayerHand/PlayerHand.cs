@@ -1,11 +1,13 @@
 ﻿using System;
 using Card;
 using Card.CardPile;
+using Fusion;
 
 namespace PlayerHand
 {
     public class PlayerHand : CardPile, IPlayerHand
     {
+       
         public void PlaySelected()
         {
             SelectedCard.ValidateCard();
@@ -15,7 +17,7 @@ namespace PlayerHand
         public void PlayCard(ICard card)
         {
             card.ValidateCard();
-            card.ValidateCardAP();
+            card.ValidateCardAP(MyPlayerRef);
 
             SelectedCard = null;
             RemoveCard(card);
@@ -68,6 +70,8 @@ namespace PlayerHand
         #region Properties
 
         public ICard SelectedCard { get; private set; }
+        
+        public PlayerRef MyPlayerRef { get; set; }
 
         private event Action<ICard> OnCardPlayed = card => { };
 

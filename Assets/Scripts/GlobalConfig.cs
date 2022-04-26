@@ -15,7 +15,7 @@ using UnityEngine;
         [FoldoutGroup("Card Transforms")] public Transform handPivot;
         [FoldoutGroup("Card Transforms")] public Transform graveyardPosition;
 
-        [FoldoutGroup("Game Parameters")] public PlayerReferences PlayerReferences;
+        [FoldoutGroup("Game Parameters")] public PlayerReferences playerReferences;
         [FoldoutGroup("Game Parameters")] public GameObject UI;
         
         [FoldoutGroup("Temp Settings")] public int maxAP;

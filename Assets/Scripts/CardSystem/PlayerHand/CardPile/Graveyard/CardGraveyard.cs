@@ -12,7 +12,7 @@ namespace Card.CardPile.Graveyard
         protected override void Awake()
         {
             base.Awake();
-            PlayerHand = GlobalConfig.Instance.PlayerReferences.hand.GetComponent<IPlayerHand>();
+            PlayerHand = GlobalConfig.Instance.playerReferences.hand.GetComponent<IPlayerHand>();
             PlayerHand.OnCardPlayed += AddCard;
         }
 
