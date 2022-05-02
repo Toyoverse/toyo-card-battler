@@ -11,8 +11,8 @@ namespace FusionExamples.Tanknarok
 	/// </summary>
 	public class GameLauncher : MonoBehaviour
 	{
-		//[SerializeField] private GameManager _gameManagerPrefab;
-		//[SerializeField] private Player _playerPrefab;
+		[SerializeField] private PlayerNetworkManager _playerNetworkManagerPrefab;
+		[SerializeField] private Player.Player _playerPrefab;
 		[SerializeField] private TMP_InputField _room;
 		[SerializeField] private TextMeshProUGUI _progress;
 		/*[SerializeField] private Panel _uiCurtain;
@@ -24,6 +24,7 @@ namespace FusionExamples.Tanknarok
 
 		private FusionLauncher.ConnectionStatus _status = FusionLauncher.ConnectionStatus.Disconnected;
 		private GameMode _gameMode;
+		private NetworkRunner Runner;
 		
 		private void Awake()
 		{
@@ -33,7 +34,7 @@ namespace FusionExamples.Tanknarok
 		private void Start()
 		{
 			OnConnectionStatusUpdate(null, FusionLauncher.ConnectionStatus.Disconnected, "");
-			OnEnterRoom();
+			
 		}
 
 		private void Update()
@@ -136,21 +137,18 @@ namespace FusionExamples.Tanknarok
 
 		private void OnSpawnWorld(NetworkRunner runner)
 		{
-			/*Debug.Log("Spawning GameManager");
-			runner.Spawn(_gameManagerPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
+			Debug.Log("Spawning GameManager");
+			runner.Spawn(_playerNetworkManagerPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
 			void InitNetworkState(NetworkRunner runner, NetworkObject world)
 			{
 				world.transform.parent = transform;
 			}
-			*/
 		}
 
 		private void OnSpawnPlayer(NetworkRunner runner, PlayerRef playerref)
 		{
-			var _player = PlayerNetworkManager.GetPlayer(playerref);
-			_player.Runner = runner;
-			_player.NetworkPlayerRef = runner.LocalPlayer;
-			_player.MyPlayerHand.MyPlayerRef = _player.NetworkPlayerRef;
+			//Debug.Log(playerref.PlayerId);
+
 			/*
 			if (GameManager.playState != GameManager.PlayState.LOBBY)
 			{
@@ -166,6 +164,19 @@ namespace FusionExamples.Tanknarok
 				player.InitNetworkState(GameManager.MAX_LIVES);
 			}
 			*/
+			runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, playerref, InitNetworkState);
+			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
+			{
+				var _player = networkObject.gameObject.GetComponent<Player.Player>();
+				Debug.Log($"Initializing player {playerref.PlayerId}");
+				//player.InitNetworkState(GameManager.MAX_LIVES);
+			}
+			/*
+			//var _player = PlayerNetworkManager.GetPlayer(playerref);
+			_player.Runner = runner;
+			//Runner = runner;
+			_player.NetworkPlayerRef = runner.LocalPlayer;
+			_player.MyPlayerHand.MyPlayerRef = _player.NetworkPlayerRef;*/
 		}
 
 		private void OnDespawnPlayer(NetworkRunner runner, PlayerRef playerref)
@@ -175,6 +186,30 @@ namespace FusionExamples.Tanknarok
 			Player player = PlayerManager.Get(playerref);
 			player.TriggerDespawn();
 			*/
+		}
+		
+	
+		private void OnGUI()
+		{
+			if (Runner == null)
+			{
+				if (GUI.Button(new Rect(0,0,200,40), "Host"))
+				{
+					SetGameMode(GameMode.Host);
+					OnEnterRoom();
+				}
+				if (GUI.Button(new Rect(0,40,200,40), "Join"))
+				{
+					SetGameMode(GameMode.Client);
+					OnEnterRoom();
+				}
+				if (GUI.Button(new Rect(0,80,200,40), "Shared"))
+				{
+					SetGameMode(GameMode.Shared);
+					OnEnterRoom();
+				}
+				
+			}
 		}
 
 		private void UpdateUI()

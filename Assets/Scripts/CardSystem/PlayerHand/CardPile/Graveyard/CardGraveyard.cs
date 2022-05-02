@@ -1,4 +1,5 @@
-﻿using PlayerHand;
+﻿using System;
+using PlayerHand;
 using UnityEngine;
 
 namespace Card.CardPile.Graveyard
@@ -9,10 +10,9 @@ namespace Card.CardPile.Graveyard
 
         private IPlayerHand PlayerHand { get; set; }
 
-        protected override void Awake()
+        private void Start()
         {
-            base.Awake();
-            PlayerHand = GlobalConfig.Instance.playerReferences.hand.GetComponent<IPlayerHand>();
+            PlayerHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
             PlayerHand.OnCardPlayed += AddCard;
         }
 

@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &115774101 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2532777998327517698, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
-  m_PrefabInstance: {fileID: 2532777999524559739}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &160795557 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6123726220257984113, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
@@ -205,43 +200,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &491236756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115774101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 0
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 0
-  AoiPositionSource: {fileID: 0}
-  Flags: 2561
-  NetworkGuid:
-    RawGuidValue: e66ac11f986341cc9db872d30c412c5a
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 491236757}
-  SimulationBehaviours: []
---- !u!114 &491236757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115774101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20a2d2af7604cd2b6205de57f54e965, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
 --- !u!1 &519181229
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,30 +209,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 519181231}
-  - component: {fileID: 519181230}
-  - component: {fileID: 519181232}
   - component: {fileID: 519181234}
   - component: {fileID: 519181235}
   m_Layer: 0
-  m_Name: PlayerNetworking
+  m_Name: GameLauncher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &519181230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519181229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d28c7f280886460dafd67d753df6895f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
 --- !u!4 &519181231
 Transform:
   m_ObjectHideFlags: 0
@@ -290,30 +233,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &519181232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519181229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 0
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 0
-  AoiPositionSource: {fileID: 0}
-  Flags: 2561
-  NetworkGuid:
-    RawGuidValue: 22c6beed2ad24c2bb5bf891651b0491d
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 519181230}
-  SimulationBehaviours: []
 --- !u!114 &519181234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,6 +260,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62c4e98ecd14f30ae614a5ef83ca04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerNetworkManagerPrefab: {fileID: 7829189933620392815, guid: fa9a1faee48eaf7469445f81c288dd92, type: 3}
+  _playerPrefab: {fileID: 1996170898940310986, guid: e5511437c49fb034391b70497db2afa1, type: 3}
   _room: {fileID: 0}
   _progress: {fileID: 0}
   _uiGame: {fileID: 0}
@@ -671,49 +592,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2532777998902183181, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
   m_PrefabInstance: {fileID: 2532777999524559739}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1559920863 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2433744480688969844, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-  m_PrefabInstance: {fileID: 2433744480480174362}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1559920867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1559920863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02def59d100f45ce8a9f9d7db2e07364, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  _CurrentStateID: 0
---- !u!114 &1559920868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1559920863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 0
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 0
-  AoiPositionSource: {fileID: 0}
-  Flags: 2561
-  NetworkGuid:
-    RawGuidValue: 93d2d6ff4f624ad8b3d925926731ba32
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1559920867}
-  SimulationBehaviours: []
 --- !u!1 &1571867859
 GameObject:
   m_ObjectHideFlags: 0
@@ -973,6 +851,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2433744480480174364, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: Toyo
+      value: 
+      objectReference: {fileID: 897079722}
+    - target: {fileID: 2433744480480174364, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: deck
+      value: 
+      objectReference: {fileID: 199093682}
+    - target: {fileID: 2433744480480174364, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: hand
+      value: 
+      objectReference: {fileID: 1388198656}
+    - target: {fileID: 2433744480480174364, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: EnemyUI
+      value: 
+      objectReference: {fileID: 160795557}
+    - target: {fileID: 2433744480480174364, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: PlayerUI
+      value: 
+      objectReference: {fileID: 2061639159}
+    - target: {fileID: 2433744480480174364, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: graveyard
+      value: 
+      objectReference: {fileID: 1093162116}
     - target: {fileID: 2433744480688969834, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1021,18 +923,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GlobalConfig
       objectReference: {fileID: 0}
-    - target: {fileID: 2433744480688969844, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
       propertyPath: UI
       value: 
       objectReference: {fileID: 598252290}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: maxAP
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
       propertyPath: gameView
       value: 
@@ -1042,45 +936,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 898503186}
     - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: IgnoreAPCost
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
       propertyPath: deckPosition
       value: 
       objectReference: {fileID: 2532777999524559742}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: TopCardCanvas
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: timeForApRegen
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: PlayerGameObject
-      value: 
-      objectReference: {fileID: 115774101}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: PlayerReferences
-      value: 
-      objectReference: {fileID: 2532777999524559740}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: globalCardDataSO
-      value: 
-      objectReference: {fileID: 11400000, guid: cf818cf7922fbf547a2685d17b178add, type: 2}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: playerReferences
-      value: 
-      objectReference: {fileID: 2532777999524559743}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: RegularCardCanvas
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
-      propertyPath: cardDefaultPrefab
-      value: 
-      objectReference: {fileID: 8932913532635961775, guid: 631f78885287ff7458945b9ef4328493, type: 3}
     - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
       propertyPath: graveyardPosition
       value: 
@@ -1104,7 +962,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2532777998327517698, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
       propertyPath: m_Name
-      value: Player
+      value: BattleReferences
       objectReference: {fileID: 0}
     - target: {fileID: 2532777999524559744, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
       propertyPath: Flags
@@ -1162,19 +1020,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6206871161240260391, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
---- !u!114 &2532777999524559740 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6206871161240260391, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
-  m_PrefabInstance: {fileID: 2532777999524559739}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115774101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f297eaf3f522a354e9469ba1e6b93dd3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2532777999524559741 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7719380464801105823, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
@@ -1185,24 +1033,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2751017067391260463, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
   m_PrefabInstance: {fileID: 2532777999524559739}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2532777999524559743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115774101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83960a2226283224397958b092f1c40d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hand: {fileID: 1388198656}
-  graveyard: {fileID: 1093162116}
-  deck: {fileID: 199093682}
-  Toyo: {fileID: 897079722}
-  PlayerUI: {fileID: 2061639159}
-  EnemyUI: {fileID: 160795557}
 --- !u!1001 &6123726219024142810
 PrefabInstance:
   m_ObjectHideFlags: 0

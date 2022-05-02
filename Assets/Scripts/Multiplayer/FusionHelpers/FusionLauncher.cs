@@ -217,6 +217,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
             OnSpawnWorld = null;
         }
 
+        Debug.Log(runner.IsServer);
         OnSpawnPlayer?.Invoke(runner, playerref);
     }
     
@@ -227,7 +228,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
     }
 
     #endregion
-
+/*
 
     #region UnityCallbacks
 
@@ -247,5 +248,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
     }
 
     #endregion
+    
+    */
 
 }

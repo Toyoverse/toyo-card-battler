@@ -19,7 +19,7 @@ public class CardComponent : MonoBehaviour, ICard
         MyImage = GetComponent<SpriteRenderer>();
         MyImages = GetComponentsInChildren<SpriteRenderer>();
         MyInput = GetComponent<IMouseInput>();
-        Hand = GlobalConfig.Instance.playerReferences.hand.GetComponent<IPlayerHand>();
+        Hand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
 
         Scale = new CardMotionScale(this);
         Movement = new CardMotionMovement(this);

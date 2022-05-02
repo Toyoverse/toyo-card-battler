@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerReferences : MonoBehaviour
+public class BattleReferences : MonoBehaviour
 {
     /*
      * Todo: change for transforms, and maybe remote everything after the prototype

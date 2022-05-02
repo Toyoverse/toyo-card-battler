@@ -12,7 +12,7 @@ namespace Player
         IFullToyo FullToyo { get; }
         IHealth PlayerHealth { get; }
         IAp PlayerAP { get; }
-        PlayerReferences MyPlayerReferences { get; set; }
+        BattleReferences MyBattleReferences { get; set; }
         PlayerRef NetworkPlayerRef { get; set; }
 
     }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2433744480688969834}
   - component: {fileID: 2433744480688969845}
+  - component: {fileID: 2433744480480174364}
   m_Layer: 0
   m_Name: GlobalConfig
   m_TagString: Untagged
@@ -24,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2433744480688969844}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -44,4 +45,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e3899825f944408bd7adcfc89757c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardData: {fileID: 0}
+  globalCardDataSO: {fileID: 11400000, guid: cf818cf7922fbf547a2685d17b178add, type: 2}
+  cardDefaultPrefab: {fileID: 8932913532635961775, guid: 631f78885287ff7458945b9ef4328493, type: 3}
+  gameView: {fileID: 0}
+  deckPosition: {fileID: 0}
+  handPivot: {fileID: 0}
+  graveyardPosition: {fileID: 0}
+  battleReferences: {fileID: 0}
+  UI: {fileID: 0}
+  maxAP: 4
+  timeForApRegen: 2
+  IgnoreAPCost: 1
+--- !u!114 &2433744480480174364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2433744480688969844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83960a2226283224397958b092f1c40d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hand: {fileID: 0}
+  graveyard: {fileID: 0}
+  deck: {fileID: 0}
+  Toyo: {fileID: 0}
+  PlayerUI: {fileID: 0}
+  EnemyUI: {fileID: 0}

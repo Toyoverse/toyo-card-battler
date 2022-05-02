@@ -22,12 +22,17 @@ namespace PlayerHand
 
         private void Awake()
         {
-            PlayerHand = GlobalConfig.Instance.playerReferences.hand.GetComponent<IPlayerHand>();
-            Deck = GlobalConfig.Instance.playerReferences.deck.GetComponent<IDeck>();
+            /*
+            PlayerHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
+            Deck = GlobalConfig.Instance.battleReferences.deck.GetComponent<IDeck>();
+            */
         }
-
+        
         private IEnumerator Start()
         {
+            PlayerHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
+            Deck = GlobalConfig.Instance.battleReferences.deck.GetComponent<IDeck>();
+            
             //starting cards
             for (var i = 0; i < 5; i++)
             {

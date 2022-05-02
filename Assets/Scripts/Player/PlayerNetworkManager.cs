@@ -14,28 +14,14 @@ namespace Player
         private static List<Player> _players;
         public static List<Player> Players => _players;
 
-        private IFusionLauncher Launcher;
 
-        void Awake()
-        {
-            _players = FindObjectsOfType<Player>()?.ToList();
-            Launcher = GetComponent<IFusionLauncher>();
-        }
+        void Awake() => _players = FindObjectsOfType<Player>()?.ToList(); 
 
-        static void AddPlayer(Player player) => _players.Add(player);
+        public static void AddPlayer(Player player) => _players.Add(player);
         
-        static void RemovePlayer(Player player) => _players.Remove(player);
+        public  static void RemovePlayer(Player player) => _players.Remove(player);
 
-        public static Player GetPlayer(PlayerRef playerRef)
-        {
-            foreach (var _player in _players)
-            {
-                if (_player.NetworkPlayerRef.PlayerId == playerRef.PlayerId)
-                    return _player;
-            }
-
-            return null;
-        }
+        public static Player GetPlayer(PlayerRef playerRef) => _players.FirstOrDefault(_player => _player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
 
         #region Host
 
@@ -45,7 +31,7 @@ namespace Player
             if (Object.HasStateAuthority)
                 SetGameState();
         }
-
+        
         public void SetGameState()
         {
             var state = new GameState();

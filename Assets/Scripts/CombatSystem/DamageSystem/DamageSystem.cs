@@ -20,18 +20,20 @@ namespace CombatSystem.DamageSystem
         protected IAp PlayerAP{ get; set; }
         protected IFullToyo FullToyo{ get; set; }
 
-        protected virtual void Awake()
+        private void Start()
         {
-            CardHand = GlobalConfig.Instance.playerReferences.hand.GetComponent<IPlayerHand>();
-            PlayerHealth = GlobalConfig.Instance.playerReferences.PlayerUI.GetComponentInChildren<IHealth>();
-            EnemyHealth = GlobalConfig.Instance.playerReferences.EnemyUI.GetComponentInChildren<IHealth>();
-            PlayerAP = GlobalConfig.Instance.playerReferences.PlayerUI.GetComponentInChildren<IAp>();
-            FullToyo = GlobalConfig.Instance.playerReferences.Toyo.GetComponent<IFullToyo>();
+            CardHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
+            PlayerHealth = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IHealth>();
+            EnemyHealth = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IHealth>();
+            PlayerAP = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IAp>();
+            FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
+            CardHand.OnCardPlayed += ProcesCardPlayed;
         }
 
         void OnEnable()
         {
-            CardHand.OnCardPlayed += ProcesCardPlayed;
+            if(CardHand?.OnCardPlayed != null)
+                CardHand.OnCardPlayed += ProcesCardPlayed;
         }
 
         private void OnDisable()
@@ -49,7 +51,6 @@ namespace CombatSystem.DamageSystem
         {
             int _apCost = _card.CardData?.ApCost ?? 0;
             PlayerAP?.OnUseAP.Invoke(_apCost);
-                    
         }
 
         void ProcessCardDamage(ICard card)
@@ -59,7 +60,6 @@ namespace CombatSystem.DamageSystem
             if (_hitListInfos?.Count > 0)
                 foreach (var _hit in _hitListInfos)
                     DoDamage(_hit);
-                    
         }
 
         void DoDamage(HitListInfo hit)

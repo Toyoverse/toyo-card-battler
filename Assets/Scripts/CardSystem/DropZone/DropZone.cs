@@ -1,4 +1,5 @@
-﻿using PlayerHand;
+﻿using System;
+using PlayerHand;
 using Tools;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,9 +14,13 @@ namespace DefaultNamespace
 
         protected virtual void Awake()
         {
-            CardHand = GlobalConfig.Instance.playerReferences.hand.GetComponent<IPlayerHand>();
             Input = GetComponent<IMouseInput>();
             Input.OnPointerUp += OnPointerUp;
+        }
+
+        private void Start()
+        {
+            CardHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
         }
 
         protected virtual void OnPointerUp(PointerEventData eventData)
