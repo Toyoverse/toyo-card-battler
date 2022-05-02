@@ -9,10 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7283958289876266386}
-  - component: {fileID: 1996170898940310986}
-  - component: {fileID: 7283958289876266385}
-  - component: {fileID: 8248949545595963740}
-  - component: {fileID: 566165332236869870}
+  - component: {fileID: 2741775862472828005}
+  - component: {fileID: -4328075793662730184}
   m_Layer: 0
   m_Name: PlayerNetworkManager
   m_TagString: Untagged
@@ -35,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1996170898940310986
+--- !u!114 &2741775862472828005
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,18 +42,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7283958289876266387}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20a2d2af7604cd2b6205de57f54e965, type: 3}
+  m_Script: {fileID: 11500000, guid: 02def59d100f45ce8a9f9d7db2e07364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _state: 0
-  _life: 0
-  _playerName: 
-  _lives: 0
-  _score: 0
-  _ready:
-    _value: 0
---- !u!114 &7283958289876266385
+  _CurrentStateID: 0
+--- !u!114 &-4328075793662730184
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,61 +66,8 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
-    RawGuidValue: fa9a1faee48eaf7469445f81c288dd92
+    RawGuidValue: 00ffcd06a2982514785398a023025a85
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 1996170898940310986}
-  - {fileID: 566165332236869870}
+  - {fileID: 2741775862472828005}
   SimulationBehaviours: []
---- !u!143 &8248949545595963740
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7283958289876266387}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &566165332236869870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7283958289876266387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  InterpolationSpace: 0
-  InterpolationTarget: {fileID: 0}
-  InterpolateErrorCorrection: 1
-  InterpolatedErrorCorrectionSettings:
-    MinRate: 3.3
-    MaxRate: 10
-    PosBlendStart: 0.25
-    PosBlendEnd: 1
-    PosMinCorrection: 0.025
-    PosTeleportDistance: 2
-    RotBlendStart: 0.1
-    RotBlendEnd: 0.5
-    RotTeleportRadians: 1.5
-  gravity: -20
-  jumpImpulse: 8
-  acceleration: 10
-  braking: 10
-  maxSpeed: 2
-  rotationSpeed: 15
-  _IsGrounded: 0
-  _Velocity: {x: 0, y: 0, z: 0}

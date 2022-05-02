@@ -48,22 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _hull: {fileID: 0}
-  _turret: {fileID: 0}
-  _visualParent: {fileID: 0}
-  _playerMaterials: []
-  _deathExplosionPrefab: {fileID: 0}
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _pickupRadius: 0
-  _respawnTime: 0
-  _pickupMask:
-    serializedVersion: 2
-    m_Bits: 0
   _state: 0
   _life: 0
-  _playerName: 
   _lives: 0
   _score: 0
   _ready:

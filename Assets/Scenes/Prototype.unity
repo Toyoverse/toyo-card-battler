@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62c4e98ecd14f30ae614a5ef83ca04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNetworkManagerPrefab: {fileID: 7829189933620392815, guid: fa9a1faee48eaf7469445f81c288dd92, type: 3}
+  _playerNetworkManagerPrefab: {fileID: 2741775862472828005, guid: 00ffcd06a2982514785398a023025a85, type: 3}
   _playerPrefab: {fileID: 1996170898940310986, guid: e5511437c49fb034391b70497db2afa1, type: 3}
   _room: {fileID: 0}
   _progress: {fileID: 0}
