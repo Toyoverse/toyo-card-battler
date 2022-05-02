@@ -189,7 +189,7 @@ namespace FusionExamples.Tanknarok
 		}
 		
 	
-		private void OnGUI()
+		/*private void OnGUI()
 		{
 			if (Runner == null)
 			{
@@ -210,7 +210,7 @@ namespace FusionExamples.Tanknarok
 				}
 				
 			}
-		}
+		}*/
 
 		private void UpdateUI()
 		{

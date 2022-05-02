@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/button-style.uss?fileID=7433441132597879392&amp;guid=11468e3ede256d84eb1d0cd80e53adb0&amp;type=3#button-style" />
+    <ui:VisualElement name="Background" style="background-color: rgb(0, 0, 0); align-items: center; justify-content: center; flex-grow: 1;">
+        <ui:VisualElement name="PauseMenuPanel" style="height: 652px; width: 688px; background-color: rgb(255, 255, 255); border-top-left-radius: 40px; border-bottom-left-radius: 40px; border-top-right-radius: 40px; border-bottom-right-radius: 40px; align-items: center; justify-content: center;">
+            <ui:Label text="Paused" display-tooltip-when-elided="true" name="TitleText" style="font-size: 60px; position: absolute; top: 40px;" />
+            <ui:Button text="Host" display-tooltip-when-elided="true" name="HostButton" class="button-style" />
+            <ui:Button text="Join" display-tooltip-when-elided="true" name="JoinButton" class="button-style" />
+            <ui:Button text="Shared" display-tooltip-when-elided="true" name="SharedButton" class="button-style" />
+            <ui:Button text="Restart" display-tooltip-when-elided="true" name="RestartButton" class="button-style" />
+            <ui:Button text="Main Menu" display-tooltip-when-elided="true" name="QuitButton" class="button-style" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
