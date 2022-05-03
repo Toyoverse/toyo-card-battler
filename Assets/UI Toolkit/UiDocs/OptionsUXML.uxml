@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/menu-style.uss?fileID=7433441132597879392&amp;guid=11468e3ede256d84eb1d0cd80e53adb0&amp;type=3#menu-style" />
+    <ui:VisualElement name="background" class="background-style">
+        <ui:VisualElement name="OptionsPanel" class="panel-style">
+            <ui:Label text="Options" display-tooltip-when-elided="true" name="optionsTitle" class="title-style" />
+            <ui:Button text="Back" display-tooltip-when-elided="true" name="backButton" class="button-style" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

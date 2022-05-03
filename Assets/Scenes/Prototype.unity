@@ -588,6 +588,7 @@ GameObject:
   - component: {fileID: 1068560387}
   - component: {fileID: 1068560386}
   - component: {fileID: 1068560388}
+  - component: {fileID: 1068560389}
   m_Layer: 5
   m_Name: Pause_UIDocument
   m_TagString: Untagged
@@ -641,34 +642,10 @@ MonoBehaviour:
   events:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 519181235}
-        m_TargetAssemblyTypeName: FusionExamples.Tanknarok.GameLauncher, Assembly-CSharp
-        m_MethodName: OnHostOptions
+      - m_Target: {fileID: 1068560389}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: Host
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 519181235}
-        m_TargetAssemblyTypeName: FusionExamples.Tanknarok.GameLauncher, Assembly-CSharp
-        m_MethodName: OnEnterRoom
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1068560388}
-        m_TargetAssemblyTypeName: UiController, Assembly-CSharp
-        m_MethodName: EnableOrDisable
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -679,34 +656,10 @@ MonoBehaviour:
         m_CallState: 2
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 519181235}
-        m_TargetAssemblyTypeName: FusionExamples.Tanknarok.GameLauncher, Assembly-CSharp
-        m_MethodName: OnJoinOptions
+      - m_Target: {fileID: 1068560389}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: Join
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 519181235}
-        m_TargetAssemblyTypeName: FusionExamples.Tanknarok.GameLauncher, Assembly-CSharp
-        m_MethodName: OnEnterRoom
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1068560388}
-        m_TargetAssemblyTypeName: UiController, Assembly-CSharp
-        m_MethodName: EnableOrDisable
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -717,9 +670,9 @@ MonoBehaviour:
         m_CallState: 2
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 519181235}
-        m_TargetAssemblyTypeName: FusionExamples.Tanknarok.GameLauncher, Assembly-CSharp
-        m_MethodName: OnSharedOptions
+      - m_Target: {fileID: 1068560389}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: Shared
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -729,9 +682,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 519181235}
-        m_TargetAssemblyTypeName: FusionExamples.Tanknarok.GameLauncher, Assembly-CSharp
-        m_MethodName: OnEnterRoom
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1068560389}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -741,10 +696,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1068560388}
-        m_TargetAssemblyTypeName: UiController, Assembly-CSharp
-        m_MethodName: EnableOrDisable
-        m_Mode: 6
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1068560389}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: CallMainMenu
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -753,11 +710,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  - m_PersistentCalls:
-      m_Calls: []
-  - m_PersistentCalls:
-      m_Calls: []
   uiDoc: {fileID: 0}
+--- !u!114 &1068560389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068560385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a71e0568a631444a979660686f06590, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1093162116 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 615773219, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}

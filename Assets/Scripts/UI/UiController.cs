@@ -38,22 +38,39 @@ public class UiController : MonoBehaviour
             }
         }
     }
-    
-    public void EnableOrDisable(bool on)
+
+    private void DisableEvents()
     {
-        uiDoc.enabled = on;
+        for (int i = 0; i < _buttons.Count; i++)
+        {
+            if (i >= events.Length)
+            {
+                Debug.LogError("No event found for " + _buttons[i].name + ".");
+                continue;
+            }
+            if (events[i] != null)
+            {
+                _buttons[i].clicked -= events[i].Invoke;
+            }
+            else
+            {
+                Debug.LogError("The event " + i + " is null. " + 
+                               _buttons[i].name + " will not be implemented.");
+            }
+        }
     }
 
-    void FixedUpdate()
+    public void EnableOrDisable(bool on)
     {
-        if (Input.GetKey(KeyCode.P)) //TODO: Move this for correct local
+        if (!on)
         {
-            /*UiController uiControl = FindObjectOfType<UiController>();
-            if (!uiControl.uiDoc.enabled)
-            {
-                uiControl.EnableOrDisable(true);
-            }*/
-            EnableOrDisable(!uiDoc.enabled);
+            DisableEvents();
+            uiDoc.enabled = on;
+        }
+        else
+        {
+            uiDoc.enabled = on;
+            Start();
         }
     }
 }

@@ -11,17 +11,17 @@
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     font-size: 50px;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     position: relative;
     bottom: -20px;
 }
 
 .button-style:hover {
-    height: 60px;
-    width: 400px;
+    height: 70px;
+    width: 440px;
     background-color: rgb(0, 167, 255);
     border-left-width: 0;
     border-right-width: 0;
@@ -32,10 +32,10 @@
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     font-size: 50px;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     position: relative;
     bottom: -20px;
 }
@@ -53,11 +53,36 @@
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     font-size: 50px;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     position: relative;
     bottom: -20px;
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
+}
+
+.panel-style {
+    height: 652px;
+    width: 688px;
+    background-color: rgb(255, 255, 255);
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-style {
+    font-size: 60px;
+    position: absolute;
+    top: 40px;
+}
+
+.background-style {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0);
+    align-items: center;
+    justify-content: center;
 }

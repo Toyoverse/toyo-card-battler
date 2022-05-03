@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/menu-style.uss?fileID=7433441132597879392&amp;guid=11468e3ede256d84eb1d0cd80e53adb0&amp;type=3#menu-style" />
+    <ui:VisualElement name="Background" class="background-style">
+        <ui:VisualElement name="MenuPanel" class="panel-style" style="height: 600px; width: 660px; align-items: center; justify-content: center; background-color: rgb(255, 255, 255);">
+            <ui:Label text="Main Menu" display-tooltip-when-elided="true" name="titleText" class="title-style" />
+            <ui:Button text="Play" display-tooltip-when-elided="true" name="startButton" class="button-style" />
+            <ui:Button text="Options" display-tooltip-when-elided="true" name="optionsButton" class="button-style" />
+            <ui:Button text="Quit Game" display-tooltip-when-elided="true" name="exitButton" class="button-style" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
