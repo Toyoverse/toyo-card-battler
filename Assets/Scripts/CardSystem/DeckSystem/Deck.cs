@@ -46,10 +46,20 @@ namespace Card.DeckSystem
             return _countEachPart.Any(_part => _part.Value >= NumberRequiredForSynergy);
         }
 
+        private void Awake()
+        {
+            /*Cards = new List<ICard>();
+            Graveyard = GlobalConfig.Instance.graveyardPosition.GetComponent<ICardPile>();
+            FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
+            InitializeFullToyo();
+            InitializeDeckFromToyo();
+            */
+        }
+
         private void Start()
         {
             Cards = new List<ICard>();
-            Graveyard = GlobalConfig.Instance.graveyardPosition.GetComponent<ICardPile>();
+            Graveyard = GlobalConfig.Instance.graveyardPosition.GetComponent<ICardPile>() ;
             FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
             InitializeFullToyo();
             InitializeDeckFromToyo();
@@ -106,7 +116,7 @@ namespace Card.DeckSystem
 
         }
 
-        void ShuffleDeck()
+        public void ShuffleDeck()
         {
             Cards.Shuffle();
         }

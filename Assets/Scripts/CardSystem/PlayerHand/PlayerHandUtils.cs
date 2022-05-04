@@ -30,9 +30,10 @@ namespace PlayerHand
         
         private IEnumerator Start()
         {
-            PlayerHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
-            Deck = GlobalConfig.Instance.battleReferences.deck.GetComponent<IDeck>();
-            
+            PlayerHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>() ?? FindObjectOfType<PlayerHand>();;
+            Deck = GlobalConfig.Instance.battleReferences.deck.GetComponent<IDeck>() ?? FindObjectOfType<Deck>();
+            Deck.ShuffleDeck();
+            yield return new WaitForSeconds(1f);
             //starting cards
             for (var i = 0; i < 5; i++)
             {

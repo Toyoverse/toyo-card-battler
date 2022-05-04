@@ -9,6 +9,7 @@ namespace Card.DeckSystem
         bool HasSynergyCards();
         void InitializeDeckFromToyo();
         ICard GetTopCard();
+        void ShuffleDeck();
 
     }
 }

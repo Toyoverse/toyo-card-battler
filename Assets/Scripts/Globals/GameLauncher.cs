@@ -3,6 +3,7 @@ using Multiplayer;
 using Player;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace FusionExamples.Tanknarok
 {
@@ -12,7 +13,7 @@ namespace FusionExamples.Tanknarok
 	public class GameLauncher : MonoBehaviour
 	{
 		[SerializeField] private PlayerNetworkManager _playerNetworkManagerPrefab;
-		[SerializeField] private Player.Player _playerPrefab;
+		[FormerlySerializedAs("_playerPrefab")] [SerializeField] private PlayerNetworkObject playerNetworkObjectPrefab;
 		[SerializeField] private TMP_InputField _room;
 		[SerializeField] private TextMeshProUGUI _progress;
 		/*[SerializeField] private Panel _uiCurtain;
@@ -164,10 +165,10 @@ namespace FusionExamples.Tanknarok
 				player.InitNetworkState(GameManager.MAX_LIVES);
 			}
 			*/
-			runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, playerref, InitNetworkState);
+			runner.Spawn(playerNetworkObjectPrefab, Vector3.zero, Quaternion.identity, playerref, InitNetworkState);
 			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
 			{
-				var _player = networkObject.gameObject.GetComponent<Player.Player>();
+				var _player = networkObject.gameObject.GetComponent<PlayerNetworkObject>();
 				Debug.Log($"Initializing player {playerref.PlayerId}");
 				//player.InitNetworkState(GameManager.MAX_LIVES);
 			}

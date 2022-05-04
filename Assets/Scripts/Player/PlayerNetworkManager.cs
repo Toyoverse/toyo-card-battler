@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Fusion;
 using Multiplayer;
+using UnityEngine;
 
 namespace Player
 {
@@ -11,35 +12,40 @@ namespace Player
         [Networked, Capacity(4)] public NetworkArray<GameState> LastGameStates => default;
         [Networked] public int CurrentStateID { get; set; }
 
-        private static List<Player> _players;
-        public static List<Player> Players => _players;
+        private static List<PlayerNetworkObject> _players;
+        public static List<PlayerNetworkObject> Players => _players;
 
 
-        void Awake() => _players = FindObjectsOfType<Player>()?.ToList(); 
+        void Awake() => _players = FindObjectsOfType<PlayerNetworkObject>()?.ToList(); 
 
-        public static void AddPlayer(Player player) => _players.Add(player);
+        public static void AddPlayer(PlayerNetworkObject playerNetworkObject) => _players.Add(playerNetworkObject);
         
-        public  static void RemovePlayer(Player player) => _players.Remove(player);
+        public  static void RemovePlayer(PlayerNetworkObject playerNetworkObject) => _players.Remove(playerNetworkObject);
 
-        public static Player GetPlayer(PlayerRef playerRef) => _players.FirstOrDefault(_player => _player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
+        public static PlayerNetworkObject GetPlayer(PlayerRef playerRef) => _players.FirstOrDefault(_player => _player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
 
         #region Host
 
         public override void Spawned()
         {
             // Doing on spawned just for simplicity
-            if (Object.HasStateAuthority)
+           /* if (Object.HasStateAuthority)
                 SetGameState();
+                */
         }
         
-        public void SetGameState()
+        public void SetGameState(string cardID)
         {
+            //if (!Object.HasStateAuthority) return;
             var state = new GameState();
             state.CurrentPlayerTurn = Runner.LocalPlayer;
+            state.newCardI = cardID;
 
+            /*
             foreach (var _player in _players)
                 state.Players.Add(_player.NetworkPlayerRef, new PlayerNetworkStruct(_player));
-                
+            */
+            
             //state.PlayersHealth.Add(Runner.LocalPlayer, 100);
             //state.PlayersHand.Add(Runner.LocalPlayer, PlayerHandTest.SampleHand);
             /*
@@ -49,6 +55,9 @@ namespace Player
             state.TurnAction.Move = TurnMove.Attack;
             */
             LastGameStates.Set(CurrentStateID, state);
+            CurrentStateID++;
+            Debug.Log(cardID + Runner.LocalPlayer.PlayerId);
+            //Debug.Log(LastGameStates);
         }
 
         #endregion
@@ -64,11 +73,12 @@ namespace Player
 
         private const int MAXPLAYERS = 2;
         public PlayerRef CurrentPlayerTurn;
-        
-        [Networked, Capacity(MAXPLAYERS)] public NetworkDictionary<PlayerRef, PlayerNetworkStruct> Players => default;
-        
-        
-        
+        [Networked] public string newCardI { get; set; }
+
+        //[Networked, Capacity(MAXPLAYERS)] public NetworkDictionary<PlayerRef, PlayerNetworkStruct> Players => default;
+
+
+
         //[Networked, Capacity(MAXPLAYERS)] public NetworkDictionary<PlayerRef, PlayerHandTest> PlayersHand => default;
     }
 

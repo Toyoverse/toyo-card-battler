@@ -3,6 +3,7 @@ using Card.CardStateMachine;
 using Card.CardStateMachine.States;
 using Card.CardUX;
 using Extensions;
+using Fusion;
 using PlayerHand;
 using TMPro;
 using Tools;
@@ -42,6 +43,7 @@ public class CardComponent : MonoBehaviour, ICard
 
     private CardStateMachine StateMachine { get; set; }
     public string Name => MyCardData.LocalizedName ?? "NoName";
+    public string ID => MyCardData.Id;
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using APSystem;
 using Fusion;
 using HealthSystem;
@@ -10,7 +11,7 @@ using UnityEngine;
 namespace Player
 {
 	[RequireComponent(typeof(NetworkCharacterControllerPrototype))]
-    public class Player : NetworkBehaviour, IPlayer
+    public class PlayerNetworkObject : NetworkBehaviour, IPlayer
     {
 
 		[Networked(OnChanged = nameof(OnStateChanged))]
@@ -40,7 +41,7 @@ namespace Player
 		[Networked]
 		public NetworkBool ready { get; set; }
 
-		public static Player local { get; set; }
+		public static PlayerNetworkObject local { get; set; }
 
 		public enum State
 		{
@@ -87,6 +88,7 @@ namespace Player
 			//NetworkPlayerRef = Runner.LocalPlayer;
 			//MyPlayerHand.MyPlayerRef = NetworkPlayerRef;
 		}
+
 
 		private LevelManager GetLevelManager()
 		{
@@ -201,8 +203,8 @@ namespace Player
 				return;
 
 			//Don't damage yourself
-			Player attackingPlayer = PlayerNetworkManager.GetPlayer(attacker);
-			if (attackingPlayer != null && attackingPlayer.playerID == playerID)
+			PlayerNetworkObject attackingPlayerNetworkObject = PlayerNetworkManager.GetPlayer(attacker);
+			if (attackingPlayerNetworkObject != null && attackingPlayerNetworkObject.playerID == playerID)
 				return;
 
 			//ApplyImpulse(impulse);
@@ -271,7 +273,7 @@ namespace Player
 			*/
 		}
 		
-		public static void OnStateChanged(Changed<Player> changed)
+		public static void OnStateChanged(Changed<PlayerNetworkObject> changed)
 		{
 			if(changed.Behaviour)
 				changed.Behaviour.OnStateChanged();
@@ -412,8 +414,8 @@ namespace Player
     
     public struct PlayerNetworkStruct : INetworkStruct
     {
-        public Player Player;
-        public PlayerNetworkStruct(Player _player) => Player = _player;
+        public PlayerNetworkObject PlayerNetworkObject;
+        public PlayerNetworkStruct(PlayerNetworkObject playerNetworkObject) => PlayerNetworkObject = playerNetworkObject;
     }
 
 }

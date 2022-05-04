@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template
   m_EditorClassIdentifier: 
-  Id: 5b87e018-c044-42b7-8858-7366a4b0c1f3
-  LocalizedName: Test
+  Id: abc5
+  LocalizedName: abc5
   Cardtype: 0
   CardImage: {fileID: 0}
   ApCost: 4
   AttackType: 0
   AttackSubType: 0
   AttackAnimation: {fileID: 0}
-  ApplyEffect: 0
+  ApplyEffect: 1
   EffectData: {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
   HitListInfos:
   - FrameToHit: 1

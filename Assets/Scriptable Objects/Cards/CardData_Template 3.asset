@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template 3
   m_EditorClassIdentifier: 
-  Id: 5b87e018-c044-42b7-8858-7366a4b0c1f3
+  Id: abc3
   LocalizedName: Test 4
   Cardtype: 1
   CardImage: {fileID: 0}

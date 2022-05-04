@@ -932,6 +932,6 @@ namespace Tools
 public class ScriptableObjectId : PropertyAttribute { }
 
 public class UniqueScriptableObject : ScriptableObject {
-    [ScriptableObjectId]
+    [ScriptableObjectId] 
     public string Id;
 }

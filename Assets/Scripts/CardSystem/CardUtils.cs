@@ -47,5 +47,16 @@ namespace Card
             return card;
 
         }
+        
+        /*
+         * We only need to send the ID throught the network, instead of sending all the data.
+         * Todo : Only for test, optimize later
+         */
+        public static ICard FindCardByID(string _id)
+        {
+            var _cards = GameObject.FindObjectsOfType<CardComponent>();
+
+            return _cards.FirstOrDefault(_card => _card.ID == _id);
+        }
     }
 }

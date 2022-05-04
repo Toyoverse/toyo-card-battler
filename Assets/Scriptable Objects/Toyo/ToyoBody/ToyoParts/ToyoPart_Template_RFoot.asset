@@ -40,7 +40,8 @@ MonoBehaviour:
     StatValue: 8
   - ToyoStat: 11
     StatValue: 8
+  ToyoBonusStat: []
   CardsFromPiece:
-  - {fileID: 11400000, guid: dee18b4d6b6714a42b209ccfd1602a62, type: 2}
-  - {fileID: 11400000, guid: dee18b4d6b6714a42b209ccfd1602a62, type: 2}
-  - {fileID: 11400000, guid: dee18b4d6b6714a42b209ccfd1602a62, type: 2}
+  - {fileID: 11400000, guid: 7f73bfcbc45a24a459503f8a98611490, type: 2}
+  - {fileID: 11400000, guid: 7f73bfcbc45a24a459503f8a98611490, type: 2}
+  - {fileID: 11400000, guid: 7f73bfcbc45a24a459503f8a98611490, type: 2}

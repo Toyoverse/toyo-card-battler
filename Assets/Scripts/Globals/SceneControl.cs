@@ -32,7 +32,7 @@ public class SceneControl : MonoBehaviour
             loadingUiDoc = this.gameObject.GetComponent<UIDocument>();
         }
         var root = loadingUiDoc.rootVisualElement;
-        loadingText = root.Query<Label>().First();
+        //loadingText = root.Query<Label>().First();
         init = true;
     }
 
@@ -68,7 +68,7 @@ public class SceneControl : MonoBehaviour
         while (!asyncOperation.isDone)
         {
             //Debug.Log("Loading progress: " + (asyncOperation.progress * 100) + "%");
-            Instance.loadingText.text = "Loading progress: " + (asyncOperation.progress * 100) + "%";
+            //Instance.loadingText.text = "Loading progress: " + (asyncOperation.progress * 100) + "%";
             yield return null;
         }
         

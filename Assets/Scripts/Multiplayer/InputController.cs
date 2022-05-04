@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Card;
 using Fusion;
 using Fusion.Sockets;
+using Player;
+using PlayerHand;
 using UnityEngine;
 
 /// <summary>
@@ -12,10 +16,18 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 {
 	[SerializeField] private LayerMask _mouseRayMask;
 
+	[Networked]
+	private string IDCardForQueue { get; set; }
+	
+	private List<string> _listCardIDsInQueue = new ();
+	public List<ICard> ListCardIDsInQueue => _listCardIDsInQueue.Select(CardUtils.FindCardByID).ToList();
+
 	public static bool fetchInput = true;
 	public bool ToggleReady { get; set; }
 
-	private Player.Player _player;
+	private string lastID = "";
+
+	private PlayerNetworkObject _playerNetworkObject;
 	private NetworkInputData _frameworkInput = new NetworkInputData();
 	private Vector2 _moveDelta;
 	private Vector2 _aimDelta;
@@ -28,6 +40,8 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	private bool _primaryFire;
 	private bool _secondaryFire;
 
+	private PlayerNetworkManager _playerNetworkManager;
+
 	//private MobileInput _mobileInput;
 
 	/// <summary>
@@ -36,16 +50,48 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	public override void Spawned()
 	{
 		//_mobileInput = FindObjectOfType<MobileInput>(true);
-		_player = GetComponent<Player.Player>();
+		_playerNetworkObject = GetComponent<PlayerNetworkObject>();
 		// Technically, it does not really matter which InputController fills the input structure, since the actual data will only be sent to the one that does have authority,
 		// but in the name of clarity, let's make sure we give input control to the gameobject that also has Input authority.
-		if (Object.HasInputAuthority)
-		{
+		//if (Object.HasInputAuthority)
+		//{
 			Runner.AddCallbacks(this);
-		}
+		//}
 
 		Debug.Log("Spawned [" + this + "] IsClient=" + Runner.IsClient + " IsServer=" + Runner.IsServer + " HasInputAuth=" + Object.HasInputAuthority + " HasStateAuth=" + Object.HasStateAuthority);
 	}
+	
+	private IPlayerHand CardHand;
+	
+	private void Awake()
+	{
+		CardHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
+		_playerNetworkManager = FindObjectOfType<PlayerNetworkManager>();
+		CardHand.OnCardPlayed += AddCardToQueue;
+	}
+
+	void AddCardToQueue(ICard _card) => IDCardForQueue = _card.ID;
+	
+	private void OnEnable()
+	{
+		
+		/*
+		if (!FusionLauncher.IsConnected) return;
+		var myNetworkRunner = FindObjectOfType<NetworkRunner>();
+		myNetworkRunner.AddCallbacks(this);
+		*/
+	}
+	
+	public void OnDisable()
+	{
+		CardHand.OnCardPlayed -= AddCardToQueue;
+		if (FusionLauncher.IsConnected == false) return;
+		var myNetworkRunner = FindObjectOfType<NetworkRunner>();
+		if (myNetworkRunner == null)
+			return;
+		myNetworkRunner.RemoveCallbacks(this);
+	}
+
 
 	/// <summary>
 	/// Get Unity input and store them in a struct for Fusion
@@ -54,8 +100,17 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	/// <param name="input">The target input handler that we'll pass our data to</param>
 	public void OnInput(NetworkRunner runner, NetworkInput input)
 	{
-		if (_player!=null && _player.Object!=null /*&& _player.state == Player.State.Active*/ && fetchInput)
+		if (!string.IsNullOrEmpty(IDCardForQueue) && IDCardForQueue != lastID)
 		{
+			lastID = IDCardForQueue;
+			_listCardIDsInQueue.Add(IDCardForQueue);
+			_playerNetworkManager.SetGameState(IDCardForQueue);
+			//IDCardForQueue = "";
+		}
+
+		if (_playerNetworkObject!=null && _playerNetworkObject.Object!=null /*&& _player.state == Player.State.Active*/ && fetchInput)
+		{
+			
 			// Fill networked input struct with input data
 
 			_frameworkInput.aimDirection = _aimDelta.normalized;
@@ -198,6 +253,15 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 		//	return;
 		// Get our input struct and act accordingly. This method will only return data if we
 		// have Input or State Authority - meaning on the controlling player or the server.
+		/*
+		if (!string.IsNullOrEmpty(IDCardForQueue))
+		{
+			_listCardIDsInQueue.Add(IDCardForQueue);
+			_playerNetworkManager.SetGameState(IDCardForQueue);
+			IDCardForQueue = "";
+		}
+		*/			
+		
 		Vector2 direction = default;
 		if (GetInput(out NetworkInputData input))
 		{
@@ -215,13 +279,13 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 
 			if (input.IsDown(NetworkInputData.READY))
 			{
-				_player.ToggleReady();
+				_playerNetworkObject.ToggleReady();
 			}
 
 			// We let the NetworkCharacterController do the actual work
-			_player.SetDirections(direction, input.aimDirection.normalized);
+			_playerNetworkObject.SetDirections(direction, input.aimDirection.normalized);
 		}
-		_player.Move();
+		_playerNetworkObject.Move();
 	}
 
 	public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
@@ -237,6 +301,10 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
 	public void OnSceneLoadDone(NetworkRunner runner) { }
 	public void OnSceneLoadStart(NetworkRunner runner) { }
+
+
+
+
 }
 
 /// <summary>

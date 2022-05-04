@@ -9,10 +9,15 @@ using UnityEngine;
 
 public class FusionLauncher : MonoBehaviour, IFusionLauncher
 {
+    public static bool IsConnected => Instance.Runner != null && Instance.Runner.IsCloudReady;
+    public static FusionLauncher Instance;
+
     private NetworkRunner Runner;
     private ConnectionStatus Status;
     private FusionObjectPoolRoot Pool;
 
+    #region Actions
+    
     Action<NetworkRunner, ConnectionStatus, string> IFusionLauncher.OnConnect
     {
         get => OnConnect;
@@ -37,11 +42,13 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
         set => OnDespawnPlayer = value;
     }
     
-    
     private event Action<NetworkRunner> OnSpawnWorld = _ => { };
     private event Action<NetworkRunner, ConnectionStatus, string> OnConnect = (_, _, _) => { };
     private event Action<NetworkRunner, PlayerRef> OnSpawnPlayer = (_, _) => { };
     private event Action<NetworkRunner, PlayerRef> OnDespawnPlayer = (_, _) => { };
+    
+    #endregion
+    
     
     public enum ConnectionStatus
     {
@@ -72,7 +79,8 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
         if (Runner == null)
             Runner = gameObject.AddComponent<NetworkRunner>();
         Runner.name = name;
-        Runner.ProvideInput = mode != GameMode.Server;
+        Runner.ProvideInput = true;
+        //Runner.ProvideInput = mode != GameMode.Server;
 
         if(Pool==null)
             Pool = gameObject.AddComponent<FusionObjectPoolRoot>();
@@ -98,7 +106,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
         //NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
         //_spawnedCharacters.Add(player, networkPlayerObject);
 
-        if (!runner.IsServer) return;
+       //if (!runner.IsServer) return;
         
         Debug.Log("Hosted Mode - Spawning Player");
         InstantiatePlayer(runner, player);
@@ -217,7 +225,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
             OnSpawnWorld = null;
         }
 
-        Debug.Log(runner.IsServer);
+//        Debug.Log(runner.IsServer);
         OnSpawnPlayer?.Invoke(runner, playerref);
     }
     
@@ -228,27 +236,12 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
     }
 
     #endregion
-/*
 
     #region UnityCallbacks
 
-    private void OnGUI()
-    {
-        if (Runner == null)
-        {
-            if (GUI.Button(new Rect(0,0,200,40), "Host"))
-            {
-                //Launch(GameMode.Host);
-            }
-            if (GUI.Button(new Rect(0,40,200,40), "Join"))
-            {
-                //Launch(GameMode.Client);
-            }
-        }
-    }
+    private void Awake() => Instance = this;
 
     #endregion
     
-    */
 
 }
