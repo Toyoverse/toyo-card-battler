@@ -15,6 +15,9 @@ public class CardData : UniqueScriptableObject
     [SerializeField]
     public CARD_TYPE Cardtype;
     
+    [SerializeField][ShowIf("Cardtype", CARD_TYPE.DEFENSE)]
+    public DEFENSE_TYPE DefenseType;
+    
     [SerializeField] 
     public Image CardImage;
 

@@ -76,6 +76,7 @@ namespace CombatSystem.DamageSystem
         public ATTACK_SUB_TYPE AttackSubType;
         public CARD_TYPE CardType;
         public Dictionary<TOYO_STAT, float> ToyoStats;
+        public Dictionary<TOYO_STAT, float> EnemyToyoStats;
         public int CurrentCombo;
 
         public DamageInformation(ICard card, IFullToyo fullToyo, int hitIndex)
@@ -85,6 +86,7 @@ namespace CombatSystem.DamageSystem
             AttackType = card.CardData.AttackType;
             AttackSubType = card.CardData.AttackSubType;
             ToyoStats = fullToyo.ToyoStats;
+            EnemyToyoStats = fullToyo.ToyoStats; //TODO: Get Enemy Toyo Stats
             CurrentCombo = 1; //Todo Implement Combo System
         }
     }

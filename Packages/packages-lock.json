@@ -33,7 +33,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.mono-cecil": {
-      "version": "file:D:/Downloads/com.unity.nuget.mono-cecil-1.10.2",
+      "version": "file:C:/Users/jhone/Downloads/com.unity.nuget.mono-cecil-1.10.2/com.unity.nuget.mono-cecil-1.10.2",
       "depth": 0,
       "source": "local",
       "dependencies": {}
