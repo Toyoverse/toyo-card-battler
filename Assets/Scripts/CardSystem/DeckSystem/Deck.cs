@@ -11,9 +11,14 @@ namespace Card.DeckSystem
 {
     public class Deck : MonoBehaviour, IDeck, ICardPile
     {
-        public List<ICard> Cards { get; set; }
-        public IFullToyo FullToyo { get; set; }
-        private ICardPile Graveyard;
+        public Lazy<List<ICard>> _cards = new(new List<ICard>());
+        public List<ICard> Cards => _cards.Value;
+        
+        private IFullToyo _fullToyo;
+        public IFullToyo FullToyo => this.LazyFindOfType(ref _fullToyo);
+        
+        private ICardPile _graveyard;
+        public ICardPile Graveyard => this.LazyFindOfType(ref _graveyard);
         
         Action<ICard[]> ICardPile.OnPileChanged
         {
@@ -46,28 +51,10 @@ namespace Card.DeckSystem
             return _countEachPart.Any(_part => _part.Value >= NumberRequiredForSynergy);
         }
 
-        private void Awake()
-        {
-            /*Cards = new List<ICard>();
-            Graveyard = GlobalConfig.Instance.graveyardPosition.GetComponent<ICardPile>();
-            FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
-            InitializeFullToyo();
-            InitializeDeckFromToyo();
-            */
-        }
-
-        private void Start()
-        {
-            Cards = new List<ICard>();
-            Graveyard = GlobalConfig.Instance.graveyardPosition.GetComponent<ICardPile>() ;
-            FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
-            InitializeFullToyo();
-            InitializeDeckFromToyo();
-        }
-
-        void InitializeFullToyo()
+        public void InitializeFullToyo()
         {
             FullToyo.InitializeToyo(this);
+            InitializeDeckFromToyo();
             return; //Todo Get Toyo from Database
             
         }

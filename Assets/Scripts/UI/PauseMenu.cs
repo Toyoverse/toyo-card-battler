@@ -1,4 +1,5 @@
 using FusionExamples.Tanknarok;
+using PlayerHand;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,7 +18,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.P)) //TODO: Move this for correct local
         {
-            _uiController.EnableOrDisable(!_uiController.uiDoc.enabled);
+            _uiController.EnableOrDisable(!_uiController.UiDoc.enabled);
         }
     }
 
@@ -31,10 +32,13 @@ public class PauseMenu : MonoBehaviour
         SceneControl.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
+    void StartGame() => StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand()); 
+
     public void Host()
     {
         _gameLauncher.OnHostOptions();
         _gameLauncher.OnEnterRoom();
+        StartGame();
         _uiController.EnableOrDisable(false);
     }
 
@@ -42,6 +46,7 @@ public class PauseMenu : MonoBehaviour
     {
         _gameLauncher.OnJoinOptions();
         _gameLauncher.OnEnterRoom();
+        StartGame();
         _uiController.EnableOrDisable(false);
     }
 
@@ -49,6 +54,7 @@ public class PauseMenu : MonoBehaviour
     {
         _gameLauncher.OnSharedOptions();
         _gameLauncher.OnEnterRoom();
+        StartGame();
         _uiController.EnableOrDisable(false);
     }
 }

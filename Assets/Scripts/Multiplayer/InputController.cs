@@ -7,6 +7,8 @@ using Fusion.Sockets;
 using Player;
 using PlayerHand;
 using UnityEngine;
+using Extensions;
+
 
 /// <summary>
 /// Handle player input by responding to Fusion input polling, filling an input struct and then working with
@@ -27,8 +29,7 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 
 	private string lastID = "";
 
-	private PlayerNetworkObject _playerNetworkObject;
-	private NetworkInputData _frameworkInput = new NetworkInputData();
+
 	private Vector2 _moveDelta;
 	private Vector2 _aimDelta;
 	private Vector2 _leftPos;
@@ -40,7 +41,25 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	private bool _primaryFire;
 	private bool _secondaryFire;
 
-	private PlayerNetworkManager _playerNetworkManager;
+
+	
+	private NetworkInputData _frameworkInput = new NetworkInputData();
+
+	#region LazyProperties
+	
+	//Lazy FindObject
+	private Lazy<PlayerNetworkManager> _playerNetworkManager = new (FindObjectOfType<PlayerNetworkManager>);
+	public PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager.Value;
+	
+	//Cached Property GetComponent
+	private PlayerNetworkObject _playerNetworkObject;
+	public PlayerNetworkObject PlayerNetworkObject => this.LazyGetComponent(ref _playerNetworkObject);
+
+	//Cached Property FindInterface
+	private IPlayerHand _cardHand;
+	public IPlayerHand CardHand => _cardHand ??= this.LazyFindOfType(ref _cardHand);
+
+	#endregion
 
 	//private MobileInput _mobileInput;
 
@@ -50,31 +69,23 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	public override void Spawned()
 	{
 		//_mobileInput = FindObjectOfType<MobileInput>(true);
-		_playerNetworkObject = GetComponent<PlayerNetworkObject>();
 		// Technically, it does not really matter which InputController fills the input structure, since the actual data will only be sent to the one that does have authority,
 		// but in the name of clarity, let's make sure we give input control to the gameobject that also has Input authority.
-		//if (Object.HasInputAuthority)
-		//{
+		if (Object.HasInputAuthority)
+		{
 			Runner.AddCallbacks(this);
-		//}
+		}
 
 		Debug.Log("Spawned [" + this + "] IsClient=" + Runner.IsClient + " IsServer=" + Runner.IsServer + " HasInputAuth=" + Object.HasInputAuthority + " HasStateAuth=" + Object.HasStateAuthority);
 	}
-	
-	private IPlayerHand CardHand;
-	
-	private void Awake()
-	{
-		CardHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
-		_playerNetworkManager = FindObjectOfType<PlayerNetworkManager>();
-		CardHand.OnCardPlayed += AddCardToQueue;
-	}
+
+
 
 	void AddCardToQueue(ICard _card) => IDCardForQueue = _card.ID;
 	
 	private void OnEnable()
 	{
-		
+		CardHand.OnCardPlayed += AddCardToQueue;
 		/*
 		if (!FusionLauncher.IsConnected) return;
 		var myNetworkRunner = FindObjectOfType<NetworkRunner>();
@@ -104,11 +115,11 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 		{
 			lastID = IDCardForQueue;
 			_listCardIDsInQueue.Add(IDCardForQueue);
-			_playerNetworkManager.SetGameState(IDCardForQueue);
+			PlayerNetworkManager.SetGameState(IDCardForQueue);
 			//IDCardForQueue = "";
 		}
 
-		if (_playerNetworkObject!=null && _playerNetworkObject.Object!=null /*&& _player.state == Player.State.Active*/ && fetchInput)
+		if (PlayerNetworkObject!=null && PlayerNetworkObject.Object!=null /*&& _player.state == Player.State.Active*/ && fetchInput)
 		{
 			
 			// Fill networked input struct with input data
@@ -257,7 +268,7 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 		if (!string.IsNullOrEmpty(IDCardForQueue))
 		{
 			_listCardIDsInQueue.Add(IDCardForQueue);
-			_playerNetworkManager.SetGameState(IDCardForQueue);
+			PlayerNetworkManager.SetGameState(IDCardForQueue);
 			IDCardForQueue = "";
 		}
 		*/			
@@ -279,13 +290,13 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 
 			if (input.IsDown(NetworkInputData.READY))
 			{
-				_playerNetworkObject.ToggleReady();
+				PlayerNetworkObject.ToggleReady();
 			}
 
 			// We let the NetworkCharacterController do the actual work
-			_playerNetworkObject.SetDirections(direction, input.aimDirection.normalized);
+			PlayerNetworkObject.SetDirections(direction, input.aimDirection.normalized);
 		}
-		_playerNetworkObject.Move();
+		PlayerNetworkObject.Move();
 	}
 
 	public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }

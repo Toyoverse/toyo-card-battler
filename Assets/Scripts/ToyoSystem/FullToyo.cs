@@ -49,9 +49,6 @@ namespace ToyoSystem
         void CreateToyoObject(FullToyoSO fullToyo, ICardPile handler)
         {
             var _toyoParts = fullToyo.ToyoParts;
-            Debug.Log(_toyoParts);
-            Debug.Log(fullToyo);
-            Debug.Log(ToyoParts);
             foreach (var _part in _toyoParts)
             {
                 ToyoParts.Add(_part.ToyoPiece, new ToyoPart(_part, handler));

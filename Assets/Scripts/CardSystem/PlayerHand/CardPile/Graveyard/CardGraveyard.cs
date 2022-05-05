@@ -1,4 +1,5 @@
 ﻿using System;
+using Extensions;
 using PlayerHand;
 using UnityEngine;
 
@@ -8,12 +9,17 @@ namespace Card.CardPile.Graveyard
     {
         private Transform graveyardPosition => GlobalConfig.Instance.graveyardPosition;
 
-        private IPlayerHand PlayerHand { get; set; }
+        private IPlayerHand _playerHand;
+        public IPlayerHand PlayerHand => _playerHand ??= this.LazyFindOfType(ref _playerHand);
 
-        private void Start()
+        private void OnEnable()
         {
-            PlayerHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
             PlayerHand.OnCardPlayed += AddCard;
+        }
+
+        private void OnDisable()
+        {
+            PlayerHand.OnCardPlayed -= AddCard;
         }
 
         public override void AddCard(ICard card)

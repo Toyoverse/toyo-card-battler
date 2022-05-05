@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Extensions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -8,12 +9,12 @@ public class UiController : MonoBehaviour
 {
     private List<Button> _buttons;
     public UnityEvent[] events;
-    [HideInInspector] public UIDocument uiDoc;
+    private UIDocument _uiDoc;
+    internal UIDocument UiDoc => this.LazyGetComponent(ref _uiDoc);
 
     private void Start()
     {
-        uiDoc = GetComponent<UIDocument>();
-        var root = uiDoc.rootVisualElement;
+        var root = UiDoc.rootVisualElement;
         _buttons = root.Query<Button>().ToList();
 
         if (events.Length != _buttons.Count)
@@ -65,11 +66,11 @@ public class UiController : MonoBehaviour
         if (!on)
         {
             DisableEvents();
-            uiDoc.enabled = on;
+            UiDoc.enabled = on;
         }
         else
         {
-            uiDoc.enabled = on;
+            UiDoc.enabled = on;
             Start();
         }
     }

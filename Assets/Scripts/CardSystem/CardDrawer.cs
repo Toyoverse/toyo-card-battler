@@ -8,18 +8,15 @@ namespace Card
 {
     public class CardDrawer : MonoBehaviour
     {
-        private PlayerHandUtils Drawer { get; set; }
+        private Lazy<PlayerHandUtils> _drawer = new (FindObjectOfType<PlayerHandUtils>);
+        public PlayerHandUtils Drawer => _drawer.Value;
+        
         private IMouseInput Input { get; set; }
 
         private void Awake()
         {
             Input = GetComponent<IMouseInput>();
             Input.OnPointerClick += DrawCard;
-        }
-
-        private void Start()
-        {
-            Drawer = GlobalConfig.Instance.battleReferences.deck.GetComponent<PlayerHandUtils>();
         }
 
         private void DrawCard(PointerEventData obj)

@@ -2,6 +2,7 @@
 using Card;
 using Card.DeckSystem;
 using Extensions;
+using ToyoSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,26 +14,22 @@ namespace PlayerHand
 
         private int Count { get; set; }
 
-        private IPlayerHand PlayerHand { get; set; }
-        private IDeck Deck { get; set; }
+        private IPlayerHand _playerHand;
+        public IPlayerHand PlayerHand => _playerHand ??= this.LazyFindOfType(ref _playerHand);
+        
+        private IDeck _deck;
+        public IDeck Deck => _deck ??= this.LazyFindOfType(ref _deck);
 
         #endregion
 
         #region Unitycallbacks
 
-        private void Awake()
+        public IEnumerator DrawFirstHand()
         {
-            /*
-            PlayerHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
-            Deck = GlobalConfig.Instance.battleReferences.deck.GetComponent<IDeck>();
-            */
-        }
-        
-        private IEnumerator Start()
-        {
-            PlayerHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>() ?? FindObjectOfType<PlayerHand>();;
-            Deck = GlobalConfig.Instance.battleReferences.deck.GetComponent<IDeck>() ?? FindObjectOfType<Deck>();
-            Deck.ShuffleDeck();
+            while (!FusionLauncher.IsConnected)
+                yield return null;
+            Deck?.InitializeFullToyo();
+            Deck?.ShuffleDeck();
             yield return new WaitForSeconds(1f);
             //starting cards
             for (var i = 0; i < 5; i++)

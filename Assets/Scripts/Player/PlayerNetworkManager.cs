@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Extensions;
 using Fusion;
 using Multiplayer;
 using UnityEngine;
@@ -13,16 +14,18 @@ namespace Player
         [Networked] public int CurrentStateID { get; set; }
 
         private static List<PlayerNetworkObject> _players;
-        public static List<PlayerNetworkObject> Players => _players;
+        public List<PlayerNetworkObject> Players => _players ??= FindObjectsOfType<PlayerNetworkObject>()?.ToList();
 
+        private static PlayerNetworkManager Instance;
 
-        void Awake() => _players = FindObjectsOfType<PlayerNetworkObject>()?.ToList(); 
-
-        public static void AddPlayer(PlayerNetworkObject playerNetworkObject) => _players.Add(playerNetworkObject);
+        public static void AddPlayer(PlayerNetworkObject playerNetworkObject) => Instance.Players.Add(playerNetworkObject);
         
-        public  static void RemovePlayer(PlayerNetworkObject playerNetworkObject) => _players.Remove(playerNetworkObject);
+        public  static void RemovePlayer(PlayerNetworkObject playerNetworkObject) => Instance.Players.Remove(playerNetworkObject);
 
-        public static PlayerNetworkObject GetPlayer(PlayerRef playerRef) => _players.FirstOrDefault(_player => _player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
+        public static PlayerNetworkObject GetPlayer(PlayerRef playerRef) => Instance.Players.FirstOrDefault(_player => _player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
+
+        private void Awake() => Instance = this;
+
 
         #region Host
 

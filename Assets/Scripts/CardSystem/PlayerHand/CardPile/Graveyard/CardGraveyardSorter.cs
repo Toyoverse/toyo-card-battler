@@ -1,4 +1,5 @@
 ﻿using System;
+using Extensions;
 using UnityEngine;
 
 namespace Card.CardPile.Graveyard
@@ -8,12 +9,20 @@ namespace Card.CardPile.Graveyard
     {
         private Transform graveyardPosition => GlobalConfig.Instance.graveyardPosition;
 
-        private ICardPile CardGraveyard { get; set; }
+        
+        private ICardPile _cardGraveyard;
+        public ICardPile CardGraveyard => this.LazyGetComponent(ref _cardGraveyard);
+        
+        
 
-        private void Awake()
+        private void OnEnable()
         {
-            CardGraveyard = GetComponent<CardGraveyard>();
             CardGraveyard.OnPileChanged += Sort;
+        }
+
+        private void OnDisable()
+        {
+            CardGraveyard.OnPileChanged -= Sort;
         }
 
 
