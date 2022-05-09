@@ -13,8 +13,10 @@ namespace ToyoSystem
         public const bool IsDebug = true;
         
         public Dictionary<TOYO_PIECE, IToyoPart> ToyoParts { get; set; }
-        public Dictionary<TOYO_STAT, float> ToyoStats { get; set; }
+        public Dictionary<TOYO_STAT, float> ToyoStats { get; private set; }
         public Dictionary<TOYO_STAT, float> ToyoBonusStats { get; set; }
+
+        public List<EffectData> Buffs { get; set; }
         public ListToyoIDData ToyoIDs { get; set; }
 
 

@@ -35,7 +35,7 @@ public enum EFFECT_TYPE
 {
     GAIN_HP,
     GAIN_AP,
-    REDUCE_STAT
+    CHANGE_STAT
 }
 
 public enum TOYO_PIECE

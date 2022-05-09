@@ -1,35 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using Card;
 using ToyoSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
-namespace CombatSystem.DamageSystem
+namespace CombatSystem
 {
     public class DamageCalculation
     {
-        public static void CalculateDamage(DamageInformation dmgInfo)
+        public static float CalculateDamage(DamageInformation dmgInfo)
         {
             var _attackType = dmgInfo.AttackType;
             var _damage = _attackType == ATTACK_TYPE.PHYSICAL
                 ? CalculateStrenght(dmgInfo)
                 : CalculateCyberForce(dmgInfo);
 
-            float _damageFromType = dmgInfo.CardType switch
-            {
-                CARD_TYPE.HEAVY => ApplyDamageCalculation(dmgInfo, _damage),
-                CARD_TYPE.FAST => ApplyDamageCalculation(dmgInfo, _damage),
-                CARD_TYPE.SUPER => ApplyDamageCalculation(dmgInfo, _damage),
-                CARD_TYPE.BOND => CalculateBondCard(dmgInfo),
-                _ => 0
-            };
-
-            if (dmgInfo.CardType == CARD_TYPE.DEFENSE)
-            {
-                var success = DefenseSuccess(dmgInfo);
-                var counter = success && CounterSuccess(dmgInfo);
-            }
+            return ApplyDamageCalculation(dmgInfo, _damage);
         }
 
         static float CalculateBondCard(DamageInformation dmgInfo)
@@ -40,6 +28,13 @@ namespace CombatSystem.DamageSystem
         static float CalculateStrenght(DamageInformation dmgInfo)
         {
             var _strenght = dmgInfo.ToyoStats[TOYO_STAT.PHYSICAL_STRENGHT];
+            if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.PHYSICAL_STRENGHT))
+            {
+                var _effect = DamageSystem.GetMyEffectInBuffs(
+                    dmgInfo, TOYO_STAT.PHYSICAL_STRENGHT);
+                _strenght *= _effect.changeFactor;
+                BoundSystem.RemoveEffect(dmgInfo, _effect);
+            }
             var _hitVariation = dmgInfo.HitVariation;
             return _strenght * _hitVariation;
         }
@@ -47,6 +42,13 @@ namespace CombatSystem.DamageSystem
         static float CalculateCyberForce(DamageInformation dmgInfo)
         {
             var _cyberForce = dmgInfo.ToyoStats[TOYO_STAT.CYBER_FORCE];
+            if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.CYBER_FORCE))
+            {
+                var _effect = DamageSystem.GetMyEffectInBuffs(
+                    dmgInfo, TOYO_STAT.CYBER_FORCE);
+                _cyberForce *= _effect.changeFactor;
+                BoundSystem.RemoveEffect(dmgInfo, _effect);
+            }
             var _hitVariation = dmgInfo.HitVariation;
             return _cyberForce * _hitVariation;
         }
@@ -109,7 +111,21 @@ namespace CombatSystem.DamageSystem
         static bool CheckCriticalHit(DamageInformation dmgInfo)
         {   
             var _precision = dmgInfo.ToyoStats[TOYO_STAT.PRECISION];
+            if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.PRECISION))
+            {
+                var _effect = DamageSystem.GetMyEffectInBuffs(
+                    dmgInfo, TOYO_STAT.PRECISION);
+                _precision *= _effect.changeFactor;
+                BoundSystem.RemoveEffect(dmgInfo, _effect);
+            }
             var _luck = dmgInfo.ToyoStats[TOYO_STAT.LUCK];
+            if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.LUCK))
+            {
+                var _effect = DamageSystem.GetMyEffectInBuffs(
+                    dmgInfo, TOYO_STAT.LUCK);
+                _luck *= _effect.changeFactor;
+                BoundSystem.RemoveEffect(dmgInfo, _effect);
+            }
 
             var _criticalChance =
                 (_precision * GlobalConfig.Instance.globalCardDataSO.criticalPrecisionFactor)
@@ -122,10 +138,26 @@ namespace CombatSystem.DamageSystem
 
         static float GetEnemyDef(DamageInformation dmgInfo, bool criticalHit)
         {
+            var _enemyResistance = dmgInfo.EnemyToyoStats[TOYO_STAT.RESISTANCE];
+            if (DamageSystem.GetEnemyEffectInEnemyBuffs(dmgInfo, TOYO_STAT.RESISTANCE))
+            {
+                var _effect = DamageSystem.GetEnemyEffectInEnemyBuffs(
+                    dmgInfo, TOYO_STAT.RESISTANCE);
+                _enemyResistance *= _effect.changeFactor;
+                BoundSystem.RemoveEffect(dmgInfo, _effect);
+            }
+            var _enemyResilience = dmgInfo.EnemyToyoStats[TOYO_STAT.RESILIENCE];
+            if (DamageSystem.GetEnemyEffectInEnemyBuffs(dmgInfo, TOYO_STAT.RESILIENCE))
+            {
+                var _effect = DamageSystem.GetEnemyEffectInEnemyBuffs(
+                    dmgInfo, TOYO_STAT.RESILIENCE);
+                _enemyResilience *= _effect.changeFactor;
+                BoundSystem.RemoveEffect(dmgInfo, _effect);
+            }
             var _enemyDef = dmgInfo.AttackType == ATTACK_TYPE.PHYSICAL ?
-                (dmgInfo.EnemyToyoStats[TOYO_STAT.RESISTANCE] * 
+                (_enemyResistance * 
                  GlobalConfig.Instance.globalCardDataSO.enemyResistanceMultiplier) : 
-                (dmgInfo.EnemyToyoStats[TOYO_STAT.RESILIENCE] *
+                (_enemyResilience *
                  GlobalConfig.Instance.globalCardDataSO.enemyResilienceMultiplier);
             if (criticalHit)
             {
@@ -140,62 +172,6 @@ namespace CombatSystem.DamageSystem
             return criticalHit ? 
                 dmgInfo.HitVariation * GlobalConfig.Instance.globalCardDataSO.criticalDamageModifier
                 : dmgInfo.HitVariation;
-        }
-
-        static float GetDefenseChance(DamageInformation dmgInfo)
-        {
-            float _defChance = 100;
-            switch (dmgInfo.DefenseType)
-            {
-                case DEFENSE_TYPE.BLOCK:
-                    _defChance += ((dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE]
-                                  * GlobalConfig.Instance.globalCardDataSO.techDefMultiplier)
-                                  - (dmgInfo.EnemyToyoStats[TOYO_STAT.ANALYSIS] 
-                                  * GlobalConfig.Instance.globalCardDataSO.analysisMultiplier));
-                    break;
-                case  DEFENSE_TYPE.DODGE:
-                    _defChance += ((dmgInfo.ToyoStats[TOYO_STAT.AGILITY]
-                                  * GlobalConfig.Instance.globalCardDataSO.agilityDefMultiplier)
-                                  - (dmgInfo.EnemyToyoStats[TOYO_STAT.SPEED] 
-                                  * GlobalConfig.Instance.globalCardDataSO.speedMultiplier));
-                    break;
-            }
-
-            return _defChance;
-        }
-
-        static bool DefenseSuccess(DamageInformation dmgInfo)
-        {
-            float defenseChance = GetDefenseChance(dmgInfo);
-            return Random.Range(0, 100) <= defenseChance;
-        }
-        
-        static float GetCounterChance(DamageInformation dmgInfo)
-        {
-            float _counterChance = GlobalConfig.Instance.globalCardDataSO.baseCounterChance;
-            switch (dmgInfo.DefenseType)
-            {
-                case DEFENSE_TYPE.BLOCK:
-                    _counterChance += ((dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE] * 
-                                      GlobalConfig.Instance.globalCardDataSO.counterTechMultiplier) + 
-                                      (dmgInfo.ToyoStats[TOYO_STAT.LUCK] * 
-                                      GlobalConfig.Instance.globalCardDataSO.counterLuckFactor));
-                    break;
-                case  DEFENSE_TYPE.DODGE:
-                    _counterChance += ((dmgInfo.ToyoStats[TOYO_STAT.AGILITY] 
-                                      * GlobalConfig.Instance.globalCardDataSO.counterAgilityMultiplier) 
-                                      + (dmgInfo.ToyoStats[TOYO_STAT.LUCK] 
-                                      * GlobalConfig.Instance.globalCardDataSO.counterLuckFactor));
-                    break;
-            }
-
-            return _counterChance;
-        }
-        
-        static bool CounterSuccess(DamageInformation dmgInfo)
-        {
-            float counterChance = GetCounterChance(dmgInfo);
-            return Random.Range(0, 100) <= counterChance;
         }
     }
 }

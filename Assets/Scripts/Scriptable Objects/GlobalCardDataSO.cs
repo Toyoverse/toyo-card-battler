@@ -132,7 +132,7 @@ namespace Scriptable_Objects
         [Tooltip("Amount by which the COMBO is divided in the calculation of HEAVY ATTACK DAMAGE.")]
         [SerializeField] [Range(1, 20)] 
         public int comboSystemFactor = 5;
-        
+
         [Tooltip("Value added to HEAVY ATTACK calculations.")]
         [SerializeField] [Range(0.0f, 10.0f)] 
         public float heavyCardSumFactor = 1.0f;

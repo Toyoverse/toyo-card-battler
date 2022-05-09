@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
+  m_Name: CardData_Template 5
+  m_EditorClassIdentifier: 
+  Id: a1b4d54e-20e2-4d26-ba71-765e5b057d16
+  LocalizedName: boundTest
+  Cardtype: 3
+  DefenseType: 0
+  CardImage: {fileID: 0}
+  ApCost: 1
+  AttackType: 0
+  AttackSubType: 0
+  AttackAnimation: {fileID: 0}
+  ApplyEffect: 1
+  EffectData: {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
+  HitListInfos: []

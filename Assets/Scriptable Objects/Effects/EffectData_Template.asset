@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a80ed03d309a4a49bee1430254d09ef6, type: 3}
   m_Name: EffectData_Template
   m_EditorClassIdentifier: 
-  EffectType: 0
-  HPValue: 0
+  EffectType: 2
+  temporary: 0
+  duration: 0
+  HPValue: 10
   APValue: 0
-  statToReduce: 2
-  percentToReduce: 34.1
+  statToChange: 0
+  changeFactor: 1.5

@@ -7,7 +7,9 @@ namespace ToyoSystem
     {
         Dictionary<TOYO_PIECE, IToyoPart> ToyoParts { get; set; }
 
-        Dictionary<TOYO_STAT, float> ToyoStats { get; set; }
+        Dictionary<TOYO_STAT, float> ToyoStats { get; }
+        
+        public List<EffectData> Buffs { get; set; }
 
         ListToyoIDData ToyoIDs { get; }
         

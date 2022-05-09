@@ -8,7 +8,7 @@ using Tools;
 using ToyoSystem;
 using UnityEngine;
 
-namespace CombatSystem.DamageSystem
+namespace CombatSystem
 {
     public class DamageSystem : MonoBehaviour
     {
@@ -58,20 +58,77 @@ namespace CombatSystem.DamageSystem
             var _hitListInfos = card.CardData?.HitListInfos;
 
             if (_hitListInfos?.Count > 0)
+            {
                 for (var index = 0; index < _hitListInfos.Count; index++)
                 {
-                    var _hit = _hitListInfos[index];
-                    /*DamageInformation _dmgInfo = new DamageInformation(card, FullToyo, index);
-                    DamageCalculation.CalculateDamage(_dmgInfo);*/
-                    DoDamage(_hit);
+                    DamageInformation _dmgInfo = new DamageInformation(card, FullToyo, index);
+                    var _damage = DamageCalculation.CalculateDamage(_dmgInfo);
+                    DoDamage(_damage);
                 }
+            }
+            else
+            {
+                DamageInformation _dmgInfo = new DamageInformation(card, FullToyo, -1);
+                switch (_dmgInfo.CardType)
+                {
+                    case CARD_TYPE.DEFENSE:
+                        if (DefenseSystem.DefenseSuccess(_dmgInfo))
+                        {
+                            //TODO: Send defense success to the Enemy and interrupt his attack
+                            if (DefenseSystem.CounterSuccess(_dmgInfo))
+                            {
+                                //TODO: Get fast attack card and Execute the counterattack - Start new combo
+                            }
+                        }
+                        else
+                        {
+                            //TODO: UX for Defense fail
+                            Debug.Log("Defense fail");
+                        }
+                        break;
+                    case  CARD_TYPE.BOND:
+                        BoundSystem.BoundEffectApply(_dmgInfo);
+                        break;
+                }
+            }
         }
 
-        void DoDamage(HitListInfo hit)
+        void DoDamage(/*HitListInfo hit*/ float damage)
         {
-            EnemyHealth?.OnTakeDamage.Invoke(hit.Damage);
+            EnemyHealth?.OnTakeDamage.Invoke(/*hit.Damage*/ damage);
         }
         
+        public static EffectData GetMyEffectInBuffs(DamageInformation dmgInfo, TOYO_STAT statToFind)
+        {
+            foreach (var effect in dmgInfo.Buffs)
+            {
+                if (effect.EffectType == EFFECT_TYPE.CHANGE_STAT)
+                {
+                    if (effect.statToChange == statToFind)
+                    {
+                        //TODO: Consider multiple cumulative equal effects.
+                        return effect;
+                    }
+                }
+            }
+            return null;
+        }
+        
+        public static EffectData GetEnemyEffectInEnemyBuffs(DamageInformation dmgInfo, TOYO_STAT statToFind)
+        {
+            foreach (var effect in dmgInfo.EnemyBuffs)
+            {
+                if (effect.EffectType == EFFECT_TYPE.CHANGE_STAT)
+                {
+                    if (effect.statToChange == statToFind)
+                    {
+                        //TODO: Consider multiple cumulative equal effects.
+                        return effect;
+                    }
+                }
+            }
+            return null;
+        }
     }
     
     public struct DamageInformation
@@ -84,6 +141,9 @@ namespace CombatSystem.DamageSystem
         public Dictionary<TOYO_STAT, float> ToyoStats;
         public Dictionary<TOYO_STAT, float> EnemyToyoStats;
         public int CurrentCombo;
+        public List<EffectData> Buffs;
+        public List<EffectData> EnemyBuffs;
+        public EffectData EffectData;
 
         public DamageInformation(ICard card, IFullToyo fullToyo, int hitIndex)
         {
@@ -95,6 +155,9 @@ namespace CombatSystem.DamageSystem
             ToyoStats = fullToyo.ToyoStats;
             EnemyToyoStats = fullToyo.ToyoStats; //TODO: Get Enemy Toyo Stats
             CurrentCombo = 1; //Todo Implement Combo System
+            Buffs = fullToyo.Buffs;
+            EnemyBuffs = fullToyo.Buffs; //TODO: Get Enemy Toyo Buffs
+            EffectData = card.CardData.EffectData;
         }
     }
 }
