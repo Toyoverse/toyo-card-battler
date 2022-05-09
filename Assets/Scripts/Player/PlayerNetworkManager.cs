@@ -29,33 +29,36 @@ namespace Player
 
         #region Host
 
-        public override void FixedUpdateNetwork() {
-            //The player needs to have InputAuthority over this NetworkObject.
-            //You can create a simple NB to read inputs and maybe other infos about each player (All         //player are interested, that will be needed for when you're using AOI)
-            //You can have a similar NB for each player like the one in the RazorMadness sample
-        
-            //Only the InputAuth and the Host will return true and get the input from this check
-            if(GetInput(out PlayerInputData data))
-            {
-                //Seting the state from the Host, the inputAuth will run this as well but no need to             //worry because he cant change the state.
-                //But you can do a quick check like if(Object.HasStateAuthority) if you want
-                SetGameState(data.newCardId.ToString());
-            }
-        }
         public GameState GetCurrentGameState() => GetGameState(CurrentStateID);
         
         private GameState GetGameState(int _currentStateID) => LastGameStates.Get(_currentStateID);
         
-        public void SetGameState(string cardID)
+        public void SetGameState(PlayerInputData _playerInput)
         {
-            var state = new GameState();
-            state.CurrentPlayerTurn = Runner.LocalPlayer;
-            state.newCardId = cardID;
-            LastGameStates.Set(CurrentStateID, state);
             NextGameState();
+            var state = new GameState
+            {
+                GameStatePlayerRef = _playerInput.PlayerRef,
+                newCardId = _playerInput.PlayedCardID
+            };
+            LastGameStates.Set(CurrentStateID, state);
+            //PrintDebugData();
+            
         }
 
         #endregion
+
+        private void PrintDebugData()
+        {
+            int tempGameState = 0;
+            foreach (var _state in LastGameStates)
+            {
+                Debug.LogError("CurrentState ID:" + tempGameState);
+                Debug.LogError("New Card ID:" +_state.newCardId);
+                Debug.LogError("Player ID:" +_state.GameStatePlayerRef.PlayerId);
+                tempGameState++;
+            }
+        }
 
         private void NextGameState()
         {
@@ -73,7 +76,7 @@ namespace Player
     public struct GameState : INetworkStruct {
 
         private const int MAXPLAYERS = 2;
-        public PlayerRef CurrentPlayerTurn;
+        public PlayerRef GameStatePlayerRef;
         public NetworkString<_16> newCardId { get; set; }
 
         //[Networked, Capacity(MAXPLAYERS)] public NetworkDictionary<PlayerRef, PlayerNetworkStruct> Players => default;
@@ -84,7 +87,8 @@ namespace Player
 
 public struct  PlayerInputData : INetworkInput
 {
-    public NetworkString<_16> newCardId;
+    public NetworkString<_16> PlayedCardID;
+    public PlayerRef PlayerRef;
 
 }
 

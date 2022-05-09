@@ -76,6 +76,7 @@ namespace FusionExamples.Tanknarok
 		private void SetGameMode(GameMode gamemode)
 		{
 			_gameMode = gamemode;
+			//Debug.LogError(_gameMode);
 			/*if (GateUI(_uiStart))
 				_uiRoom.SetVisible(true);
 			*/
@@ -114,10 +115,8 @@ namespace FusionExamples.Tanknarok
 		*/
 		private void OnConnectionStatusUpdate(NetworkRunner runner, FusionLauncher.ConnectionStatus status, string reason)
 		{
-			if (!this)
+			if (!this )
 				return;
-
-			Debug.Log(status);
 
 			if (status != _status)
 			{
@@ -169,7 +168,7 @@ namespace FusionExamples.Tanknarok
 			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
 			{
 				var _player = networkObject.gameObject.GetComponent<PlayerNetworkObject>();
-				Debug.Log($"Initializing player {playerref.PlayerId}");
+				//Debug.Log($"Initializing player {playerref.PlayerId}");
 				//player.InitNetworkState(GameManager.MAX_LIVES);
 			}
 			/*

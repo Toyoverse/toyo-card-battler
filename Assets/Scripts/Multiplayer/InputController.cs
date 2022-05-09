@@ -16,19 +16,15 @@ using Extensions;
 /// </summary>
 public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 {
-	[SerializeField] private LayerMask _mouseRayMask;
-
-	[Networked]
 	private string IDCardForQueue { get; set; }
-	
+
+	private int PreviousStateID { get; set; }
+
 	private List<string> _listCardIDsInQueue = new ();
 	public List<ICard> ListCardIDsInQueue => _listCardIDsInQueue.Select(CardUtils.FindCardByID).ToList();
 
 	public static bool fetchInput = true;
 	public bool ToggleReady { get; set; }
-
-	private string lastID = "";
-
 
 	private Vector2 _moveDelta;
 	private Vector2 _aimDelta;
@@ -68,7 +64,6 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	/// </summary>
 	public override void Spawned()
 	{
-		//_mobileInput = FindObjectOfType<MobileInput>(true);
 		// Technically, it does not really matter which InputController fills the input structure, since the actual data will only be sent to the one that does have authority,
 		// but in the name of clarity, let's make sure we give input control to the gameobject that also has Input authority.
 		if (Object.HasInputAuthority)
@@ -76,7 +71,7 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 			Runner.AddCallbacks(this);
 		}
 
-		Debug.Log("Spawned [" + this + "] IsClient=" + Runner.IsClient + " IsServer=" + Runner.IsServer + " HasInputAuth=" + Object.HasInputAuthority + " HasStateAuth=" + Object.HasStateAuthority);
+		//Debug.Log("Spawned [" + this + "] IsClient=" + Runner.IsClient + " IsServer=" + Runner.IsServer + " HasInputAuth=" + Object.HasInputAuthority + " HasStateAuth=" + Object.HasStateAuthority);
 	}
 
 
@@ -111,26 +106,24 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	/// <param name="input">The target input handler that we'll pass our data to</param>
 	public void OnInput(NetworkRunner runner, NetworkInput input)
 	{
-		if (PlayerNetworkObject!=null && PlayerNetworkObject.Object!=null /*&& _player.state == Player.State.Active*/ && fetchInput)
+		if (!string.IsNullOrEmpty(IDCardForQueue))
 		{
-			if (!string.IsNullOrEmpty(IDCardForQueue) && IDCardForQueue != lastID)
-			{
-				SetPlayerInput();
+			SetPlayerInput();
 				
-				//Hand over data to Fusion
-				input.Set(_frameworkInput);
-			}
+			//Hand over data to Fusion
+			input.Set(_frameworkInput);
+			IDCardForQueue = "";
 		}
-
 	}
 
 	void SetPlayerInput()
 	{
-		lastID = IDCardForQueue;
 		_listCardIDsInQueue.Add(IDCardForQueue);
-		_frameworkInput = new PlayerInputData();
-		_frameworkInput.newCardId = IDCardForQueue;
-		IDCardForQueue = "";
+		_frameworkInput = new PlayerInputData
+		{
+			PlayedCardID = IDCardForQueue,
+			PlayerRef = Runner.LocalPlayer
+		};
 	}
 
 	public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -141,132 +134,39 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	{
 	}
 
-	private void Update()
-	{
-		ToggleReady = ToggleReady || Input.GetKeyDown(KeyCode.R);
-
-		if (Input.mousePresent)
-		{
-			if (Input.GetMouseButton(0) )
-				_primaryFire = true;
-
-			if (Input.GetMouseButton(1) )
-				_secondaryFire = true;
-
-			_moveDelta = Vector2.zero;
-			
-			if (Input.GetKey(KeyCode.W))
-				_moveDelta += Vector2.up;
-
-			if (Input.GetKey(KeyCode.S))
-				_moveDelta += Vector2.down;
-
-			if (Input.GetKey(KeyCode.A))
-				_moveDelta += Vector2.left;
-
-			if (Input.GetKey(KeyCode.D))
-				_moveDelta += Vector2.right;
-
-			Vector3 mousePos = Input.mousePosition;
-
-			RaycastHit hit;
-			Ray ray = Camera.main.ScreenPointToRay(mousePos);
-
-			Vector3 mouseCollisionPoint = Vector3.zero;
-			// Raycast towards the mouse collider box in the world
-			if (Physics.Raycast(ray, out hit, Mathf.Infinity, _mouseRayMask))
-			{
-				if (hit.collider != null)
-				{
-					mouseCollisionPoint = hit.point;
-				}
-			}
-
-			//Vector3 aimDirection = mouseCollisionPoint - _player.turretPosition;
-			//_aimDelta = new Vector2(aimDirection.x,aimDirection.z );
-		}
-
-		if (Input.touchSupported)
-		{
-			bool leftIsDown = false;
-			bool rightIsDown = false;
-
-			foreach (Touch touch in Input.touches)
-			{
-				if (touch.position.x < Screen.width / 2)
-				{
-					leftIsDown = true;
-					_leftPos = touch.position;
-					if (_leftTouchWasDown)
-						_moveDelta += 10.0f * touch.deltaPosition / Screen.dpi;
-					else
-						_leftDown = touch.position;
-				}
-				else
-				{
-					rightIsDown = true;
-					_rightPos = touch.position;
-					if (_rightTouchWasDown && (touch.position-_rightDown).magnitude>(0.01f*Screen.dpi))
-						_aimDelta = (10.0f / Screen.dpi) * (touch.position-_rightDown);
-					else
-						_rightDown = touch.position;
-				}
-			}
-			if (_rightTouchWasDown && !rightIsDown )
-				_primaryFire = true;
-			if (_leftTouchWasDown && !leftIsDown && _moveDelta.magnitude < 0.01f )
-				_secondaryFire = true;
-
-			if( !leftIsDown )
-				_moveDelta = Vector2.zero;
-		/*
-			_mobileInput.gameObject.SetActive(true);
-			_mobileInput.SetLeft(leftIsDown, _leftDown, _leftPos);
-			_mobileInput.SetRight(rightIsDown,_rightDown, _rightPos);
-		*/
-			_leftTouchWasDown = leftIsDown;
-			_rightTouchWasDown = rightIsDown;
-		}
-		/*else
-		{
-			_mobileInput.gameObject.SetActive(false);
-		}
-		*/
-	}
-
 	/// <summary>
 	/// FixedUpdateNetwork is the main Fusion simulation callback - this is where
 	/// we modify network state.
 	/// </summary>
 	public override void FixedUpdateNetwork()
 	{
-		GameState _state = PlayerNetworkManager.GetCurrentGameState();
-					
-		
-		Vector2 direction = default;
-		if (GetInput(out NetworkInputData input))
+		//The player needs to have InputAuthority over this NetworkObject.
+		//You can create a simple NB to read inputs and maybe other infos about each player (All
+		////player are interested, that will be needed for when you're using AOI)
+		//You can have a similar NB for each player like the one in the RazorMadness sample
+        
+		//Only the InputAuth and the Host will return true and get the input from this check
+		if(GetInput(out PlayerInputData data))
 		{
-			direction = input.moveDirection.normalized;
-
-			if (input.IsDown(NetworkInputData.BUTTON_FIRE_PRIMARY))
-			{
-				//_player.shooter.FireWeapon(WeaponManager.WeaponInstallationType.PRIMARY);
-			}
-
-			if (input.IsDown(NetworkInputData.BUTTON_FIRE_SECONDARY))
-			{
-				//_player.shooter.FireWeapon(WeaponManager.WeaponInstallationType.SECONDARY);
-			}
-
-			if (input.IsDown(NetworkInputData.READY))
-			{
-				PlayerNetworkObject.ToggleReady();
-			}
-
-			// We let the NetworkCharacterController do the actual work
-			PlayerNetworkObject.SetDirections(direction, input.aimDirection.normalized);
+			//Seting the state from the Host, the inputAuth will run this as well but no need to
+			////worry because he cant change the state.
+			//But you can do a quick check like if(Object.HasStateAuthority) if you want
+			PlayerNetworkManager.SetGameState(data);
 		}
-		PlayerNetworkObject.Move();
+
+		if (PreviousStateID != PlayerNetworkManager.CurrentStateID && !Object.HasStateAuthority)
+		{
+			//Todo Running 2 times, once for each player... fix that.
+			
+			PreviousStateID = PlayerNetworkManager.CurrentStateID;
+			GameState _state = PlayerNetworkManager.GetCurrentGameState();
+			
+			/*
+			Debug.Log(_state.newCardId);
+			Debug.Log(_state.GameStatePlayerRef.PlayerId);
+			*/
+		}
+
 	}
 
 	public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
@@ -286,32 +186,4 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 
 
 
-}
-
-/// <summary>
-/// Our custom definition of an INetworkStruct. Keep in mind that
-/// * bool does not work (C# does not define a consistent size on different platforms)
-/// * Must be a top-level struct (cannot be a nested class)
-/// * Stick to primitive types and structs
-/// * Size is not an issue since only modified data is serialized, but things that change often should be compact (e.g. button states)
-/// </summary>
-public struct NetworkInputData : INetworkInput
-{
-	public const uint BUTTON_FIRE_PRIMARY = 1 << 0;
-	public const uint BUTTON_FIRE_SECONDARY = 1 << 1;
-	public const uint READY = 1 << 6;
-
-	public uint Buttons;
-	public Vector2 aimDirection;
-	public Vector2 moveDirection;
-
-	public bool IsUp(uint button)
-	{
-		return IsDown(button) == false;
-	}
-
-	public bool IsDown(uint button)
-	{
-		return (Buttons & button) == button;
-	}
 }

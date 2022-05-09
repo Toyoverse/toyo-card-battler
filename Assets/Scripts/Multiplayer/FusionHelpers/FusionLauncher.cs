@@ -79,8 +79,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
         if (Runner == null)
             Runner = gameObject.AddComponent<NetworkRunner>();
         Runner.name = name;
-        Runner.ProvideInput = true;
-        //Runner.ProvideInput = mode != GameMode.Server;
+        Runner.ProvideInput = mode != GameMode.Server;
 
         if(Pool==null)
             Pool = gameObject.AddComponent<FusionObjectPoolRoot>();
@@ -106,10 +105,10 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
         //NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
         //_spawnedCharacters.Add(player, networkPlayerObject);
 
-       //if (!runner.IsServer) return;
+       if (runner.IsServer) InstantiatePlayer(runner, player);
         
-        Debug.Log("Hosted Mode - Spawning Player");
-        InstantiatePlayer(runner, player);
+        //Debug.Log("Spawning Player: " + player.PlayerId);
+        
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -120,32 +119,13 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
             _spawnedCharacters.Remove(player);
         }*/
 
-        Debug.Log("Player Left");
+        //Debug.Log("Player Left");
         OnDespawnPlayer?.Invoke(runner, player);
 
         SetConnectionStatus(Status, "Player Left");
     }
 
-    public void OnInput(NetworkRunner runner, NetworkInput input)
-    {
-        /*
-        var data = new NetworkInputData();
-
-        if (Input.GetKey(KeyCode.W))
-            data.direction += Vector3.forward;
-
-        if (Input.GetKey(KeyCode.S))
-            data.direction += Vector3.back;
-
-        if (Input.GetKey(KeyCode.A))
-            data.direction += Vector3.left;
-
-        if (Input.GetKey(KeyCode.D))
-            data.direction += Vector3.right;
-
-        input.Set(data);
-        */
-    }
+    public void OnInput(NetworkRunner runner, NetworkInput input) { }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
@@ -178,10 +158,10 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
 
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        Debug.Log("Connected to server");
+        //Debug.Log("Connected to server");
         if (runner.GameMode == GameMode.Shared)
         {
-            Debug.Log("Shared Mode - Spawning Player");
+            //Debug.Log("Shared Mode - Spawning Player");
             InstantiatePlayer(runner, runner.LocalPlayer);
         }
         SetConnectionStatus(ConnectionStatus.Connected, "");
@@ -189,7 +169,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        Debug.Log("Disconnected from server");
+        //Debug.Log("Disconnected from server");
         SetConnectionStatus(ConnectionStatus.Disconnected, "");
     }
 
@@ -200,7 +180,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        Debug.Log($"Connect failed {reason}");
+        //Debug.Log($"Connect failed {reason}");
         SetConnectionStatus(ConnectionStatus.Failed, reason.ToString());
     }
     
@@ -225,7 +205,6 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
             OnSpawnWorld = null;
         }
 
-//        Debug.Log(runner.IsServer);
         OnSpawnPlayer?.Invoke(runner, playerref);
     }
     

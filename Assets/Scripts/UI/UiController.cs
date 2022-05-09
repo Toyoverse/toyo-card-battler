@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Extensions;
 using UnityEngine;
@@ -12,16 +13,16 @@ public class UiController : MonoBehaviour
     private UIDocument _uiDoc;
     internal UIDocument UiDoc => this.LazyGetComponent(ref _uiDoc);
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(.2f); 
         var root = UiDoc.rootVisualElement;
-        _buttons = root.Query<Button>().ToList();
-
-        if (events.Length != _buttons.Count)
+        _buttons = root?.Query<Button>().ToList();
+        if (events.Length != _buttons?.Count)
         {
             Debug.LogError("The list of buttons is longer than the number of events created!");
         }
-        for (int i = 0; i < _buttons.Count; i++)
+        for (int i = 0; i < _buttons?.Count; i++)
         {
             if (i >= events.Length)
             {

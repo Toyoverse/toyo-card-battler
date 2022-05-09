@@ -136,6 +136,7 @@ namespace Player
 
 		public override void FixedUpdateNetwork()
 		{
+			/*
 			if (Object.HasStateAuthority)
 			{
 				if (_respawnInSeconds >= 0)
@@ -144,8 +145,9 @@ namespace Player
 				if (isRespawningDone)
 					ResetPlayer();
 			}
-
-			//CheckForPowerupPickup();
+			
+			CheckForPowerupPickup();
+			*/
 		}
 
 		/// <summary>
