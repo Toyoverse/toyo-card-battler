@@ -5,6 +5,7 @@
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
+/[Pp]ackages/
 
 # Exclude 3rd party libraries installed from the assets store
 [Aa]ssets/Asset Store Resources/
@@ -35,6 +36,7 @@ ExportedObj/
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+
 
 # Builds
 *.apk

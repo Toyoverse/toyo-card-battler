@@ -43,7 +43,7 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 
 
 	
-	private NetworkInputData _frameworkInput = new NetworkInputData();
+	private PlayerInputData _frameworkInput = new PlayerInputData();
 
 	#region LazyProperties
 	
@@ -111,45 +111,26 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	/// <param name="input">The target input handler that we'll pass our data to</param>
 	public void OnInput(NetworkRunner runner, NetworkInput input)
 	{
-		if (!string.IsNullOrEmpty(IDCardForQueue) && IDCardForQueue != lastID)
-		{
-			lastID = IDCardForQueue;
-			_listCardIDsInQueue.Add(IDCardForQueue);
-			PlayerNetworkManager.SetGameState(IDCardForQueue);
-			//IDCardForQueue = "";
-		}
-
 		if (PlayerNetworkObject!=null && PlayerNetworkObject.Object!=null /*&& _player.state == Player.State.Active*/ && fetchInput)
 		{
-			
-			// Fill networked input struct with input data
-
-			_frameworkInput.aimDirection = _aimDelta.normalized;
-			
-			_frameworkInput.moveDirection = _moveDelta.normalized;
-
-			if ( _primaryFire )
+			if (!string.IsNullOrEmpty(IDCardForQueue) && IDCardForQueue != lastID)
 			{
-				_primaryFire = false;
-				_frameworkInput.Buttons |= NetworkInputData.BUTTON_FIRE_PRIMARY;
-			}
-
-			if ( _secondaryFire )
-			{
-				_secondaryFire = false;
-				_frameworkInput.Buttons |= NetworkInputData.BUTTON_FIRE_SECONDARY;
-			}
-
-			if (ToggleReady)
-			{
-				ToggleReady = false;
-				_frameworkInput.Buttons |= NetworkInputData.READY;
+				SetPlayerInput();
+				
+				//Hand over data to Fusion
+				input.Set(_frameworkInput);
 			}
 		}
 
-		// Hand over the data to Fusion
-		input.Set(_frameworkInput);
-		_frameworkInput.Buttons = 0;
+	}
+
+	void SetPlayerInput()
+	{
+		lastID = IDCardForQueue;
+		_listCardIDsInQueue.Add(IDCardForQueue);
+		_frameworkInput = new PlayerInputData();
+		_frameworkInput.newCardId = IDCardForQueue;
+		IDCardForQueue = "";
 	}
 
 	public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -259,19 +240,8 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	/// </summary>
 	public override void FixedUpdateNetwork()
 	{
-		
-		//if (GameManager.playState == GameManager.PlayState.TRANSITION)
-		//	return;
-		// Get our input struct and act accordingly. This method will only return data if we
-		// have Input or State Authority - meaning on the controlling player or the server.
-		/*
-		if (!string.IsNullOrEmpty(IDCardForQueue))
-		{
-			_listCardIDsInQueue.Add(IDCardForQueue);
-			PlayerNetworkManager.SetGameState(IDCardForQueue);
-			IDCardForQueue = "";
-		}
-		*/			
+		GameState _state = PlayerNetworkManager.GetCurrentGameState();
+					
 		
 		Vector2 direction = default;
 		if (GetInput(out NetworkInputData input))
