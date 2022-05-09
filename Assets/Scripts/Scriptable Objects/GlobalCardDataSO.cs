@@ -1,6 +1,7 @@
 ﻿using System;
 using Tools;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Scriptable_Objects
 {
@@ -156,41 +157,41 @@ namespace Scriptable_Objects
         [SerializeField] [Range(0.0f, 10.0f)] 
         public float superCardMultiplierFactor = 1.0f;
 
-        [Tooltip("")] //TODO: Finish adding the tooltips to the other variables.
+        [Tooltip("LUCK multiplier used to generate CRITICAL HIT CHANCE value.")] 
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float criticalLuckFactor = 0.025f;
 
-        [Tooltip("")]
+        [Tooltip("PRECISION multiplier used to generate CRITICAL HIT CHANCE value.")]
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float criticalPrecisionFactor = 0.05f;
-        
-        [Tooltip("BASE counter attack chance (BEFORE Toyo stat calculation).")]
-        [SerializeField] [Range(0.0f, 100.0f)] 
-        public float baseCounterChance = 5.0f;
-        
-        [Tooltip("")]
-        [SerializeField] [Range(0.0f, 100.0f)] 
-        public float defenseInCritical = 0f;
-        
-        [Tooltip("")]
+
+        [Tooltip("MAXIMUM value that it is possible to obtain in the CRITICAL HIT CHANCE.")]
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float maxCriticalChance = 0.5f;
         
-        [Tooltip("")]
+        [Tooltip("Multiplier applied to the HIT VARIATION when getting a CRITICAL HIT.")]
         [SerializeField] [Range(1f, 10f)] 
         public float criticalDamageModifier = 2f;
         
-        [Tooltip("")]
+        [Tooltip("ENEMY defense multiplier while receiving a CRITICAL HIT.")]
         [SerializeField] [Range(0.0f, 1.0f)] 
-        public float resistenceMultiplier = 0.1f;
+        public float defenseInCriticalMultiplier = 0f;
         
-        [Tooltip("")]
+        [Tooltip("Multiplier applied to ENEMY RESISTANCE when getting ENEMY DEFENSE value. (In physical attacks)")]
         [SerializeField] [Range(0.0f, 1.0f)] 
-        public float resilianceMultiplier = 0.1f;
+        public float enemyResistanceMultiplier = 0.1f;
+        
+        [Tooltip("Multiplier applied to ENEMY RESILIENCE when getting ENEMY DEFENSE value. (In cyber attacks)")]
+        [SerializeField] [Range(0.0f, 1.0f)] 
+        public float enemyResilienceMultiplier = 0.1f;
         
         [Tooltip("ANALYSIS multiplier used to generate BLOCK CHANCE value.")]
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float analysisMultiplier = 0.11f;
+        
+        [Tooltip("TECHNIQUE multiplier used to generate BLOCK CHANCE value.")]
+        [SerializeField] [Range(0.0f, 1.0f)] 
+        public float techDefMultiplier = 0.1f;
         
         [Tooltip("SPEED multiplier used to generate DODGE CHANCE value.")]
         [SerializeField] [Range(0.0f, 1.0f)] 
@@ -200,10 +201,10 @@ namespace Scriptable_Objects
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float agilityDefMultiplier = 0.1f;
         
-        [Tooltip("TECHNIQUE multiplier used to generate BLOCK CHANCE value.")]
-        [SerializeField] [Range(0.0f, 1.0f)] 
-        public float techDefMultiplier = 0.1f;
-        
+        [Tooltip("BASE counter attack chance (BEFORE Toyo stat calculation).")]
+        [SerializeField] [Range(0.0f, 100.0f)] 
+        public float baseCounterChance = 5.0f;
+
         [Tooltip("LUCK multiplier used to generate COUNTER ATTACK CHANCE value after dodge or block success.")]
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float counterLuckFactor = 0.1f;

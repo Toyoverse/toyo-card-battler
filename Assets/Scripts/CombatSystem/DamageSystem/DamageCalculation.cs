@@ -9,7 +9,6 @@ namespace CombatSystem.DamageSystem
 {
     public class DamageCalculation
     {
-
         public static void CalculateDamage(DamageInformation dmgInfo)
         {
             var _attackType = dmgInfo.AttackType;
@@ -22,72 +21,20 @@ namespace CombatSystem.DamageSystem
                 CARD_TYPE.HEAVY => ApplyDamageCalculation(dmgInfo, _damage),
                 CARD_TYPE.FAST => ApplyDamageCalculation(dmgInfo, _damage),
                 CARD_TYPE.SUPER => ApplyDamageCalculation(dmgInfo, _damage),
-                //TODO: Use 'ref' on defense. Needs get "success" and "counter" booleans.
-                CARD_TYPE.DEFENSE => CalculateDefenseCard(dmgInfo),
                 CARD_TYPE.BOND => CalculateBondCard(dmgInfo),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => 0
             };
+
+            if (dmgInfo.CardType == CARD_TYPE.DEFENSE)
+            {
+                var success = DefenseSuccess(dmgInfo);
+                var counter = success && CounterSuccess(dmgInfo);
+            }
         }
 
-        static float CalculateDefenseCard(DamageInformation dmgInfo)
-        {   //TODO: We need the defense card subtype (block or dodge) to know what to apply.
-            var _blockCard = true;
-            var _counter = false;
-            var _success = false;
-            if (_blockCard)
-            {
-                //TODO: Turn this into a method. GetBlockChance() or GetDefChance()
-                var _blockChance = 100 + ((dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE]
-                                           * GlobalConfig.Instance.globalCardDataSO.techDefMultiplier)
-                                           - (dmgInfo.EnemyToyoStats[TOYO_STAT.ANALYSIS] *
-                                           GlobalConfig.Instance.globalCardDataSO.analysisMultiplier));
-                _success = Random.Range(0, 100) <= _blockChance;
-                if (_success)
-                {
-                    //TODO: Turn this into a method. GetCounterChance()
-                    var _counterBlockChance = GlobalConfig.Instance.globalCardDataSO.baseCounterChance
-                                              + ((dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE] * 
-                                                  GlobalConfig.Instance.globalCardDataSO.counterTechMultiplier) + 
-                                                 (dmgInfo.ToyoStats[TOYO_STAT.LUCK] * 
-                                                  GlobalConfig.Instance.globalCardDataSO.counterLuckFactor));
-                    _counter = Random.Range(0, 100) <= _counterBlockChance;
-                }
-            }
-            else
-            {
-                var _dodgeChance = 100 + ((dmgInfo.ToyoStats[TOYO_STAT.AGILITY]
-                                           * GlobalConfig.Instance.globalCardDataSO.agilityDefMultiplier)
-                                           - (dmgInfo.EnemyToyoStats[TOYO_STAT.SPEED] 
-                                           * GlobalConfig.Instance.globalCardDataSO.speedMultiplier));
-                _success = Random.Range(0, 100) <= _dodgeChance;
-                if (_success)
-                {
-                    var _counterDodgeChance = GlobalConfig.Instance.globalCardDataSO.baseCounterChance 
-                                                + ((dmgInfo.ToyoStats[TOYO_STAT.AGILITY] 
-                                                * GlobalConfig.Instance.globalCardDataSO.counterAgilityMultiplier) 
-                                                + (dmgInfo.ToyoStats[TOYO_STAT.LUCK] 
-                                                * GlobalConfig.Instance.globalCardDataSO.counterLuckFactor));
-                    _counter = Random.Range(0, 100) < _counterDodgeChance;
-                }
-            }
-            
-            //TODO: Return success and counter
-            return 0.0f;
-        }
-        
         static float CalculateBondCard(DamageInformation dmgInfo)
         {
             return GlobalConfig.Instance.globalCardDataSO.bondCardDamage;
-        }
-
-        static void CalculateResistance(DamageInformation dmgInfo)
-        {
-            
-        }
-
-        static void CalculateResilience(DamageInformation dmgInfo)
-        {
-            
         }
         
         static float CalculateStrenght(DamageInformation dmgInfo)
@@ -104,11 +51,6 @@ namespace CombatSystem.DamageSystem
             return _cyberForce * _hitVariation;
         }
 
-        static void CalculatePrecision(DamageInformation dmgInfo)
-        {
-            
-        }
-
         /// <summary>
         /// Returns damage dealt after applying modifiers.
         /// </summary>
@@ -117,30 +59,16 @@ namespace CombatSystem.DamageSystem
             float _sum = 0;
             float _multiplier = 1;
             GetSumAndMultiplier(dmgInfo.CardType, ref _sum, ref _multiplier);
+            
+            var _comboFactor = GetComboFactor(dmgInfo);
+            
+            var _criticalHit = CheckCriticalHit(dmgInfo);
+            
+            var _enemyDef = GetEnemyDef(dmgInfo, _criticalHit);
 
-            //TODO: Turn this into a method. GetComboFactor()
-            var _comboFactor = 1;
-            if (dmgInfo.CardType == CARD_TYPE.HEAVY)
-            {
-                _comboFactor = GlobalConfig.Instance.globalCardDataSO.comboSystemFactor;
-            }
-            var comboFactorResult = dmgInfo.CurrentCombo / _comboFactor;
+            var _hitVar = GetHitVariation(dmgInfo, _criticalHit);
             
-            //TODO: Turn this into a method. GetEnemyDef()
-            var _enemyDef = dmgInfo.AttackType == ATTACK_TYPE.PHYSICAL ?
-                (dmgInfo.EnemyToyoStats[TOYO_STAT.RESISTANCE] * 
-                 GlobalConfig.Instance.globalCardDataSO.resistenceMultiplier) : 
-                (dmgInfo.EnemyToyoStats[TOYO_STAT.RESILIENCE] *
-                 GlobalConfig.Instance.globalCardDataSO.resilianceMultiplier);
-
-            var _critical = CheckCriticalHit(dmgInfo);
-            
-            _enemyDef = _critical ? GlobalConfig.Instance.globalCardDataSO.defenseInCritical : _enemyDef;
-            var _hitVar = _critical ? 
-                dmgInfo.HitVariation * GlobalConfig.Instance.globalCardDataSO.criticalDamageModifier
-                : dmgInfo.HitVariation;
-            
-            var _damageResult = _multiplier * (_sum + comboFactorResult * _hitVar * damage);
+            var _damageResult = _multiplier * (_sum + _comboFactor * _hitVar * damage);
             _damageResult -= _enemyDef;
             
             return _damageResult;
@@ -167,6 +95,17 @@ namespace CombatSystem.DamageSystem
             }
         }
         
+        static int GetComboFactor(DamageInformation dmgInfo)
+        {
+            var _comboFactor = 1;
+            if (dmgInfo.CardType == CARD_TYPE.HEAVY)
+            {
+                _comboFactor = GlobalConfig.Instance.globalCardDataSO.comboSystemFactor;
+            }
+            var comboFactor = dmgInfo.CurrentCombo / _comboFactor;
+            return comboFactor;
+        }
+        
         static bool CheckCriticalHit(DamageInformation dmgInfo)
         {   
             var _precision = dmgInfo.ToyoStats[TOYO_STAT.PRECISION];
@@ -179,6 +118,84 @@ namespace CombatSystem.DamageSystem
             var _maxCritical = GlobalConfig.Instance.globalCardDataSO.maxCriticalChance;
             _criticalChance = _criticalChance > _maxCritical ? _maxCritical : _criticalChance;
             return Random.Range(0, 100) >= _criticalChance;
+        }
+
+        static float GetEnemyDef(DamageInformation dmgInfo, bool criticalHit)
+        {
+            var _enemyDef = dmgInfo.AttackType == ATTACK_TYPE.PHYSICAL ?
+                (dmgInfo.EnemyToyoStats[TOYO_STAT.RESISTANCE] * 
+                 GlobalConfig.Instance.globalCardDataSO.enemyResistanceMultiplier) : 
+                (dmgInfo.EnemyToyoStats[TOYO_STAT.RESILIENCE] *
+                 GlobalConfig.Instance.globalCardDataSO.enemyResilienceMultiplier);
+            if (criticalHit)
+            {
+                _enemyDef *= GlobalConfig.Instance.globalCardDataSO.defenseInCriticalMultiplier;
+            }
+
+            return _enemyDef;
+        }
+
+        static float GetHitVariation(DamageInformation dmgInfo, bool criticalHit)
+        {
+            return criticalHit ? 
+                dmgInfo.HitVariation * GlobalConfig.Instance.globalCardDataSO.criticalDamageModifier
+                : dmgInfo.HitVariation;
+        }
+
+        static float GetDefenseChance(DamageInformation dmgInfo)
+        {
+            float _defChance = 100;
+            switch (dmgInfo.DefenseType)
+            {
+                case DEFENSE_TYPE.BLOCK:
+                    _defChance += ((dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE]
+                                  * GlobalConfig.Instance.globalCardDataSO.techDefMultiplier)
+                                  - (dmgInfo.EnemyToyoStats[TOYO_STAT.ANALYSIS] 
+                                  * GlobalConfig.Instance.globalCardDataSO.analysisMultiplier));
+                    break;
+                case  DEFENSE_TYPE.DODGE:
+                    _defChance += ((dmgInfo.ToyoStats[TOYO_STAT.AGILITY]
+                                  * GlobalConfig.Instance.globalCardDataSO.agilityDefMultiplier)
+                                  - (dmgInfo.EnemyToyoStats[TOYO_STAT.SPEED] 
+                                  * GlobalConfig.Instance.globalCardDataSO.speedMultiplier));
+                    break;
+            }
+
+            return _defChance;
+        }
+
+        static bool DefenseSuccess(DamageInformation dmgInfo)
+        {
+            float defenseChance = GetDefenseChance(dmgInfo);
+            return Random.Range(0, 100) <= defenseChance;
+        }
+        
+        static float GetCounterChance(DamageInformation dmgInfo)
+        {
+            float _counterChance = GlobalConfig.Instance.globalCardDataSO.baseCounterChance;
+            switch (dmgInfo.DefenseType)
+            {
+                case DEFENSE_TYPE.BLOCK:
+                    _counterChance += ((dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE] * 
+                                      GlobalConfig.Instance.globalCardDataSO.counterTechMultiplier) + 
+                                      (dmgInfo.ToyoStats[TOYO_STAT.LUCK] * 
+                                      GlobalConfig.Instance.globalCardDataSO.counterLuckFactor));
+                    break;
+                case  DEFENSE_TYPE.DODGE:
+                    _counterChance += ((dmgInfo.ToyoStats[TOYO_STAT.AGILITY] 
+                                      * GlobalConfig.Instance.globalCardDataSO.counterAgilityMultiplier) 
+                                      + (dmgInfo.ToyoStats[TOYO_STAT.LUCK] 
+                                      * GlobalConfig.Instance.globalCardDataSO.counterLuckFactor));
+                    break;
+            }
+
+            return _counterChance;
+        }
+        
+        static bool CounterSuccess(DamageInformation dmgInfo)
+        {
+            float counterChance = GetCounterChance(dmgInfo);
+            return Random.Range(0, 100) <= counterChance;
         }
     }
 }
