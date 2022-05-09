@@ -58,8 +58,13 @@ namespace CombatSystem.DamageSystem
             var _hitListInfos = card.CardData?.HitListInfos;
 
             if (_hitListInfos?.Count > 0)
-                foreach (var _hit in _hitListInfos)
+                for (var index = 0; index < _hitListInfos.Count; index++)
+                {
+                    var _hit = _hitListInfos[index];
+                    /*DamageInformation _dmgInfo = new DamageInformation(card, FullToyo, index);
+                    DamageCalculation.CalculateDamage(_dmgInfo);*/
                     DoDamage(_hit);
+                }
         }
 
         void DoDamage(HitListInfo hit)
@@ -75,6 +80,7 @@ namespace CombatSystem.DamageSystem
         public ATTACK_TYPE AttackType;
         public ATTACK_SUB_TYPE AttackSubType;
         public CARD_TYPE CardType;
+        public DEFENSE_TYPE DefenseType;
         public Dictionary<TOYO_STAT, float> ToyoStats;
         public Dictionary<TOYO_STAT, float> EnemyToyoStats;
         public int CurrentCombo;
@@ -85,6 +91,7 @@ namespace CombatSystem.DamageSystem
             CardType = card.CardData.Cardtype;
             AttackType = card.CardData.AttackType;
             AttackSubType = card.CardData.AttackSubType;
+            DefenseType = card.CardData.DefenseType;
             ToyoStats = fullToyo.ToyoStats;
             EnemyToyoStats = fullToyo.ToyoStats; //TODO: Get Enemy Toyo Stats
             CurrentCombo = 1; //Todo Implement Combo System
