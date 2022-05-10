@@ -89,7 +89,7 @@ namespace CombatSystem
                     break;
                 case CARD_TYPE.BOND:
                     var _dmgInfo2 = new DamageInformation(card, FullToyo, -1);
-                    BoundSystem.BoundEffectApply(_dmgInfo2);
+                    BoundSystem.AddEffect(_dmgInfo2);
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }
@@ -113,7 +113,7 @@ namespace CombatSystem
         public int CurrentCombo;
         public List<EffectData> MyBuffs;
         public List<EffectData> EnemyBuffs;
-        public EffectData EffectData;
+        public EffectData[] EffectData;
 
         public DamageInformation(ICard card, IFullToyo fullToyo, int hitIndex)
         {

@@ -8,20 +8,13 @@ namespace CombatSystem
 {
     public class BoundSystem : MonoBehaviour
     {
-        public static void BoundEffectApply(DamageInformation dmgInfo)
+        public static void AddEffect(DamageInformation dmgInfo)
         {
-            AddEffect(dmgInfo);
-            if (dmgInfo.EffectData.temporary)
+            if (dmgInfo.EffectData == null) return;
+            foreach (var effect in dmgInfo.EffectData)
             {
-                //TODO: Treat case of temporary effect.
-            }
-        }
-
-        private static void AddEffect(DamageInformation dmgInfo)
-        {
-            if (dmgInfo.EffectData != null)
-            {
-                dmgInfo.MyBuffs?.Add(dmgInfo.EffectData);
+                if (effect == null) { continue; }
+                dmgInfo.MyBuffs?.Add(effect);
             }
         }
 

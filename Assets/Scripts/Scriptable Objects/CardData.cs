@@ -37,7 +37,7 @@ public class CardData : UniqueScriptableObject
     public bool ApplyEffect;
     
     [SerializeField] [ShowIf("ApplyEffect")]
-    public EffectData EffectData;
+    public EffectData[] EffectData;
     
     [Space]    
     public List<HitListInfo> HitListInfos; 
