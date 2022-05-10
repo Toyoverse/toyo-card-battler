@@ -35,7 +35,13 @@ public enum EFFECT_TYPE
 {
     GAIN_HP,
     GAIN_AP,
-    CHANGE_STAT
+    CHANGE_STAT,
+    CARD_MOD_DAMAGE, 
+    CARD_MOD_COST, 
+    CARD_MOD_TRUE_DAMAGE,
+    CARD_MOD_LIFE_STEAL,
+    RULE_MOD, 
+    STUN
 }
 
 public enum TOYO_PIECE
@@ -86,4 +92,10 @@ public enum TOYO_STAT
     PRECISION,
     STAMINA,
     LUCK
+}
+
+public enum TOYO_TYPE
+{
+    ALLY,
+    ENEMY
 }

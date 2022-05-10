@@ -27,107 +27,77 @@ namespace CombatSystem
             EnemyHealth = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IHealth>();
             PlayerAP = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IAp>();
             FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
-            CardHand.OnCardPlayed += ProcesCardPlayed;
+            CardHand.OnCardPlayed += ProcessCardPlayed;
         }
 
         void OnEnable()
         {
             if(CardHand?.OnCardPlayed != null)
-                CardHand.OnCardPlayed += ProcesCardPlayed;
+                CardHand.OnCardPlayed += ProcessCardPlayed;
         }
 
         private void OnDisable()
         {
-            CardHand.OnCardPlayed -= ProcesCardPlayed;
+            CardHand.OnCardPlayed -= ProcessCardPlayed;
         }
 
-        void ProcesCardPlayed(ICard _card)
+        private void ProcessCardPlayed(ICard _card)
         {
             ProcessCardDamage(_card);
             ProcessCardAPCost(_card);
         }
-        
-        void ProcessCardAPCost(ICard _card)
+
+        private void ProcessCardAPCost(ICard _card)
         {
-            int _apCost = _card.CardData?.ApCost ?? 0;
+            var _apCost = _card.CardData?.ApCost ?? 0;
             PlayerAP?.OnUseAP.Invoke(_apCost);
         }
 
-        void ProcessCardDamage(ICard card)
+        private void ProcessCardDamage(ICard card)
         {
-            var _hitListInfos = card.CardData?.HitListInfos;
-
-            if (_hitListInfos?.Count > 0)
+            switch (card.CardData.Cardtype)
             {
-                for (var index = 0; index < _hitListInfos.Count; index++)
-                {
-                    DamageInformation _dmgInfo = new DamageInformation(card, FullToyo, index);
-                    var _damage = DamageCalculation.CalculateDamage(_dmgInfo);
-                    DoDamage(_damage);
-                }
-            }
-            else
-            {
-                DamageInformation _dmgInfo = new DamageInformation(card, FullToyo, -1);
-                switch (_dmgInfo.CardType)
-                {
-                    case CARD_TYPE.DEFENSE:
-                        if (DefenseSystem.DefenseSuccess(_dmgInfo))
+                case CARD_TYPE.HEAVY or CARD_TYPE.FAST or CARD_TYPE.SUPER:
+                    var _hitListInfos = card.CardData?.HitListInfos;
+                    if (_hitListInfos?.Count > 0)
+                    {
+                        for (var index = 0; index < _hitListInfos.Count; index++)
                         {
-                            //TODO: Send defense success to the Enemy and interrupt his attack
-                            if (DefenseSystem.CounterSuccess(_dmgInfo))
-                            {
-                                //TODO: Get fast attack card and Execute the counterattack - Start new combo
-                            }
+                            //TODO: Consider hit time in the animation.
+                            var _dmgInfo = new DamageInformation(card, FullToyo, index);
+                            var _damage = DamageCalculation.CalculateDamage(_dmgInfo);
+                            DoDamage(_damage);
                         }
-                        else
+                    }
+                    break;
+                case CARD_TYPE.DEFENSE:
+                    var _dmgInfo1 = new DamageInformation(card, FullToyo, -1);
+                    if (DefenseSystem.DefenseSuccess(_dmgInfo1))
+                    {
+                        //TODO: Send defense success to the Enemy and interrupt if his attack is a fast attack
+                        //TODO: If the enemy has a stronger card than the defense cards, don't check the counter-attack
+                        if (DefenseSystem.CounterSuccess(_dmgInfo1))
                         {
-                            //TODO: UX for Defense fail
-                            Debug.Log("Defense fail");
+                            //TODO: Get fast attack card and Execute the counterattack - Start new combo
                         }
-                        break;
-                    case  CARD_TYPE.BOND:
-                        BoundSystem.BoundEffectApply(_dmgInfo);
-                        break;
-                }
+                    }
+                    else
+                    {
+                        //TODO: UX for Defense fail
+                        Debug.Log("Defense fail");
+                    }
+                    break;
+                case CARD_TYPE.BOND:
+                    var _dmgInfo2 = new DamageInformation(card, FullToyo, -1);
+                    BoundSystem.BoundEffectApply(_dmgInfo2);
+                    break;
+                default: throw new ArgumentOutOfRangeException();
             }
         }
 
-        void DoDamage(/*HitListInfo hit*/ float damage)
+        private void DoDamage(/*HitListInfo hit*/ float damage)
         {
             EnemyHealth?.OnTakeDamage.Invoke(/*hit.Damage*/ damage);
-        }
-        
-        public static EffectData GetMyEffectInBuffs(DamageInformation dmgInfo, TOYO_STAT statToFind)
-        {
-            foreach (var effect in dmgInfo.Buffs)
-            {
-                if (effect.EffectType == EFFECT_TYPE.CHANGE_STAT)
-                {
-                    if (effect.statToChange == statToFind)
-                    {
-                        //TODO: Consider multiple cumulative equal effects.
-                        return effect;
-                    }
-                }
-            }
-            return null;
-        }
-        
-        public static EffectData GetEnemyEffectInEnemyBuffs(DamageInformation dmgInfo, TOYO_STAT statToFind)
-        {
-            foreach (var effect in dmgInfo.EnemyBuffs)
-            {
-                if (effect.EffectType == EFFECT_TYPE.CHANGE_STAT)
-                {
-                    if (effect.statToChange == statToFind)
-                    {
-                        //TODO: Consider multiple cumulative equal effects.
-                        return effect;
-                    }
-                }
-            }
-            return null;
         }
     }
     
@@ -141,7 +111,7 @@ namespace CombatSystem
         public Dictionary<TOYO_STAT, float> ToyoStats;
         public Dictionary<TOYO_STAT, float> EnemyToyoStats;
         public int CurrentCombo;
-        public List<EffectData> Buffs;
+        public List<EffectData> MyBuffs;
         public List<EffectData> EnemyBuffs;
         public EffectData EffectData;
 
@@ -155,7 +125,7 @@ namespace CombatSystem
             ToyoStats = fullToyo.ToyoStats;
             EnemyToyoStats = fullToyo.ToyoStats; //TODO: Get Enemy Toyo Stats
             CurrentCombo = 1; //Todo Implement Combo System
-            Buffs = fullToyo.Buffs;
+            MyBuffs = fullToyo.Buffs;
             EnemyBuffs = fullToyo.Buffs; //TODO: Get Enemy Toyo Buffs
             EffectData = card.CardData.EffectData;
         }

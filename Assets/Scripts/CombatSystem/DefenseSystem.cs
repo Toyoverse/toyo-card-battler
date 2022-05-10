@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CombatSystem
 {
@@ -12,50 +14,33 @@ namespace CombatSystem
             var counter = success && CounterSuccess(dmgInfo);
         }*/
 
-        static float GetDefenseChance(DamageInformation dmgInfo)
+        private static float GetDefenseChance(DamageInformation dmgInfo)
         {
             float _defChance = 100;
             switch (dmgInfo.DefenseType)
             {
                 case DEFENSE_TYPE.BLOCK:
                     var _tech = dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE];
-                    if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.TECHNIQUE))
-                    {
-                        var _effect = DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.TECHNIQUE);
-                        _tech *= _effect.changeFactor;
-                        BoundSystem.RemoveEffect(dmgInfo, _effect);
-                    }
+                    _tech *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.TECHNIQUE);
+
                     var _enemyAnalysis = dmgInfo.EnemyToyoStats[TOYO_STAT.ANALYSIS];
-                    if (DamageSystem.GetEnemyEffectInEnemyBuffs(dmgInfo, TOYO_STAT.ANALYSIS))
-                    {
-                        var _effect = DamageSystem.GetEnemyEffectInEnemyBuffs(
-                            dmgInfo, TOYO_STAT.ANALYSIS);
-                        _enemyAnalysis *= _effect.changeFactor;
-                        BoundSystem.RemoveEffect(dmgInfo, _effect);
-                    }
+                    _enemyAnalysis *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.ANALYSIS);
+
                     _defChance += ((_tech * GlobalConfig.Instance.globalCardDataSO.techDefMultiplier) 
                            - (_enemyAnalysis * GlobalConfig.Instance.globalCardDataSO.analysisMultiplier));
                     break;
                 case  DEFENSE_TYPE.DODGE:
                     var _agility = dmgInfo.ToyoStats[TOYO_STAT.AGILITY];
-                    if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.AGILITY))
-                    {
-                        var _effect = DamageSystem.GetMyEffectInBuffs(
-                            dmgInfo, TOYO_STAT.AGILITY);
-                        _agility *= _effect.changeFactor;
-                        BoundSystem.RemoveEffect(dmgInfo, _effect);
-                    }
+                    _agility *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.AGILITY);
+
                     var _enemySpeed = dmgInfo.EnemyToyoStats[TOYO_STAT.SPEED];
-                    if (DamageSystem.GetEnemyEffectInEnemyBuffs(dmgInfo, TOYO_STAT.SPEED))
-                    {
-                        var _effect = DamageSystem.GetEnemyEffectInEnemyBuffs(
-                            dmgInfo, TOYO_STAT.SPEED);
-                        _enemySpeed *= _effect.changeFactor;
-                        BoundSystem.RemoveEffect(dmgInfo, _effect);
-                    }
+                    _enemySpeed *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.SPEED);
+
                     _defChance += ((_agility * GlobalConfig.Instance.globalCardDataSO.agilityDefMultiplier)
                                   - (_enemySpeed * GlobalConfig.Instance.globalCardDataSO.speedMultiplier));
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             return _defChance;
@@ -63,32 +48,22 @@ namespace CombatSystem
 
         public static bool DefenseSuccess(DamageInformation dmgInfo)
         {
-            float defenseChance = GetDefenseChance(dmgInfo);
+            var defenseChance = GetDefenseChance(dmgInfo);
             return Random.Range(0, 100) <= defenseChance;
         }
-        
-        static float GetCounterChance(DamageInformation dmgInfo)
+
+        private static float GetCounterChance(DamageInformation dmgInfo)
         {
-            float _counterChance = GlobalConfig.Instance.globalCardDataSO.baseCounterChance;
+            var _counterChance = GlobalConfig.Instance.globalCardDataSO.baseCounterChance;
             switch (dmgInfo.DefenseType)
             {
                 case DEFENSE_TYPE.BLOCK:
                     var _tech = dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE];
-                    if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.TECHNIQUE))
-                    {
-                        var _effect = DamageSystem.GetMyEffectInBuffs(
-                            dmgInfo, TOYO_STAT.TECHNIQUE);
-                        _tech *= _effect.changeFactor;
-                        BoundSystem.RemoveEffect(dmgInfo, _effect);
-                    }
+                    _tech *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.TECHNIQUE);
+
                     var _luck = dmgInfo.ToyoStats[TOYO_STAT.LUCK];
-                    if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.LUCK))
-                    {
-                        var _effect = DamageSystem.GetMyEffectInBuffs(
-                            dmgInfo, TOYO_STAT.LUCK);
-                        _luck *= _effect.changeFactor;
-                        BoundSystem.RemoveEffect(dmgInfo, _effect);
-                    }
+                    _luck *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.LUCK);
+                    
                     _counterChance += ((_tech * 
                                         GlobalConfig.Instance.globalCardDataSO.counterTechMultiplier) 
                                        + (_luck * 
@@ -96,26 +71,18 @@ namespace CombatSystem
                     break;
                 case  DEFENSE_TYPE.DODGE:
                     var _agility = dmgInfo.ToyoStats[TOYO_STAT.AGILITY];
-                    if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.AGILITY))
-                    {
-                        var _effect = DamageSystem.GetMyEffectInBuffs(
-                            dmgInfo, TOYO_STAT.AGILITY);
-                        _agility *= _effect.changeFactor;
-                        BoundSystem.RemoveEffect(dmgInfo, _effect);
-                    }
+                    _agility *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.AGILITY);
+                    
                     var _lucky = dmgInfo.ToyoStats[TOYO_STAT.LUCK];
-                    if (DamageSystem.GetMyEffectInBuffs(dmgInfo, TOYO_STAT.LUCK))
-                    {
-                        var _effect = DamageSystem.GetMyEffectInBuffs(
-                            dmgInfo, TOYO_STAT.LUCK);
-                        _lucky *= _effect.changeFactor;
-                        BoundSystem.RemoveEffect(dmgInfo, _effect);
-                    }
+                    _lucky *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.LUCK);
+                    
                     _counterChance += ((_agility
-                                      * GlobalConfig.Instance.globalCardDataSO.counterAgilityMultiplier) 
-                                      + (_lucky 
-                                      * GlobalConfig.Instance.globalCardDataSO.counterLuckFactor));
+                                        * GlobalConfig.Instance.globalCardDataSO.counterAgilityMultiplier) 
+                                       + (_lucky 
+                                          * GlobalConfig.Instance.globalCardDataSO.counterLuckFactor));
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             return _counterChance;
@@ -123,7 +90,7 @@ namespace CombatSystem
         
         public static bool CounterSuccess(DamageInformation dmgInfo)
         {
-            float counterChance = GetCounterChance(dmgInfo);
+            var counterChance = GetCounterChance(dmgInfo);
             return Random.Range(0, 100) <= counterChance;
         }
     }

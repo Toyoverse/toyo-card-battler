@@ -35,7 +35,7 @@ namespace Scriptable_Objects
             LayerToRenderNormal = 0;
             LayerToRenderTop = 1;
 
-            bondCardDamage = 1.0f;
+            //bondCardDamage = 1.0f;
             heavyCardSumFactor = 1.0f;
 
             heavyCardMultiplierFactor = 1.0f;
@@ -126,8 +126,8 @@ namespace Scriptable_Objects
         public int offsetZ = -1;
         
         [Header("CombatSettings")]
-        [SerializeField] [Range(0.0f, 5.0f)] 
-        public float bondCardDamage = -1;
+        /*[SerializeField] [Range(0.0f, 5.0f)] 
+        public float bondCardDamage = -1;*/
 
         [Tooltip("Amount by which the COMBO is divided in the calculation of HEAVY ATTACK DAMAGE.")]
         [SerializeField] [Range(1, 20)] 
