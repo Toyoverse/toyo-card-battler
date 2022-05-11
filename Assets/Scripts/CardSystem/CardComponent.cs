@@ -42,7 +42,7 @@ public class CardComponent : MonoBehaviour, ICard
     public CardData MyCardData;
 
     private CardStateMachine StateMachine { get; set; }
-    public string Name => MyCardData.LocalizedName ?? "NoName";
+    public string Name => MyCardData.CardName ?? "NoName";
     public string ID => MyCardData.Id;
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();

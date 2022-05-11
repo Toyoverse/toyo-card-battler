@@ -39,7 +39,7 @@ namespace Card
         static ICard InstantiateCard(ICardPile handler, CardData cardData)
         {
             var cardGo = Object.Instantiate(GlobalConfig.Instance.cardDefaultPrefab, GlobalConfig.Instance.deckPosition);
-            cardGo.name = "Card_" +cardData.toyoPart +"_"+cardData.LocalizedName;
+            cardGo.name = "Card_" +cardData.toyoPart +"_"+cardData.CardName;
             var card = cardGo.GetComponent<ICard>();
             card.CardData = cardData;
             handler.AddCard(card);
