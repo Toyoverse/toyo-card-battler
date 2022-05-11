@@ -20,6 +20,12 @@ namespace CombatSystem
             return ApplyDamageCalculation(dmgInfo, _damage);
         }
 
+        public static int CalculateLifeMod(DamageInformation dmgInfo, float damage)
+        {
+            var lifeMod = damage * BoundSystem.GetLifeStealFactor(dmgInfo);
+            return (int)lifeMod;
+        }
+
         private static float CalculateStrength(DamageInformation dmgInfo)
         {
             var _strength = dmgInfo.ToyoStats[TOYO_STAT.PHYSICAL_STRENGHT];
@@ -113,6 +119,8 @@ namespace CombatSystem
 
         private static float GetEnemyDef(DamageInformation dmgInfo, bool criticalHit)
         {
+            if (BoundSystem.GetTrueDamage(dmgInfo)) { return 0; }
+            
             var _enemyResistance = dmgInfo.EnemyToyoStats[TOYO_STAT.RESISTANCE];
             _enemyResistance *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.RESISTANCE);
 

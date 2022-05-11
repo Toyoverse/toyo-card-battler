@@ -33,15 +33,16 @@ public enum ATTACK_SUB_TYPE
 
 public enum EFFECT_TYPE
 {
-    GAIN_HP,
-    GAIN_AP,
+    HP_MOD,
+    AP_MOD,
     CHANGE_STAT,
     CARD_MOD_DAMAGE, 
     CARD_MOD_COST, 
     CARD_MOD_TRUE_DAMAGE,
     CARD_MOD_LIFE_STEAL,
     RULE_MOD, 
-    STUN
+    STUN,
+    DISCARD
 }
 
 public enum TOYO_PIECE

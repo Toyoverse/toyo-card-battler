@@ -10,20 +10,30 @@ public class EffectData : ScriptableObject
     [SerializeField]
     public TOYO_TYPE Toyo;
     
-    [SerializeField] [ShowIf("EffectType", EFFECT_TYPE.CHANGE_STAT)]
+    [SerializeField]
+    //[ShowIf("EffectType", EFFECT_TYPE.CHANGE_STAT)] 
     [Tooltip("If not checked, the effect is applied instantly.")]
     public bool temporary; //TODO: Apply ShowIf Effect_Type.Rule_Mod
-    
-    [SerializeField] [ShowIf("EffectType",EFFECT_TYPE.CHANGE_STAT)] 
+
+    [SerializeField]
+    //[ShowIf("@EffectType == EFFECT_TYPE.CHANGE_STAT")] 
     [HideIf("temporary", false)] [Range(0.0f, 10.0f)]
-    public float duration; //TODO: Apply ShowIf Effect_Type.Rule_Mod
+    [Tooltip("[WARNING! While the turn system has not been defined] \n" +
+             "This variable represents the number of times the effect will be applied. " +
+             "That is, if the value was 2, this effect will be applied to two actions, " +
+             "regardless of how many turns pass.")]
+    public int duration; //TODO: Apply ShowIf Effect_Type.Rule_Mod
+
+    [HideInInspector] 
+    public int timeUsed = 0; //Temporary duration control
+    //TODO: After defining the turn system by the GD, rethink treatment of effect duration.
     
     [Header("Effect Values")] 
-    [SerializeField] [ShowIf("EffectType", EFFECT_TYPE.GAIN_HP)] [Range(0.0f, 200.0f)]
+    [SerializeField] [ShowIf("EffectType", EFFECT_TYPE.HP_MOD)] [Range(-200.0f, 200.0f)]
     public float HPValue;
     
     [Header("Effect Values")] 
-    [SerializeField] [ShowIf("EffectType", EFFECT_TYPE.GAIN_AP)] [Range(0, 9)]
+    [SerializeField] [ShowIf("EffectType", EFFECT_TYPE.AP_MOD)] [Range(-9, 9)]
     public int APValue;
 
     [Header("Effect Values")] 
@@ -52,9 +62,7 @@ public class EffectData : ScriptableObject
              "what percentage of the damage will increase HP. " +
              "Examples: " +
              "\n  - 'Damage * 1.1' = 110% lifeSteal; " +
-             "\n  - 'Damage * 0.5' = 50% lifeSteal." +
-             "\n(The final result will be rounded down. Example: " +
-             "\n  - 'damage = 10, lifeSteal 12% = 1.2f, rounded = 1').")]
+             "\n  - 'Damage * 0.5' = 50% lifeSteal.")]
     [ShowIf("EffectType", EFFECT_TYPE.CARD_MOD_LIFE_STEAL)]
     [Range(0.0f, 5.0f)]
     public float lifeStealFactor;

@@ -15,13 +15,15 @@ MonoBehaviour:
   Id: abc1
   LocalizedName: Test 2
   Cardtype: 1
+  DefenseType: 0
   CardImage: {fileID: 0}
   ApCost: 1
   AttackType: 1
   AttackSubType: 1
   AttackAnimation: {fileID: 0}
-  ApplyEffect: 0
-  EffectData: {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
+  ApplyEffect: 1
+  EffectData:
+  - {fileID: 0}
   HitListInfos:
   - FrameToHit: 1
     Damage: 8

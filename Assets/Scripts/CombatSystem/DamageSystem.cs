@@ -14,10 +14,9 @@ namespace CombatSystem
     {
         protected IPlayerHand CardHand { get; set; }
         protected IHealth PlayerHealth { get; set; }
-        
         protected IHealth EnemyHealth { get; set; }
-        
         protected IAp PlayerAP{ get; set; }
+        protected IAp EnemyAP{ get; set; }
         protected IFullToyo FullToyo{ get; set; }
 
         private void Start()
@@ -26,6 +25,7 @@ namespace CombatSystem
             PlayerHealth = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IHealth>();
             EnemyHealth = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IHealth>();
             PlayerAP = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IAp>();
+            EnemyAP = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IAp>();
             FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
             CardHand.OnCardPlayed += ProcessCardPlayed;
         }
@@ -43,6 +43,9 @@ namespace CombatSystem
 
         private void ProcessCardPlayed(ICard _card)
         {
+            var _dmgInfo = new DamageInformation(_card, FullToyo);
+            if (!BoundSystem.ICanPlayThisCard(_dmgInfo)) { return; }
+            
             ProcessCardDamage(_card);
             ProcessCardAPCost(_card);
         }
@@ -50,6 +53,8 @@ namespace CombatSystem
         private void ProcessCardAPCost(ICard _card)
         {
             var _apCost = _card.CardData?.ApCost ?? 0;
+            var _dmgInfo = new DamageInformation(_card, FullToyo);
+            _apCost += BoundSystem.GetCostMod(_dmgInfo);
             PlayerAP?.OnUseAP.Invoke(_apCost);
         }
 
@@ -66,12 +71,14 @@ namespace CombatSystem
                             //TODO: Consider hit time in the animation.
                             var _dmgInfo = new DamageInformation(card, FullToyo, index);
                             var _damage = DamageCalculation.CalculateDamage(_dmgInfo);
+                            _damage *= BoundSystem.GetDamageFactor(_dmgInfo);
                             DoDamage(_damage);
+                            CheckLifeSteal(_dmgInfo, _damage);
                         }
                     }
                     break;
                 case CARD_TYPE.DEFENSE:
-                    var _dmgInfo1 = new DamageInformation(card, FullToyo, -1);
+                    var _dmgInfo1 = new DamageInformation(card, FullToyo);
                     if (DefenseSystem.DefenseSuccess(_dmgInfo1))
                     {
                         //TODO: Send defense success to the Enemy and interrupt if his attack is a fast attack
@@ -88,8 +95,9 @@ namespace CombatSystem
                     }
                     break;
                 case CARD_TYPE.BOND:
-                    var _dmgInfo2 = new DamageInformation(card, FullToyo, -1);
-                    BoundSystem.AddEffect(_dmgInfo2);
+                    var _dmgInfo2 = new DamageInformation(card, FullToyo);
+                    var damageSystem = this;
+                    BoundSystem.BoundProcess(_dmgInfo2, ref damageSystem);
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }
@@ -98,6 +106,54 @@ namespace CombatSystem
         private void DoDamage(/*HitListInfo hit*/ float damage)
         {
             EnemyHealth?.OnTakeDamage.Invoke(/*hit.Damage*/ damage);
+        }
+
+        private void CheckLifeSteal(DamageInformation dmgInfo, float damage)
+        {
+            var _lifeStealFactor = BoundSystem.GetLifeStealFactor(dmgInfo);
+            if (!(_lifeStealFactor > 0)) return;
+            var _hpMod = damage * _lifeStealFactor;
+            PlayerHealth?.OnGainHP.Invoke(_hpMod);
+        }
+
+        public void HpMod(TOYO_TYPE toyo, float sumValue)
+        {
+            if(sumValue == 0) { return; }
+
+            if (sumValue > 0)
+            {
+                if (toyo == TOYO_TYPE.ALLY)
+                { PlayerHealth?.OnGainHP.Invoke(sumValue); }
+                else
+                { EnemyHealth?.OnGainHP.Invoke(sumValue); }
+            }
+            else
+            {
+                if (toyo == TOYO_TYPE.ALLY)
+                { PlayerHealth?.OnTakeDamage.Invoke(Math.Abs(sumValue)); }
+                else
+                { EnemyHealth?.OnTakeDamage.Invoke(Math.Abs(sumValue)); }
+            }
+        }
+        
+        public void ApMod(TOYO_TYPE toyo, int sumValue)
+        {
+            if(sumValue == 0) { return; }
+
+            if (sumValue > 0)
+            {
+                if (toyo == TOYO_TYPE.ALLY)
+                { PlayerAP?.OnGainAP.Invoke(sumValue); }
+                else
+                { EnemyAP?.OnGainAP.Invoke(sumValue); }
+            }
+            else
+            {
+                if (toyo == TOYO_TYPE.ALLY)
+                { PlayerAP?.OnUseAP.Invoke(Math.Abs(sumValue)); }
+                else
+                { EnemyAP?.OnUseAP.Invoke(Math.Abs(sumValue)); }
+            }
         }
     }
     
@@ -115,9 +171,9 @@ namespace CombatSystem
         public List<EffectData> EnemyBuffs;
         public EffectData[] EffectData;
 
-        public DamageInformation(ICard card, IFullToyo fullToyo, int hitIndex)
+        public DamageInformation(ICard card, IFullToyo fullToyo, int hitIndex = -1)
         {
-            HitVariation = card.CardData.HitListInfos[hitIndex].Damage;
+            HitVariation = hitIndex >= 0 ? card.CardData.HitListInfos[hitIndex].Damage : 0;
             CardType = card.CardData.Cardtype;
             AttackType = card.CardData.AttackType;
             AttackSubType = card.CardData.AttackSubType;
