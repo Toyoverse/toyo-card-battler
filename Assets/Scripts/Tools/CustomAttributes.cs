@@ -478,6 +478,8 @@ namespace Tools
 
     public abstract class PropertyGroupAttribute : PropertyAttribute
     {
+        public object condition;
+        public string parameter = "";
     }
 
     #endregion

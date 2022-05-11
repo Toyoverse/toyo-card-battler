@@ -352,135 +352,69 @@ public class ToyoCustomPropertyDrawer : PropertyDrawer
 
     bool ValidadeEnableIf(SerializedProperty property)
     {
-        if (attribute is not EnableIf snif) return true;
-        
-        if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
-        {
-            var eE = snif.parameter.Contains("&&");
-            var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
-            var lstr = str.Split('|');
-            var pass = 0;
-            foreach (var ll in lstr)
-            {
-                var s2 = ll.Replace("==", "=").Split('=');
-                if (s2.Length < 2)
-                {
-
-                }
-                else
-                {
-                    var objp = PropertyUtility.GetTargetObjectWithProperty(property);
-                    var field = ReflectionUtility.GetField(objp, s2[0]);
-                    var obj = field.GetValue(objp);
-                    if (string.Equals(obj?.ToString(), s2[1], StringComparison.CurrentCultureIgnoreCase))
-                        pass++;
-
-                }
-
-            }
-            if (!(pass == lstr.Length || !eE && pass > 0))
-                return false;
-        }
-        else
-        {
-            var objp = PropertyUtility.GetTargetObjectWithProperty(property);
-            var field = ReflectionUtility.GetField(objp, snif.parameter);
-            var obj = field.GetValue(objp);
-            if (obj?.ToString() != snif.condition.ToString())
-                return false;
-        }
-        return true;
+        return attribute is not EnableIf _serializedProperty || ValidatePropertyCondition(property, _serializedProperty);
     }
     bool ValidadeDisableIf(SerializedProperty property)
     {
-        if (attribute is not DisableIf snif) return true;
-        
-        if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
-        {
-            var eE = snif.parameter.Contains("&&");
-            var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
-            var lstr = str.Split('|');
-            var pass = (from ll in lstr 
-                select ll.Replace("==", "=").Split('=') into s2 
-                where s2.Length >= 2 let objp = PropertyUtility.GetTargetObjectWithProperty(property) let field = ReflectionUtility.GetField(objp, s2[0]) let obj = field.GetValue(objp) 
-                where obj != null let res = obj.ToString() 
-                where string.Equals(res, s2[1], StringComparison.CurrentCultureIgnoreCase) 
-                select s2).Count();
-            if (!(pass == lstr.Length || !eE && pass > 0))
-                return false;
-        }
-        else
-        {
-            var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-            var field = ReflectionUtility.GetField(objp, snif.parameter);
-            var obj = field.GetValue(objp);
-            if (obj?.ToString() != snif.condition.ToString())
-                return false;
-        }
-        return true;
+        return attribute is not DisableIf _serializedProperty || ValidatePropertyCondition(property, _serializedProperty);
     }
-
 
     bool ValidadeShowIf(SerializedProperty property)
     {
-        if (attribute is not ShowIf snif) return true;
-        
-        if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
-        {
-            var eE = snif.parameter.Contains("&&");
-            var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
-            var lstr = str.Split('|');
-            var pass = (from ll in lstr 
-                select ll.Replace("==", "=").Split('=') into s2 
-                where s2.Length >= 2 let objp = PropertyUtility.GetTargetObjectWithProperty(property) let field = ReflectionUtility.GetField(objp, s2[0]) let obj = field.GetValue(objp) 
-                where obj != null let res = obj.ToString()
-                where string.Equals(res, s2[1], StringComparison.CurrentCultureIgnoreCase) 
-                select s2).Count();
-            if (!(pass == lstr.Length || !eE && pass > 0))
-                return false;
-
-        }
-        else
-        {
-            var objp = PropertyUtility.GetTargetObjectWithProperty(property);
-            var field = ReflectionUtility.GetField(objp, snif.parameter);
-            var obj = field.GetValue(objp);
-            if (obj?.ToString() != snif.condition.ToString())
-                return false;
-        }
-        return true;
+        return attribute is not ShowIf _serializedProperty || ValidatePropertyCondition(property, _serializedProperty);
     }
     
     bool ValidadeHideIf(SerializedProperty property)
     {
-        if (attribute is not HideIf snif) return true;
+        return attribute is not HideIf _serializedProperty || ValidatePropertyCondition(property, _serializedProperty);
+    }
+    
+
+    bool ValidatePropertyCondition(SerializedProperty property, PropertyGroupAttribute _serializedProperty)
+    {
+        var _containsAND = _serializedProperty.parameter.Contains("&&");
         
-        if (snif.parameter.Contains("@") || snif.parameter.Contains("||") || snif.parameter.Contains("&&"))
+        if (_serializedProperty.parameter.Contains("@") || _serializedProperty.parameter.Contains("||") || _containsAND)
         {
-            var eE = snif.parameter.Contains("&&");
-            var str = snif.parameter.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
-            var lstr = str.Split('|');
-            int pass = (from ll in lstr 
-                select ll.Replace("==", "=").Split('=') into s2 
-                where s2.Length >= 2 let objp = PropertyUtility.GetTargetObjectWithProperty(property) let field = ReflectionUtility.GetField(objp, s2[0]) let obj = field.GetValue(objp) 
-                where obj != null let res = obj.ToString() where res.ToLower() == s2[1].ToLower() 
-                select s2).Count();
-            if (!(pass == lstr.Length || !eE && pass > 0))
+            var _conditionArray = PrepareStringForValidation(_serializedProperty.parameter);
+            var pass = ValidadeCondition(property, _conditionArray);
+            if (!(pass == _conditionArray.Length || !_containsAND && pass > 0))
                 return false;
         }
         else
         {
-            var objp = PropertyUtility.GetTargetObjectWithProperty(property);//.FindPropertyRelative(snif.parameter);// target.GetField(snif.parameter);
-            var field = ReflectionUtility.GetField(objp, snif.parameter);
+            var objp = PropertyUtility.GetTargetObjectWithProperty(property);
+            var field = ReflectionUtility.GetField(objp, _serializedProperty.parameter);
             var obj = field.GetValue(objp);
-            if (obj?.ToString() != snif.condition.ToString())
+            if (obj?.ToString() != _serializedProperty.condition.ToString())
                 return false;
         }
+
         return true;
     }
+    
+    string[] PrepareStringForValidation(string _string)
+    {
+        var _formattedString = _string.Replace("||", "|").Replace("@", "").Replace(" ", "").Replace("&&", "|");
+        return _formattedString.Split('|');
+    }
 
-
-
+    int ValidadeCondition(SerializedProperty property, string[] _conditionArray)
+    { 
+        return (from _eachCondition in _conditionArray
+                select _eachCondition.Replace("==", "=").Split('=')
+                into s2
+                where s2.Length >= 2
+                let objp = PropertyUtility.GetTargetObjectWithProperty(property)
+                let field = ReflectionUtility.GetField(objp, s2[0])
+                let obj = field.GetValue(objp)
+                where obj != null
+                let res = obj.ToString()
+                where string.Equals(res, s2[1], StringComparison.CurrentCultureIgnoreCase)
+                select s2
+                ).Count();
+    }
+    
     private object GetValues(SerializedProperty property, string valuesName)
     {
         object target = PropertyUtility.GetTargetObjectWithProperty(property);
