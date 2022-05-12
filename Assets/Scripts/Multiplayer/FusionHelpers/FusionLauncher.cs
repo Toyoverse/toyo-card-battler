@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Card.DeckSystem;
 using Fusion;
 using Fusion.Sockets;
 using FusionExamples.FusionHelpers;
 using Multiplayer;
+using Player;
 using UnityEngine;
 
 
@@ -205,7 +207,16 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
             OnSpawnWorld = null;
         }
 
+        SaveAllCardIDS();
+        
         OnSpawnPlayer?.Invoke(runner, playerref);
+    }
+
+    void SaveAllCardIDS()
+    {
+        var _deck = FindObjectOfType<Deck>();
+        var _allIDS = _deck.AllCardIDS;
+        PlayerNetworkManager.Instance.AllCardIDS.AddRange(_allIDS);
     }
     
     public void SetConnectionStatus(ConnectionStatus status, string message)

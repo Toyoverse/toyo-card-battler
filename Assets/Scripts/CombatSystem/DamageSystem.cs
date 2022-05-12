@@ -71,6 +71,7 @@ namespace CombatSystem
                     }
                     break;
                 case CARD_TYPE.DEFENSE:
+                    break;
                     var _dmgInfo1 = new DamageInformation(card, FullToyo, -1);
                     if (DefenseSystem.DefenseSuccess(_dmgInfo1))
                     {

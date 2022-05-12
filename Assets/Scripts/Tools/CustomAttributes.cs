@@ -935,5 +935,5 @@ public class ScriptableObjectId : PropertyAttribute { }
 
 public class UniqueScriptableObject : ScriptableObject {
     [ScriptableObjectId] 
-    public string Id;
+    public int Id = 0;
 }

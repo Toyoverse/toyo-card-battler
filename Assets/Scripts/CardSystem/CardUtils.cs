@@ -14,7 +14,7 @@ namespace Card
     {
         public static void ValidateCard(this ICard card)
         {
-            if (card == null) throw new ArgumentNullException("Card is null");
+            if (card == null) /*throw new ArgumentNullException("Card is null");*/ throw new Exception();
         }
         
         public static void ValidateCardAP(this ICard card, PlayerRef _playerRef)
@@ -42,6 +42,7 @@ namespace Card
             cardGo.name = "Card_" +cardData.toyoPart +"_"+cardData.LocalizedName;
             var card = cardGo.GetComponent<ICard>();
             card.CardData = cardData;
+            card.CardID = cardData.Id;
             handler.AddCard(card);
             cardGo.transform.position = GlobalConfig.Instance.deckPosition.position;
             return card;
@@ -52,7 +53,7 @@ namespace Card
          * We only need to send the ID throught the network, instead of sending all the data.
          * Todo : Only for test, optimize later
          */
-        public static ICard FindCardByID(string _id)
+        public static ICard FindCardByID(int _id)
         {
             var _cards = GameObject.FindObjectsOfType<CardComponent>();
 

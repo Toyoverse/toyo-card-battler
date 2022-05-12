@@ -11,5 +11,7 @@ namespace Card.DeckSystem
         ICard GetTopCard();
         void ShuffleDeck();
         void InitializeFullToyo();
+
+        List<int> AllCardIDS { get;}
     }
 }

@@ -43,7 +43,7 @@ public class CardComponent : MonoBehaviour, ICard
 
     private CardStateMachine StateMachine { get; set; }
     public string Name => MyCardData.LocalizedName ?? "NoName";
-    public string ID => MyCardData.Id;
+    public int ID => MyCardData.Id;
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
@@ -66,6 +66,7 @@ public class CardComponent : MonoBehaviour, ICard
 
     public TextMeshPro DamageValue => MyDamageValue;
     public TextMeshPro APCost => MyApCost;
+    public int CardID { get; set; }
 
 
     public Camera MainCamera => Camera.main;

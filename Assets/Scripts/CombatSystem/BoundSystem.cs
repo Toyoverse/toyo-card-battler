@@ -33,9 +33,9 @@ namespace CombatSystem
         public static float GetFactorInMyBuffs(DamageInformation dmgInfo, TOYO_STAT statToFind)
         {
             var selected = new List<EffectData>();
-            foreach (var effect in dmgInfo.MyBuffs.Where(effect => 
-                         effect.EffectType == EFFECT_TYPE.CHANGE_STAT).Where(effect => 
-                         effect.statToChange == statToFind))
+            foreach (var effect in dmgInfo.MyBuffs?.
+                         Where(effect => effect.EffectType == EFFECT_TYPE.CHANGE_STAT).
+                         Where(effect => effect.statToChange == statToFind))
             {
                 selected.Add(effect);
                 RemoveEffect(dmgInfo, effect);

@@ -16,7 +16,7 @@ namespace Player
         private static List<PlayerNetworkObject> _players;
         public List<PlayerNetworkObject> Players => _players ??= FindObjectsOfType<PlayerNetworkObject>()?.ToList();
 
-        private static PlayerNetworkManager Instance;
+        public static PlayerNetworkManager Instance;
 
         public static void AddPlayer(PlayerNetworkObject playerNetworkObject) => Instance.Players.Add(playerNetworkObject);
         
@@ -32,7 +32,9 @@ namespace Player
         public GameState GetCurrentGameState() => GetGameState(CurrentStateID);
         
         private GameState GetGameState(int _currentStateID) => LastGameStates.Get(_currentStateID);
-        
+
+        public List<int> AllCardIDS { get; set; }
+
         public void SetGameState(PlayerInputData _playerInput)
         {
             NextGameState();
@@ -77,7 +79,8 @@ namespace Player
 
         private const int MAXPLAYERS = 2;
         public PlayerRef GameStatePlayerRef;
-        public NetworkString<_16> newCardId { get; set; }
+        public int newCardId { get; set; }
+        public NetworkArray<Int64> AllCardsThisMatch;
 
         //[Networked, Capacity(MAXPLAYERS)] public NetworkDictionary<PlayerRef, PlayerNetworkStruct> Players => default;
         //[Networked, Capacity(MAXPLAYERS)] public NetworkDictionary<PlayerRef, PlayerHandTest> PlayersHand => default;
@@ -87,7 +90,7 @@ namespace Player
 
 public struct  PlayerInputData : INetworkInput
 {
-    public NetworkString<_16> PlayedCardID;
+    public int PlayedCardID;
     public PlayerRef PlayerRef;
 
 }

@@ -90,9 +90,9 @@ namespace ToyoSystem
                 */
         }
         
-        public Dictionary<string, int> CountEachPartToyo()
+        public Dictionary<int, int> CountEachPartToyo()
         {
-            Dictionary<string, int> CountEachPart = new Dictionary<string, int>();
+            Dictionary<int, int> CountEachPart = new Dictionary<int, int>();
 
             var _listToyoData = ToyoIDs.ListToyoData;
             
