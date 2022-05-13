@@ -44,8 +44,6 @@ namespace CombatSystem
                 case EFFECT_TYPE.DISCARD:
                     DiscardRandomCard();
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
         
