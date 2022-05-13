@@ -56,8 +56,13 @@ namespace Card
         public static ICard FindCardByID(int _id)
         {
             var _cards = GameObject.FindObjectsOfType<CardComponent>();
-
             return _cards.FirstOrDefault(_card => _card.ID == _id);
+        }
+        
+        public static List<ICard> FindCardsByIDs(List<int> _id)
+        {
+            var _cards = GameObject.FindObjectsOfType<CardComponent>();
+            return _cards.Where(_card => _id.Contains(_card.ID)).Cast<ICard>().ToList();
         }
     }
 }

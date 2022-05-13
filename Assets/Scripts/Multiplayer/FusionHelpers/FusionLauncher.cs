@@ -216,7 +216,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
     {
         var _deck = FindObjectOfType<Deck>();
         var _allIDS = _deck.AllCardIDS;
-        PlayerNetworkManager.Instance.AllCardIDS.AddRange(_allIDS);
+        PlayerNetworkManager.Instance.AddNewCardsID(_allIDS);
     }
     
     public void SetConnectionStatus(ConnectionStatus status, string message)
