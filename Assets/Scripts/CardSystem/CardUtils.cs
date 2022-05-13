@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSystem;
 using Card.CardPile;
+using CombatSystem;
 using Fusion;
 using Player;
 using UnityEngine;
@@ -16,6 +17,9 @@ namespace Card
         {
             if (card == null) throw new ArgumentNullException("Card is null");
         }
+
+        public static bool ValidateCardForPlaying(this ICard card, DamageInformation dmgInfo)
+            => CanIPlayThisCard(dmgInfo);
         
         public static void ValidateCardAP(this ICard card, PlayerRef _playerRef)
         {
@@ -57,6 +61,12 @@ namespace Card
             var _cards = GameObject.FindObjectsOfType<CardComponent>();
 
             return _cards.FirstOrDefault(_card => _card.ID == _id);
+        }
+        
+        public static bool CanIPlayThisCard(DamageInformation dmgInfo)
+        {
+            return dmgInfo.MyBuffs.Where(effect => effect.EffectType == EFFECT_TYPE.RULE_MOD)
+                .All(effect => effect.excludedTypes.All(type => type != dmgInfo.CardType));
         }
     }
 }

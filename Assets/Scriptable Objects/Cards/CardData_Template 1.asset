@@ -13,17 +13,18 @@ MonoBehaviour:
   m_Name: CardData_Template 1
   m_EditorClassIdentifier: 
   Id: abc1
-  LocalizedName: Test 2
+  CardName: Fast-Physical_Template
   Cardtype: 1
   DefenseType: 0
   CardImage: {fileID: 0}
   ApCost: 1
   AttackType: 1
-  AttackSubType: 1
+  AttackSubType: 0
   AttackAnimation: {fileID: 0}
-  ApplyEffect: 1
+  ApplyEffect: 0
+  EffectName: 
   EffectData:
   - {fileID: 0}
   HitListInfos:
   - FrameToHit: 1
-    Damage: 8
+    Damage: 5

@@ -24,7 +24,7 @@ public class EffectData : ScriptableObject
              "regardless of how many turns pass.")]
     public int duration; //TODO: Apply ShowIf Effect_Type.Rule_Mod
 
-    [HideInInspector] 
+    [HideInInspector] [HideIf("timeUsed", 0)]
     public int timeUsed = 0; //Temporary duration control
     //TODO: After defining the turn system by the GD, rethink treatment of effect duration.
     
@@ -47,9 +47,13 @@ public class EffectData : ScriptableObject
     public float changeStatFactor;
     
     [Header("Next Card Effects")] [SerializeField] 
-    [Tooltip("Multiplier applied to status. \nExamples: " +
-             "\n'Damage * 1.1' = 10% more damage; \n'Damage * 0.5' = 50% less damage.")]
-    [ShowIf("EffectType", EFFECT_TYPE.CARD_MOD_DAMAGE)] [Range(0.0f, 5.0f)]
+    [Tooltip("Damage multiplication factor. " +
+             "\nThe factor starts at 1, adds the buffs (this value) and then multiplies by the damage. " +
+             "\nThat is, if this value of is 0.5, the end result is (Damage * 1.5), " +
+             "increasing 50% of the total damage. \nIf it is a negative value, " +
+             "it will reduce the damage, for example: If this value is -0.2, " +
+             "the end result will be (Damage * 0.8), reduced by 20% of the total damage.")]
+    [ShowIf("EffectType", EFFECT_TYPE.CARD_MOD_DAMAGE)] [Range(-1.0f, 5.0f)]
     public float nextCardDamageFactor;
     
     [SerializeField]

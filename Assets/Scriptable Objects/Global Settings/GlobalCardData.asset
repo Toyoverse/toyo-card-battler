@@ -29,7 +29,6 @@ MonoBehaviour:
   LayerToRenderNormal: 0
   LayerToRenderTop: 1
   offsetZ: -1
-  bondCardDamage: -1
   comboSystemFactor: 5
   heavyCardSumFactor: 1
   heavyCardMultiplierFactor: 1
@@ -42,8 +41,8 @@ MonoBehaviour:
   maxCriticalChance: 0.5
   criticalDamageModifier: 2
   defenseInCriticalMultiplier: 0
-  enemyResistanceMultiplier: 0.1
-  enemyResilienceMultiplier: 0.1
+  enemyResistanceMultiplier: 0.9
+  enemyResilienceMultiplier: 0.9
   analysisMultiplier: 0.11
   techDefMultiplier: 0.1
   speedMultiplier: 0.11

@@ -59,7 +59,8 @@ public class CardComponent : MonoBehaviour, ICard
         set
         {
             MyCardData = value;
-            DamageValue.text = MyCardData.HitListInfos[0].Damage.ToString(); //Todo consider all damages
+            DamageValue.text = MyCardData.HitListInfos.Count > 0 
+                ? MyCardData.HitListInfos[0].Damage.ToString() : "0"; //Todo consider all damages
             APCost.text = MyCardData.ApCost.ToString();
         }
     }

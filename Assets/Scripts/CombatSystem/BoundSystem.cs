@@ -22,6 +22,8 @@ namespace CombatSystem
         
         private static void AddEffect(DamageInformation dmgInfo, EffectData effect)
         {
+            Debug.Log("addEffect: " + effect.EffectType);
+            effect.timeUsed = 0;
             if (effect.Toyo == TOYO_TYPE.ALLY)
             { dmgInfo.MyBuffs?.Add(effect); }
             else
@@ -55,11 +57,12 @@ namespace CombatSystem
         private static void CheckRemoveEffect(DamageInformation dmgInfo, EffectData effect)
         {
             //TODO: After defining the turn system by the GD, rethink treatment of effect duration.
-            if (!effect.temporary || effect.duration >= effect.timeUsed)
+            if (!effect.temporary || effect.timeUsed >= (effect.duration - 1))
             {                         //^ Temporary duration control ^
+                Debug.Log("removeEffect: " + effect.EffectType);
                 dmgInfo.MyBuffs.Remove(effect);
             }
-            else if(effect.duration < effect.timeUsed)
+            else if(effect.duration > effect.timeUsed)
             {
                 effect.timeUsed++; //Temporary duration control
             }
@@ -68,10 +71,11 @@ namespace CombatSystem
         public static float GetFactorInMyBuffs(DamageInformation dmgInfo, TOYO_STAT statToFind)
         {
             var _selected = new List<EffectData>();
-            foreach (var effect in dmgInfo.MyBuffs.Where(effect => 
-                         effect.EffectType == EFFECT_TYPE.CHANGE_STAT).Where(effect => 
-                         effect.statToChange == statToFind))
+            for (var i = dmgInfo.MyBuffs.Count - 1; i >= 0; i--)
             {
+                var effect = dmgInfo.MyBuffs[i];
+                if (effect.EffectType != EFFECT_TYPE.CHANGE_STAT) continue;
+                if (effect.statToChange != statToFind) continue;
                 _selected.Add(effect);
                 CheckRemoveEffect(dmgInfo, effect);
             }
@@ -90,15 +94,18 @@ namespace CombatSystem
                 CheckRemoveEffect(dmgInfo, effect);
             }
 
-            return GetAllFactorsInEffects(_selected);
+            var _result = GetAllFactorsInEffects(_selected);
+            Debug.Log("Factor_" + statToFind + " in EnemyBuffs: " + _result);
+            return _result;
         }
 
-        private static float GetAllFactorsInEffects(List<EffectData> effectList)
+        private static float GetAllFactorsInEffects(IReadOnlyList<EffectData> effectList)
         {
             if (effectList.Count <= 0) return 1;
             float _effectSum = 0;
-            foreach (var effect in effectList)
+            for (var i = effectList.Count - 1; i >= 0; i--)
             {
+                var effect = effectList[i];
                 _effectSum += effect.changeStatFactor;
             }
 
@@ -108,14 +115,18 @@ namespace CombatSystem
         public static float GetLifeStealFactor(DamageInformation dmgInfo)
         {
             float _totalLifeSteal = 0;
-            foreach (var effect in dmgInfo.MyBuffs)
+            for (var i = 0; i < dmgInfo.MyBuffs.Count; i++)
             {
+                var effect = dmgInfo.MyBuffs[i];
                 if (effect.EffectType != EFFECT_TYPE.CARD_MOD_LIFE_STEAL)
-                { continue; }
+                {
+                    continue;
+                }
+
                 _totalLifeSteal += effect.lifeStealFactor;
                 CheckRemoveEffect(dmgInfo, effect);
             }
-
+            
             return _totalLifeSteal;
         }
 
@@ -125,6 +136,7 @@ namespace CombatSystem
                          effect.EffectType == EFFECT_TYPE.CARD_MOD_TRUE_DAMAGE))
             {
                 CheckRemoveEffect(dmgInfo, effect);
+                Debug.Log("TRUE DAMAGE!");
                 return true;
             }
 
@@ -134,9 +146,10 @@ namespace CombatSystem
         public static float GetDamageFactor(DamageInformation dmgInfo)
         {
             float _result = 1;
-            foreach (var effect in dmgInfo.MyBuffs.Where(effect => 
-                         effect.EffectType == EFFECT_TYPE.CARD_MOD_DAMAGE))
+            for (var i = 0; i < dmgInfo.MyBuffs.Count; i++)
             {
+                var effect = dmgInfo.MyBuffs[i];
+                if (effect.EffectType != EFFECT_TYPE.CARD_MOD_DAMAGE) continue;
                 _result += effect.nextCardDamageFactor;
                 CheckRemoveEffect(dmgInfo, effect);
             }
@@ -147,30 +160,15 @@ namespace CombatSystem
         public static int GetCostMod(DamageInformation dmgInfo)
         {
             var _result = 0;
-            foreach (var effect in dmgInfo.MyBuffs.Where(effect => 
-                         effect.EffectType == EFFECT_TYPE.CARD_MOD_COST))
+            for (var i = dmgInfo.MyBuffs.Count - 1; i >= 0; i--)
             {
+                var effect = dmgInfo.MyBuffs[i];
+                if (effect.EffectType != EFFECT_TYPE.CARD_MOD_COST) continue;
                 _result += effect.nextCardCostMod;
                 CheckRemoveEffect(dmgInfo, effect);
             }
 
             return _result;
-        }
-
-        public static bool ICanPlayThisCard(DamageInformation dmgInfo)
-        {
-            foreach (var effect in dmgInfo.MyBuffs.Where(effect => 
-                         effect.EffectType == EFFECT_TYPE.RULE_MOD))
-            {
-                if (effect.excludedTypes.Any(type => type == dmgInfo.CardType))
-                {
-                    CheckRemoveEffect(dmgInfo, effect);
-                    //TODO: After defining the turn system by the GD, rethink treatment of effect duration.
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }

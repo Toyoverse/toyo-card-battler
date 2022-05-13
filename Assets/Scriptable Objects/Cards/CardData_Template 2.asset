@@ -13,15 +13,20 @@ MonoBehaviour:
   m_Name: CardData_Template 2
   m_EditorClassIdentifier: 
   Id: abc2
-  LocalizedName: Test 3
-  Cardtype: 2
+  CardName: Fast-Cyber_Template
+  Cardtype: 1
+  DefenseType: 0
   CardImage: {fileID: 0}
   ApCost: 2
   AttackType: 0
   AttackSubType: 4
   AttackAnimation: {fileID: 0}
-  ApplyEffect: 1
-  EffectData: {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
+  ApplyEffect: 0
+  EffectName: 
+  EffectData:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   HitListInfos:
   - FrameToHit: 1
-    Damage: 12
+    Damage: 8

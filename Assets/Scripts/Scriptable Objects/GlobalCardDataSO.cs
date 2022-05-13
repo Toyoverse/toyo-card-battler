@@ -185,6 +185,14 @@ namespace Scriptable_Objects
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float enemyResilienceMultiplier = 0.1f;
         
+        [Tooltip("Multiplier factor that defines the maximum damage a defense can mitigate. " +
+                 "This factor is applied to the amount of damage dealt and represents the percentage " +
+                 "the defense will mitigate if it is higher than damage. " +
+                 "\nExample: If the defense is greater than the damage, then the defense will be " +
+                 "\n(Damage * maxDefenseFactor).")]
+        [SerializeField] [Range(0.0f, 1.0f)] 
+        public float maxDefenseFactor = 0.5f;
+        
         [Tooltip("ANALYSIS multiplier used to generate BLOCK CHANCE value.")]
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float analysisMultiplier = 0.11f;
