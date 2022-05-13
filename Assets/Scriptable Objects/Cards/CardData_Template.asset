@@ -12,20 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template
   m_EditorClassIdentifier: 
-  Id: 7
-  LocalizedName: abc5
-  Cardtype: 0
+  Id: abc5
+  CardName: Bound_Template
+  Cardtype: 3
   DefenseType: 0
   CardImage: {fileID: 0}
-  ApCost: 4
+  ApCost: 2
   AttackType: 0
   AttackSubType: 0
   AttackAnimation: {fileID: 0}
   ApplyEffect: 1
+  EffectName: Test_Effects
   EffectData:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  HitListInfos:
-  - FrameToHit: 1
-    Damage: 10
+  - {fileID: 11400000, guid: 81da7ff21c91bb0459c4b874420d65d9, type: 2}
+  - {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
+  HitListInfos: []

@@ -42,8 +42,8 @@ public class CardComponent : MonoBehaviour, ICard
     public CardData MyCardData;
 
     private CardStateMachine StateMachine { get; set; }
-    public string Name => MyCardData.LocalizedName ?? "NoName";
-    public int ID => MyCardData.Id;
+    public string Name => MyCardData.CardName ?? "NoName";
+    public string ID => MyCardData.Id;
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
@@ -59,14 +59,14 @@ public class CardComponent : MonoBehaviour, ICard
         set
         {
             MyCardData = value;
-            DamageValue.text = MyCardData.HitListInfos[0].Damage.ToString(); //Todo consider all damages
+            DamageValue.text = MyCardData.HitListInfos.Count > 0 
+                ? MyCardData.HitListInfos[0].Damage.ToString() : "0"; //Todo consider all damages
             APCost.text = MyCardData.ApCost.ToString();
         }
     }
 
     public TextMeshPro DamageValue => MyDamageValue;
     public TextMeshPro APCost => MyApCost;
-    public int CardID { get; set; }
 
 
     public Camera MainCamera => Camera.main;

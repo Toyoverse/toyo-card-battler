@@ -25,7 +25,7 @@ namespace ToyoSystem
             ToyoParts = new Dictionary<TOYO_PIECE, IToyoPart>();
             ToyoStats = new Dictionary<TOYO_STAT, float>();
             ToyoBonusStats = new Dictionary<TOYO_STAT, float>();
-
+            Buffs = new List<EffectData>();
         }
         
         public void InitializeToyo(ICardPile handler)

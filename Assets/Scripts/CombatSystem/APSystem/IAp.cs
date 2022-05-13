@@ -11,6 +11,8 @@ namespace APSystem
         
         Action<int> OnGainAP { get; set; }
         
+        Action<int> OnChangeAP { get; set; }
+        
         Action<int> OnUseAP { get; set; }
     }
 }

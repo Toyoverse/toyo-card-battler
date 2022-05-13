@@ -10,12 +10,12 @@ public class CardData : UniqueScriptableObject
     #region Public Variables
 
     [Header("Card Description")] [SerializeField]
-    public string LocalizedName;
+    public string CardName;
     
     [SerializeField]
-    public CARD_TYPE Cardtype;
+    public CARD_TYPE CardType;
     
-    [SerializeField][ShowIf("Cardtype", CARD_TYPE.DEFENSE)]
+    [SerializeField][ShowIf("CardType", CARD_TYPE.DEFENSE)]
     public DEFENSE_TYPE DefenseType;
     
     [SerializeField] 
@@ -35,6 +35,9 @@ public class CardData : UniqueScriptableObject
     
     [SerializeField]
     public bool ApplyEffect;
+    
+    [SerializeField] [ShowIf("ApplyEffect")]
+    public string EffectName;
     
     [SerializeField] [ShowIf("ApplyEffect")]
     public EffectData[] EffectData;

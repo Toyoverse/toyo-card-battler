@@ -11,6 +11,8 @@ namespace HealthSystem
         
         Action<float> OnGainHP { get; set; }
         
+        Action<float> OnChangeHP { get; set; }
+        
         Action<float> OnTakeDamage { get; set; }
     }
 }

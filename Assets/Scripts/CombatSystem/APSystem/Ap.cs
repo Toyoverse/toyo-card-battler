@@ -59,12 +59,14 @@ namespace APSystem
         {
             OnGainAP += GainAP;
             OnUseAP += UseAP;
+            OnChangeAP += ChangeAP;
         }
 
         void OnDisable()
         {
             OnGainAP -= GainAP;
             OnUseAP -= UseAP;
+            OnChangeAP -= ChangeAP;
         }
 
         #endregion
@@ -77,6 +79,14 @@ namespace APSystem
             if (Mathf.FloorToInt(partialAP) > AP)
                 AP++;
               
+        }
+
+        void ChangeAP(int _value)
+        {
+            if(_value > 0)
+                GainAP(_value);
+            else
+                UseAP(_value);
         }
         
         void GainAP(int _value)
@@ -108,6 +118,7 @@ namespace APSystem
         }
 
         public Action<int> OnGainAP { get; set; }
+        public Action<int> OnChangeAP { get; set; }
         public Action<int> OnUseAP { get; set; }
     }
 }

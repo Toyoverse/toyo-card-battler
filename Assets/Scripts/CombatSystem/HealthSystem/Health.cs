@@ -37,16 +37,26 @@ public class Health : MonoBehaviour, IHealth
     {
         OnGainHP += GainHP;
         OnTakeDamage += TakeDamage;
+        OnChangeHP += ChangeHP;
     }
 
     void OnDisable()
     {
         OnGainHP -= GainHP;
         OnTakeDamage -= TakeDamage;
+        OnChangeHP -= ChangeHP;
     }
     
     #endregion
 
+    void ChangeHP(float _value)
+    {
+        if (_value > 0)
+            OnGainHP?.Invoke(_value);
+        else
+            OnTakeDamage?.Invoke(_value);
+    }
+    
     void GainHP(float _value)
     {
         health += _value;
@@ -74,5 +84,6 @@ public class Health : MonoBehaviour, IHealth
     }
 
     public Action<float> OnGainHP { get; set; }
+    public Action<float> OnChangeHP { get; set; }
     public Action<float> OnTakeDamage { get; set; }
 }
