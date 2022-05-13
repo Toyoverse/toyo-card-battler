@@ -6,6 +6,7 @@ using Card.CardPile;
 using CombatSystem;
 using Fusion;
 using Player;
+using ToyoSystem;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -18,8 +19,8 @@ namespace Card
             if (card == null) throw new ArgumentNullException("Card is null");
         }
 
-        public static bool ValidateCardForPlaying(this ICard card, DamageInformation dmgInfo)
-            => CanIPlayThisCard(dmgInfo);
+        public static bool ValidateBoundEffects(this ICard card, List<EffectData> _effectList)
+            => CanIPlayThisCard(card, _effectList);
         
         public static void ValidateCardAP(this ICard card, PlayerRef _playerRef)
         {
@@ -49,7 +50,6 @@ namespace Card
             handler.AddCard(card);
             cardGo.transform.position = GlobalConfig.Instance.deckPosition.position;
             return card;
-
         }
         
         /*
@@ -63,10 +63,17 @@ namespace Card
             return _cards.FirstOrDefault(_card => _card.ID == _id);
         }
         
-        public static bool CanIPlayThisCard(DamageInformation dmgInfo)
+        private static bool CanIPlayThisCard(ICard _card, List<EffectData> _effectList)
         {
-            return dmgInfo.MyBuffs.Where(effect => effect.EffectType == EFFECT_TYPE.RULE_MOD)
-                .All(effect => effect.excludedTypes.All(type => type != dmgInfo.CardType));
+            for (var i = 0; i < _effectList.Count; i++)
+            {
+                var effect = _effectList[i];
+                if (effect.EffectType != EFFECT_TYPE.RULE_MOD) continue;
+                if (effect.excludedTypes.All(type => type != _card.CardData.CardType)) continue;
+                BoundSystem.CheckRemoveEffect(_effectList, effect);
+                return false;
+            }
+            return true;
         }
     }
 }

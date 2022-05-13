@@ -6,42 +6,45 @@ namespace CombatSystem
 {
     public class DefenseSystem : MonoBehaviour
     {
+        public static bool DefenseCardSuccess(DamageInformation dmgInfo)
+            => GetDefenseChance(dmgInfo) >= Random.Range(0, 100);
+        
         private static float GetDefenseChance(DamageInformation dmgInfo)
         {
-            float _defChance = 100;
-            switch (dmgInfo.DefenseType)
+            return dmgInfo.DefenseType switch
             {
-                case DEFENSE_TYPE.BLOCK:
-                    var _tech = dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE];
-                    _tech *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.TECHNIQUE);
+                DEFENSE_TYPE.BLOCK => GetDefenseBlockChance(dmgInfo),
+                DEFENSE_TYPE.DODGE => GetDefenseDodgeChance(dmgInfo),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
 
-                    var _enemyAnalysis = dmgInfo.EnemyToyoStats[TOYO_STAT.ANALYSIS];
-                    _enemyAnalysis *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.ANALYSIS);
+        private static float GetDefenseBlockChance(DamageInformation dmgInfo)
+        {
+            float _defChance = 100;
+            var _tech = dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE];
+            _tech *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.TECHNIQUE);
 
-                    _defChance += ((_tech * GlobalConfig.Instance.globalCardDataSO.techDefMultiplier) 
+            var _enemyAnalysis = dmgInfo.EnemyToyoStats[TOYO_STAT.ANALYSIS];
+            _enemyAnalysis *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.ANALYSIS);
+
+            _defChance += ((_tech * GlobalConfig.Instance.globalCardDataSO.techDefMultiplier) 
                            - (_enemyAnalysis * GlobalConfig.Instance.globalCardDataSO.analysisMultiplier));
-                    break;
-                case  DEFENSE_TYPE.DODGE:
-                    var _agility = dmgInfo.ToyoStats[TOYO_STAT.AGILITY];
-                    _agility *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.AGILITY);
-
-                    var _enemySpeed = dmgInfo.EnemyToyoStats[TOYO_STAT.SPEED];
-                    _enemySpeed *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.SPEED);
-
-                    _defChance += ((_agility * GlobalConfig.Instance.globalCardDataSO.agilityDefMultiplier)
-                                  - (_enemySpeed * GlobalConfig.Instance.globalCardDataSO.speedMultiplier));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
             return _defChance;
         }
 
-        public static bool DefenseCardSuccess(DamageInformation dmgInfo)
+        private static float GetDefenseDodgeChance(DamageInformation dmgInfo)
         {
-            var defenseChance = GetDefenseChance(dmgInfo);
-            return Random.Range(0, 100) <= defenseChance;
+            float _defChance = 100;
+            var _agility = dmgInfo.ToyoStats[TOYO_STAT.AGILITY];
+            _agility *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.AGILITY);
+
+            var _enemySpeed = dmgInfo.EnemyToyoStats[TOYO_STAT.SPEED];
+            _enemySpeed *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.SPEED);
+
+            _defChance += ((_agility * GlobalConfig.Instance.globalCardDataSO.agilityDefMultiplier)
+                           - (_enemySpeed * GlobalConfig.Instance.globalCardDataSO.speedMultiplier));
+            return _defChance;
         }
 
         private static float GetCounterChance(DamageInformation dmgInfo)
@@ -75,7 +78,7 @@ namespace CombatSystem
 
             return _counterChance;
         }
-        
+
         public static bool CounterCardSuccess(DamageInformation dmgInfo)
             => GetCounterChance(dmgInfo) >= Random.Range(0, 100);
         

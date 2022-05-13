@@ -16,9 +16,7 @@ namespace CombatSystem
 
             var _result = new float[dmgInfo.HitVariation.Count];
             for (var i = 0; i < _damage.Length; i++)
-            {
                 _result[i] = ApplyDamageCalculation(dmgInfo, _damage[i], i);
-            }
 
             return _result;
         }
@@ -26,7 +24,7 @@ namespace CombatSystem
         private static float[] CalculateStrength(DamageInformation dmgInfo)
         {   
             //TODO: Consider balancing the calculation to avoid absurd values.
-            float[] _strength = new float[dmgInfo.HitVariation.Count];
+            var _strength = new float[dmgInfo.HitVariation.Count];
             for (var i = 0; i < dmgInfo.HitVariation.Count; i++)
             {
                 _strength[i] = dmgInfo.ToyoStats[TOYO_STAT.PHYSICAL_STRENGTH];
@@ -35,17 +33,12 @@ namespace CombatSystem
             }
 
             return _strength;
-
-            /*var _strength = dmgInfo.ToyoStats[TOYO_STAT.PHYSICAL_STRENGTH];
-            _strength *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.PHYSICAL_STRENGTH);
-            var _hitVariation = dmgInfo.HitVariation;
-            return _strength * _hitVariation;*/
         }
 
         private static float[] CalculateCyberForce(DamageInformation dmgInfo)
         {
             //TODO: Consider balancing the calculation to avoid absurd values.
-            float[] _cyberForce = new float[dmgInfo.HitVariation.Count];
+            var _cyberForce = new float[dmgInfo.HitVariation.Count];
             for (var i = 0; i < dmgInfo.HitVariation.Count; i++)
             {
                 _cyberForce[i] = dmgInfo.ToyoStats[TOYO_STAT.CYBER_FORCE];
@@ -54,16 +47,8 @@ namespace CombatSystem
             }
 
             return _cyberForce;
-            
-            /*var _cyberForce = dmgInfo.ToyoStats[TOYO_STAT.CYBER_FORCE];
-            _cyberForce *= BoundSystem.GetFactorInMyBuffs(dmgInfo, TOYO_STAT.CYBER_FORCE);
-            var _hitVariation = dmgInfo.HitVariation;
-            return _cyberForce * _hitVariation;*/
         }
 
-        /// <summary>
-        /// Returns damage dealt after applying modifiers.
-        /// </summary>
         private static float ApplyDamageCalculation(DamageInformation dmgInfo, float damage, int hitIndex)
         {
             float _sum = 0;
@@ -121,9 +106,7 @@ namespace CombatSystem
         {
             var _comboFactor = 1;
             if (dmgInfo.CardType == CARD_TYPE.HEAVY)
-            {
                 _comboFactor = GlobalConfig.Instance.globalCardDataSO.comboSystemFactor;
-            }
             return dmgInfo.CurrentCombo / _comboFactor;
         }
 
@@ -164,10 +147,8 @@ namespace CombatSystem
                 (_enemyResilience *
                  GlobalConfig.Instance.globalCardDataSO.enemyResilienceMultiplier);
             if (criticalHit)
-            {
                 _enemyDef *= GlobalConfig.Instance.globalCardDataSO.defenseInCriticalMultiplier;
-            }
-            
+
             return _enemyDef;
         }
 

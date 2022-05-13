@@ -2,12 +2,19 @@
 using Card;
 using Card.CardPile;
 using Fusion;
+using ToyoSystem;
+using UnityEngine;
+using System.Linq;
 
 namespace PlayerHand
 {
     public class PlayerHand : CardPile, IPlayerHand
     {
-       
+        private IFullToyo _fullToyo;
+
+        IFullToyo FullToyo 
+            => _fullToyo ??= GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
+
         public void PlaySelected()
         {
             SelectedCard.ValidateCard();
@@ -17,6 +24,12 @@ namespace PlayerHand
         public void PlayCard(ICard card)
         {
             card.ValidateCard();
+            if(!card.ValidateBoundEffects(FullToyo.Buffs))
+            { 
+                Debug.Log("An active RULE_MOD prevents type " 
+                          + card.CardData.CardType + " cards from being played.");
+                return;
+            }
             card.ValidateCardAP(MyPlayerRef);
 
             SelectedCard = null;
@@ -45,18 +58,15 @@ namespace PlayerHand
             EnableCards();
         }
 
-        public void Unselect()
-        {
-            UnselectCard(SelectedCard);
-        }
+        public void Unselect() => UnselectCard(SelectedCard);
 
-        public void DisableCards()
+        private void DisableCards()
         {
             foreach (var otherCard in Cards)
                 otherCard.Disable();
         }
 
-        public void EnableCards()
+        private void EnableCards()
         {
             foreach (var otherCard in Cards)
                 otherCard.Enable();

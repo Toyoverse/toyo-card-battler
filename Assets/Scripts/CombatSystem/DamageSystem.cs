@@ -14,10 +14,9 @@ namespace CombatSystem
         protected IPlayerHand CardHand { get; set; }
         protected IHealth PlayerHealth { get; set; }
         protected IHealth EnemyHealth { get; set; }
-        protected IAp PlayerAP{ get; set; }
-        protected IAp EnemyAP{ get; set; }
-        protected IFullToyo FullToyo{ get; set; }
-        
+        protected IAp PlayerAP { get; set; }
+        protected IAp EnemyAP { get; set; }
+        protected IFullToyo FullToyo { get; set; }
         protected DamageInformation DamageInformation { get; set; }
 
         private void Start()
@@ -45,7 +44,6 @@ namespace CombatSystem
         private void ProcessCardPlayed(ICard _card)
         {
             DamageInformation = new DamageInformation(_card, FullToyo);
-            if(!_card.ValidateCardForPlaying(DamageInformation)) return;
 
             ProcessCardAPCost(_card);
             ProcessCardPlay(_card);
@@ -54,80 +52,83 @@ namespace CombatSystem
         private void ProcessCardAPCost(ICard _card)
         {
             var _apCost = _card.CardData?.ApCost ?? 0;
-            var _dmgInfo = new DamageInformation(_card, FullToyo);
-            _apCost += BoundSystem.GetCostMod(_dmgInfo);
+            _apCost += BoundSystem.GetCostMod(DamageInformation);
             _apCost = _apCost < 0 ? 0 : _apCost;
             PlayerAP?.OnUseAP.Invoke(_apCost);
         }
 
         private void ProcessCardPlay(ICard card)
         {
-            switch (card.CardData.Cardtype)
+            switch (card.CardData.CardType)
             {
                 case CARD_TYPE.HEAVY or CARD_TYPE.FAST or CARD_TYPE.SUPER:
-                    var _hitListInfos = card.CardData?.HitListInfos;
-                    if (_hitListInfos?.Count > 0)
-                    {
-                        //TODO: Consider hit time in the animation.
-                        var _damage = DamageCalculation.CalculateDamage(DamageInformation);
-                        for (var i = 0; i < _damage.Length; i++)
-                        {
-                            _damage[i] *= BoundSystem.GetDamageFactor(DamageInformation);
-                            if (DefenseSystem.NaturalEnemyDefense(DamageInformation))
-                            {
-                                if (DefenseSystem.NaturalEnemyCounter(DamageInformation))
-                                    ApplyEnemyCounter();
-                            }
-                            else
-                            {
-                                DoDamage(_damage[i]);
-                                CheckLifeSteal(DamageInformation, _damage[i]);
-                            }
-                        }
-                    }
+                    AttackCardProcess(card);
                     break;
                 case CARD_TYPE.DEFENSE:
-                    var _dmgInfo1 = new DamageInformation(card, FullToyo);
-                    if (DefenseSystem.DefenseCardSuccess(_dmgInfo1))
-                    {
-                        //TODO: Send defense success to the Enemy and interrupt if his attack is a fast attack
-                        //TODO: If the enemy has a stronger card than the defense cards, don't check the counter-attack
-                        if (DefenseSystem.CounterCardSuccess(_dmgInfo1))
-                            ApplyMyCounter();
-                    }
-                    else
-                    {
-                        //TODO: UX for Defense fail
-                        Debug.Log("Defense fail");
-                    }
+                    DefenseCardProcess();
                     break;
                 case CARD_TYPE.BOND:
-                    var _dmgInfo2 = new DamageInformation(card, FullToyo);
                     var damageSystem = this;
-                    BoundSystem.BoundProcess(_dmgInfo2, ref damageSystem);
+                    BoundSystem.BoundCardProcess(DamageInformation, ref damageSystem);
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }
         }
 
-        void ApplyEnemyCounter()
+        private void AttackCardProcess(ICard card)
+        {
+            var _hitListInfos = card.CardData?.HitListInfos;
+            if (!(_hitListInfos?.Count > 0)) return;
+            //TODO: Consider hit time in the animation.
+            var _damage = DamageCalculation.CalculateDamage(DamageInformation);
+            for (var i = 0; i < _damage.Length; i++)
+            {
+                _damage[i] *= BoundSystem.GetDamageFactor(DamageInformation);
+                if (DefenseSystem.NaturalEnemyDefense(DamageInformation))
+                {
+                    if (DefenseSystem.NaturalEnemyCounter(DamageInformation))
+                        ApplyEnemyCounter();
+                }
+                else
+                {
+                    DoDamage(_damage[i]);
+                    CheckLifeSteal(_damage[i]);
+                }
+            }
+        }
+
+        private void DefenseCardProcess()
+        {
+            if (DefenseSystem.DefenseCardSuccess(DamageInformation))
+            {
+                //TODO: Send defense success to the Enemy and interrupt if his attack is a fast attack
+                //TODO: If the enemy has a stronger card than the defense cards, don't check the counter-attack
+                if (DefenseSystem.CounterCardSuccess(DamageInformation))
+                    ApplyMyCounter();
+            }
+            else
+            {
+                //TODO: UX for Defense fail
+                Debug.Log("Defense fail");
+            }
+        }
+
+        private void ApplyEnemyCounter()
         {
             //TODO: Apply enemy counter attack
         }
-        
-        void ApplyMyCounter()
+
+        private void ApplyMyCounter()
         {
             //TODO: Get fast attack card and Execute the counterattack - Start new combo
         }
 
         private void DoDamage(/*HitListInfo hit*/ float damage)
-        {
-            EnemyHealth?.OnTakeDamage.Invoke(/*hit.Damage*/ damage);
-        }
+            => EnemyHealth?.OnTakeDamage.Invoke(/*hit.Damage*/ damage);
 
-        private void CheckLifeSteal(DamageInformation dmgInfo, float damage)
+        private void CheckLifeSteal(float damage)
         {
-            var _lifeStealFactor = BoundSystem.GetLifeStealFactor(dmgInfo);
+            var _lifeStealFactor = BoundSystem.GetLifeStealFactor(DamageInformation);
             if (!(_lifeStealFactor > 0)) return;
             var _hpMod = damage * _lifeStealFactor;
             PlayerHealth?.OnGainHP.Invoke(_hpMod);
@@ -167,7 +168,7 @@ namespace CombatSystem
         public DamageInformation(ICard card, IFullToyo fullToyo)
         {
             HitVariation = card.CardData.HitListInfos;
-            CardType = card.CardData.Cardtype;
+            CardType = card.CardData.CardType;
             AttackType = card.CardData.AttackType;
             AttackSubType = card.CardData.AttackSubType;
             DefenseType = card.CardData.DefenseType;
