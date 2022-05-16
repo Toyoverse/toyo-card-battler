@@ -87,7 +87,10 @@ namespace Player
                 /*Debug.LogError("CurrentState ID:" + tempGameState);
                 Debug.LogError("New Card ID:" +_state.newCardId);
                 Debug.LogError("Player ID:" +_state.GameStatePlayerRef.PlayerId);*/
-                Debug.LogError("Player ID:" +_state.AllCardsThisMatch);
+                foreach (var cardID in _state.AllCardsThisMatch.ToArray())
+                    if(cardID > 0)
+                        Debug.Log("Card ID:" + cardID);
+                
                 tempGameState++;
             }
         }

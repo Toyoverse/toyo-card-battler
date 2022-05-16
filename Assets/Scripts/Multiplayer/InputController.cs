@@ -76,7 +76,7 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 
 
 
-	void AddCardToQueue(ICard _card) => IDCardForQueue = _card.ID;
+	void AddCardToQueue(ICard _card) => IDCardForQueue = _card.CardID;
 	
 	private void OnEnable()
 	{

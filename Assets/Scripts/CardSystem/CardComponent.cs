@@ -43,15 +43,19 @@ public class CardComponent : MonoBehaviour, ICard
 
     private CardStateMachine StateMachine { get; set; }
     public string Name => MyCardData.CardName ?? "NoName";
-    public string ID => MyCardData.Id;
+    public int CardID
+    {
+        get => MyCardData.Id;
+        set => _ = value;
+    }
+
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
 
     [Header("Card Settings")] [SerializeField] private TextMeshPro MyDamageValue;
     [SerializeField] private TextMeshPro MyApCost;
-
-
+    
     public MonoBehaviour MonoBehavior => this;
     public CardData CardData
     {

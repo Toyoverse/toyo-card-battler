@@ -5,9 +5,6 @@ namespace Card
 {
     public interface ICard : IStateMachineHandler, ICardComponents, ICardTransform
     {
-        [Networked]
-        int ID { get; }
-        
         bool IsDragging { get; }
         bool IsHovering { get; }
         bool IsDisabled { get; }

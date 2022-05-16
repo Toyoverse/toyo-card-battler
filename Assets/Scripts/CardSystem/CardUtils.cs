@@ -56,11 +56,18 @@ namespace Card
          * We only need to send the ID throught the network, instead of sending all the data.
          * Todo : Only for test, optimize later
          */
-        public static ICard FindCardByID(string _id)
+        public static ICard FindCardByID(int _id)
         {
             var _cards = GameObject.FindObjectsOfType<CardComponent>();
 
-            return _cards.FirstOrDefault(_card => _card.ID == _id);
+            return _cards.FirstOrDefault(_card => _card.CardID == _id);
+        }
+        
+                
+        public static List<ICard> FindCardsByIDs(List<int> _id)
+        {
+            var _cards = GameObject.FindObjectsOfType<CardComponent>();
+            return _cards.Where(_card => _id.Contains(_card.CardID)).Cast<ICard>().ToList();
         }
         
         private static bool CanIPlayThisCard(ICard _card, List<EffectData> _effectList)
