@@ -70,7 +70,7 @@ namespace Card
                 var effect = _effectList[i];
                 if (effect.EffectType != EFFECT_TYPE.RULE_MOD) continue;
                 if (effect.excludedTypes.All(type => type != _card.CardData.CardType)) continue;
-                BoundSystem.CheckRemoveEffect(_effectList, effect);
+                BoundSystem.CheckRemoveEffect(ref _effectList, effect);
                 return false;
             }
             return true;

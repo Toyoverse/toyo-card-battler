@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: abc5
   CardName: Bound_Template
-  Cardtype: 3
+  CardType: 3
   DefenseType: 0
   CardImage: {fileID: 0}
   ApCost: 2

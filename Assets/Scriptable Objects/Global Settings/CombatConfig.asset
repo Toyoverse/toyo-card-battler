@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73465c5151d0dd14eafc9af5ad2bac38, type: 3}
+  m_Name: CombatConfig
+  m_EditorClassIdentifier: 
+  comboSystemFactor: 5
+  heavyCardSumFactor: 1
+  heavyCardMultiplierFactor: 1
+  fastCardSumFactor: 0
+  fastCardMultiplierFactor: 1
+  superCardSumFactor: 0
+  superCardMultiplierFactor: 1
+  criticalLuckFactor: 0.025
+  criticalPrecisionFactor: 0.05
+  maxCriticalChance: 0.5
+  criticalDamageModifier: 2
+  defenseInCriticalMultiplier: 0
+  enemyResistanceMultiplier: 0.1
+  enemyResilienceMultiplier: 0.1
+  maxDefenseFactor: 0.5
+  analysisMultiplier: 0.11
+  techDefMultiplier: 0.1
+  speedMultiplier: 0.11
+  agilityDefMultiplier: 0.1
+  baseCounterChance: 5
+  counterLuckFactor: 0.1
+  counterAgilityMultiplier: 0.05
+  counterTechMultiplier: 0.05

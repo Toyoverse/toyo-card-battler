@@ -68,8 +68,7 @@ namespace CombatSystem
                     DefenseCardProcess();
                     break;
                 case CARD_TYPE.BOND:
-                    var damageSystem = this;
-                    BoundSystem.BoundCardProcess(DamageInformation, ref damageSystem);
+                    BoundSystem.BoundCardProcess(DamageInformation, HpMod, ApMod);
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }
@@ -141,13 +140,13 @@ namespace CombatSystem
             else
                 EnemyHealth?.OnChangeHP.Invoke(sumValue); 
         }
-        
-        public void ApMod(TOYO_TYPE toyo, int sumValue)
+
+        public void ApMod(TOYO_TYPE toyo, float sumValue)
         {
             if (toyo == TOYO_TYPE.ALLY)
-                PlayerAP?.OnChangeAP.Invoke(sumValue); 
+                PlayerAP?.OnChangeAP.Invoke((int)sumValue); 
             else
-                EnemyAP?.OnChangeAP.Invoke(sumValue); 
+                EnemyAP?.OnChangeAP.Invoke((int)sumValue); 
         }
     }
     

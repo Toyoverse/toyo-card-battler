@@ -7,6 +7,7 @@ using UnityEngine;
     public class GlobalConfig : Singleton<GlobalConfig>
     {
         [FoldoutGroup("Card Parameters")] public GlobalCardDataSO globalCardDataSO;
+        [FoldoutGroup("Card Parameters")] public CombatConfigSO CombatConfigSO;
         [FoldoutGroup("Card Parameters")] public GameObject cardDefaultPrefab;
         
         

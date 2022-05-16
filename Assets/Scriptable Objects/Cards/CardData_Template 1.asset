@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: abc1
   CardName: Fast-Physical_Template
-  Cardtype: 1
+  CardType: 1
   DefenseType: 0
   CardImage: {fileID: 0}
   ApCost: 1

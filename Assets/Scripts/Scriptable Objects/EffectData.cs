@@ -11,24 +11,18 @@ public class EffectData : ScriptableObject
     public TOYO_TYPE Toyo;
     
     [SerializeField]
-    //[ShowIf("@((int)EffectType > 2)")] 
     [Tooltip("If not checked, the effect is applied instantly.")]
     public bool temporary; //TODO: Don't show for effect types that can only be instantaneous.
 
     [SerializeField]
-    //[ShowIf("@EffectType == EFFECT_TYPE.CHANGE_STAT")] 
     [ShowIf("@temporary == true")]
-    /*[HideIf("temporary", false)]*/ [Range(0.0f, 10.0f)]
+    [Range(0.0f, 10.0f)]
     [Tooltip("[WARNING! While the turn system has not been defined] \n" +
              "This variable represents the number of times the effect will be applied. " +
              "That is, if the value was 2, this effect will be applied to two actions, " +
              "regardless of how many turns pass.")]
     public int duration; //TODO: Don't show for effect types that can only be instantaneous.
 
-    [HideInInspector] [HideIf("timeUsed", 0)]
-    public int timeUsed = 0; //Temporary duration control
-    //TODO: After defining the turn system by the GD, rethink treatment of effect duration.
-    
     [Header("Effect Values")] 
     [SerializeField] [ShowIf("EffectType", EFFECT_TYPE.HP_MOD)] [Range(-200.0f, 200.0f)]
     public float HPValue;
