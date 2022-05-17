@@ -19,6 +19,9 @@ namespace Card.DeckSystem
         
         private ICardPile _graveyard;
         public ICardPile Graveyard => this.LazyFindOfType(ref _graveyard);
+
+        public List<int> _allCardsID;
+        public List<int> AllCardIDS => _allCardsID ??= new List<int>(); 
         
         Action<ICard[]> ICardPile.OnPileChanged
         {
@@ -32,6 +35,8 @@ namespace Card.DeckSystem
             _card.transform.SetParent(transform);
             _card.transform.position = transform.position;
             _card.gameObject.SetActive(false);
+            if(!_allCardsID.Contains(_card.CardID))
+                _allCardsID.Add(_card.CardID);
             NotifyPileChange();
         }
 
@@ -46,7 +51,7 @@ namespace Card.DeckSystem
         
         public bool HasSynergyCards()
         {
-            Dictionary<string, int> _countEachPart = FullToyo.CountEachPartToyo();
+            Dictionary<int, int> _countEachPart = FullToyo.CountEachPartToyo();
 
             return _countEachPart.Any(_part => _part.Value >= NumberRequiredForSynergy);
         }
@@ -59,6 +64,9 @@ namespace Card.DeckSystem
             
         }
 
+        
+
+
         public void InitializeDeckFromToyo()
         {
             if (FullToyo != null)
@@ -70,6 +78,8 @@ namespace Card.DeckSystem
 
             if (Cards.Count <= 0)
                 GenerateDeckDebug();
+            
+            
         }
 
         void AddCardsFromPart(List<ICard> _cards)

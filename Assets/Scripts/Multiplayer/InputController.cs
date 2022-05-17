@@ -16,11 +16,11 @@ using Extensions;
 /// </summary>
 public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 {
-	private string IDCardForQueue { get; set; }
+	private int IDCardForQueue { get; set; }
 
 	private int PreviousStateID { get; set; }
 
-	private List<string> _listCardIDsInQueue = new ();
+	private List<int> _listCardIDsInQueue = new ();
 	public List<ICard> ListCardIDsInQueue => _listCardIDsInQueue.Select(CardUtils.FindCardByID).ToList();
 
 	public static bool fetchInput = true;
@@ -76,7 +76,7 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 
 
 
-	void AddCardToQueue(ICard _card) => IDCardForQueue = _card.ID;
+	void AddCardToQueue(ICard _card) => IDCardForQueue = _card.CardID;
 	
 	private void OnEnable()
 	{
@@ -106,14 +106,12 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	/// <param name="input">The target input handler that we'll pass our data to</param>
 	public void OnInput(NetworkRunner runner, NetworkInput input)
 	{
-		if (!string.IsNullOrEmpty(IDCardForQueue))
-		{
-			SetPlayerInput();
+		if (IDCardForQueue <= 0) return;
+		SetPlayerInput();
 				
-			//Hand over data to Fusion
-			input.Set(_frameworkInput);
-			IDCardForQueue = "";
-		}
+		//Hand over data to Fusion
+		input.Set(_frameworkInput);
+		IDCardForQueue = 0;
 	}
 
 	void SetPlayerInput()

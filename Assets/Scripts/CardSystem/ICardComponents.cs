@@ -19,5 +19,6 @@ namespace Card
         CardData CardData { get; set; }
         TextMeshPro DamageValue { get; }
         TextMeshPro APCost { get; }
+        int CardID { get; set; }
     }
 }

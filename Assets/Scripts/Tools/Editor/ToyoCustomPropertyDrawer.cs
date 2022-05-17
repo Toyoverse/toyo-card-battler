@@ -284,8 +284,10 @@ public class ToyoCustomPropertyDrawer : PropertyDrawer
 
     void ProcessScriptableObjectId(SerializedProperty property, Rect position, GUIContent label)
     {
-        if (string.IsNullOrEmpty(property.stringValue)) {
-            property.stringValue = Guid.NewGuid().ToString();
+        if (property.intValue == 0)
+        {
+            var newValue = Resources.Load<IndexerSO>("IndexerSO").CardIndex ++;
+            property.intValue = (int) newValue;
         }
         EditorGUI.PropertyField(position, property, label, true);
     }

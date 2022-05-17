@@ -15,6 +15,6 @@ namespace ToyoSystem
         
         void InitializeToyo(ICardPile handler);
 
-        Dictionary<string, int> CountEachPartToyo();
+        Dictionary<int, int> CountEachPartToyo();
     }
 }
