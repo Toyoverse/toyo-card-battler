@@ -78,6 +78,13 @@ namespace CombatSystem
         {
             var _hitListInfos = card.CardData?.HitListInfos;
             if (!(_hitListInfos?.Count > 0)) return;
+
+            if (GlobalConfig.Instance.IgnoreDamageCalculations)
+            {
+                foreach (var t in _hitListInfos)
+                    DoDamage(t.Damage);
+            }
+
             //TODO: Consider hit time in the animation.
             var _damage = DamageCalculation.CalculateDamage(DamageInformation);
             for (var i = 0; i < _damage.Length; i++)
