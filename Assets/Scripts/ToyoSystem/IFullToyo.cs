@@ -14,6 +14,8 @@ namespace ToyoSystem
         ListToyoIDData ToyoIDs { get; }
         
         void InitializeToyo(ICardPile handler);
+        
+        void InitializeToyoDebug(ICardPile handler, FullToyoSO fullToyoSo);
 
         Dictionary<int, int> CountEachPartToyo();
     }

@@ -10,6 +10,8 @@ namespace PlayerHand
 {
     public class PlayerHandUtils : MonoBehaviour
     {
+
+        public static bool IsHandDrawed;
         #region Settings
 
         private int Count { get; set; }
@@ -24,11 +26,12 @@ namespace PlayerHand
 
         #region Unitycallbacks
 
-        public IEnumerator DrawFirstHand()
+        public IEnumerator DrawFirstHand(FullToyoSO fullToyoSo)
         {
             while (!FusionLauncher.IsConnected)
                 yield return null;
-            Deck?.InitializeFullToyo();
+            IsHandDrawed = true;
+            Deck?.InitializeFullToyo(fullToyoSo);
             Deck?.ShuffleDeck();
             yield return new WaitForSeconds(1f);
             //starting cards
@@ -37,6 +40,7 @@ namespace PlayerHand
                 yield return new WaitForSeconds(0.2f);
                 DrawCard();
             }
+
         }
 
         #endregion

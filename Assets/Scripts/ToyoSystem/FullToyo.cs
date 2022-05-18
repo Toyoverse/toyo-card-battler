@@ -28,18 +28,19 @@ namespace ToyoSystem
             Buffs = new List<EffectData>();
         }
         
+        public void InitializeToyoDebug(ICardPile handler, FullToyoSO fullToyoSo)
+        {
+            if (ToyoParts.Count > 0)
+            {
+                Debug.LogError("Toyo Already Has Parts");
+                return;
+            } 
+            CreateToyoObject(fullToyoSo, handler);//GetDebugToyo(handler, fullToyoSo);
+        }
+        
         public void InitializeToyo(ICardPile handler)
         {
-            if (IsDebug)
-                GetDebugToyo(handler);
-            else
-                GetToyoFromWeb(handler); 
-        }
-
-        void GetDebugToyo(ICardPile handler)
-        {
-            FullToyoSO _fullToyoSo = Resources.Load<FullToyoSO>("FullToyoData");
-            CreateToyoObject(_fullToyoSo, handler);
+            GetToyoFromWeb(handler);
         }
         
         void GetToyoFromWeb(ICardPile handler)
@@ -89,7 +90,9 @@ namespace ToyoSystem
                 ToyoStats[_key] *= ToyoBonusStats[_key];
                 */
         }
-        
+
+
+
         public Dictionary<int, int> CountEachPartToyo()
         {
             Dictionary<int, int> CountEachPart = new Dictionary<int, int>();

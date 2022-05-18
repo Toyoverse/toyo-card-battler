@@ -1,28 +1,30 @@
 using System;
 using HealthSystem;
 using HealthSystem.HealthUI;
+using Player;
 using Tools;
 using UnityEngine;
 
 [UseAttributes]
 public class Health : MonoBehaviour, IHealth
 {
-    private float health = 100.0f;
+    public PlayerNetworkObject Parent { get; set; }
+    
+    private IHealthUI MyHealthUI;
+    IHealthUI IHealth.HealthUI => MyHealthUI;
     
     #region GetterAndSetter
     
     public float GetHealth()
     {
-        return health;
+        return Parent.Health;
     }
-
-    private IHealthUI MyHealthUI;
-    IHealthUI IHealth.HealthUI => MyHealthUI;
-
-    public void SetHealth(float _health)
+    
+    /*public void SetHealth(float _health)
     {
-        health = _health;
+        Parent.Health = _health;
     }
+    */
 
     #endregion
 
@@ -38,6 +40,7 @@ public class Health : MonoBehaviour, IHealth
         OnGainHP += GainHP;
         OnTakeDamage += TakeDamage;
         OnChangeHP += ChangeHP;
+        OnInitialize += Initialize;
     }
 
     void OnDisable()
@@ -45,28 +48,37 @@ public class Health : MonoBehaviour, IHealth
         OnGainHP -= GainHP;
         OnTakeDamage -= TakeDamage;
         OnChangeHP -= ChangeHP;
+        OnInitialize += Initialize;
     }
     
     #endregion
 
+    void Initialize(float _value)
+    {
+        OnGainHP?.Invoke(_value);
+    }
+    
     void ChangeHP(float _value)
     {
-        if (_value > 0)
-            OnGainHP?.Invoke(_value);
+        var _temp = GetHealth() - _value;
+        if (_temp > 0)
+            OnGainHP?.Invoke(_temp);
         else
-            OnTakeDamage?.Invoke(_value);
+            OnTakeDamage?.Invoke(_temp);
     }
     
     void GainHP(float _value)
     {
-        health += _value;
-        MyHealthUI?.OnUpdateHealthUI?.Invoke(health);
+        var _health = GetHealth() + _value;
+        Parent.Health = _health;
+        MyHealthUI?.OnUpdateHealthUI?.Invoke(_health);
     }
 
     void TakeDamage(float _value)
     {
-        health -= _value;
-        MyHealthUI?.OnUpdateHealthUI?.Invoke(health);
+        var _health = GetHealth() - _value;
+        Parent.Health = _health;
+        MyHealthUI?.OnUpdateHealthUI?.Invoke(_health);
     }
 
     public float testHPValue = 10.0f;
@@ -86,4 +98,5 @@ public class Health : MonoBehaviour, IHealth
     public Action<float> OnGainHP { get; set; }
     public Action<float> OnChangeHP { get; set; }
     public Action<float> OnTakeDamage { get; set; }
+    public Action<float> OnInitialize { get; set; }
 }

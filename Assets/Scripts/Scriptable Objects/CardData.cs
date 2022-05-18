@@ -30,8 +30,8 @@ public class CardData : UniqueScriptableObject
     [SerializeField]
     public ATTACK_SUB_TYPE AttackSubType;
     
-    [SerializeField]
-    public Animation AttackAnimation;
+    //[SerializeField]
+    //public Animation AttackAnimation;
     
     [SerializeField]
     public bool ApplyEffect;

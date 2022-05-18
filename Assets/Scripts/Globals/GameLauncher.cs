@@ -1,7 +1,13 @@
-﻿using Fusion;
+﻿using System.Collections.Generic;
+using System.Text;
+using Card.DeckSystem;
+using Fusion;
+using Infrastructure;
 using Multiplayer;
 using Player;
+using PlayerHand;
 using TMPro;
+using ToyoSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,12 +22,8 @@ namespace FusionExamples.Tanknarok
 		[FormerlySerializedAs("_playerPrefab")] [SerializeField] private PlayerNetworkObject playerNetworkObjectPrefab;
 		[SerializeField] private TMP_InputField _room;
 		[SerializeField] private TextMeshProUGUI _progress;
-		/*[SerializeField] private Panel _uiCurtain;
-		[SerializeField] private Panel _uiStart;
-		[SerializeField] private Panel _uiProgress;
-		[SerializeField] private Panel _uiRoom;
-		*/
 		[SerializeField] private GameObject _uiGame;
+
 
 		private FusionLauncher.ConnectionStatus _status = FusionLauncher.ConnectionStatus.Disconnected;
 		private GameMode _gameMode;
@@ -97,6 +99,7 @@ namespace FusionExamples.Tanknarok
 				var text = "test";
 				launcher.Launch(_gameMode, text, lm, OnConnectionStatusUpdate, OnSpawnWorld, OnSpawnPlayer, OnDespawnPlayer);
 			//}
+			
 		}
 
 		/// <summary>
@@ -139,45 +142,45 @@ namespace FusionExamples.Tanknarok
 		{
 			Debug.Log("Spawning GameManager");
 			runner.Spawn(_playerNetworkManagerPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
-			void InitNetworkState(NetworkRunner runner, NetworkObject world)
+			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
 			{
-				world.transform.parent = transform;
+				//var _playerNetworkManager = networkObject.gameObject.GetComponent<PlayerNetworkManager>();
 			}
 		}
 
 		private void OnSpawnPlayer(NetworkRunner runner, PlayerRef playerref)
 		{
-			//Debug.Log(playerref.PlayerId);
-
-			/*
-			if (GameManager.playState != GameManager.PlayState.LOBBY)
-			{
-				Debug.Log("Not Spawning Player - game has already started");
-				return;
-			}
-			Debug.Log($"Spawning tank for player {playerref}");
-			runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, playerref, InitNetworkState);
-			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
-			{
-				Player player = networkObject.gameObject.GetComponent<Player>();
-				Debug.Log($"Initializing player {player.playerID}");
-				player.InitNetworkState(GameManager.MAX_LIVES);
-			}
-			*/
 			runner.Spawn(playerNetworkObjectPrefab, Vector3.zero, Quaternion.identity, playerref, InitNetworkState);
 			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
 			{
+				
 				var _player = networkObject.gameObject.GetComponent<PlayerNetworkObject>();
-				//Debug.Log($"Initializing player {playerref.PlayerId}");
-				//player.InitNetworkState(GameManager.MAX_LIVES);
+				Debug.Log($"Initializing player {playerref.PlayerId}");
+				var _fullToyo = DatabaseManager.Instance.GetFullToyoFromFakeID(DatabaseManager.Instance.GetPlayerDatabaseID());
+				_player.InitNetworkState(_fullToyo);
+				
+				//if(playerref.PlayerId == runner.LocalPlayer.PlayerId)
+				//	StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(_fullToyo));
+
 			}
-			/*
-			//var _player = PlayerNetworkManager.GetPlayer(playerref);
-			_player.Runner = runner;
-			//Runner = runner;
-			_player.NetworkPlayerRef = runner.LocalPlayer;
-			_player.MyPlayerHand.MyPlayerRef = _player.NetworkPlayerRef;*/
+			
+
+
+			SetFirstGameStateDebug();
+
 		}
+		
+		
+
+		//Todo, replace this with getting all the cards from database
+		private void SetFirstGameStateDebug()
+		{
+			var _deck = FindObjectOfType<Deck>();
+			var _allIDS = _deck.AllCardIDS;
+			
+			PlayerNetworkManager.Instance.SetFirstGameState(_allIDS);
+		}
+
 
 		private void OnDespawnPlayer(NetworkRunner runner, PlayerRef playerref)
 		{
@@ -214,6 +217,7 @@ namespace FusionExamples.Tanknarok
 
 		private void UpdateUI()
 		{
+			
 			return;
 			bool intro = false;
 			bool progress = false;
@@ -256,3 +260,29 @@ namespace FusionExamples.Tanknarok
 		}
 	}
 }
+
+
+/* BKP JSON Compression
+				List<byte[]> _toyoPartsJSON = new();
+				foreach (var _toyoPart in _fullToyo.ToyoParts)
+				{
+					var _json = _toyoPart.DumpJson();
+					var _bytes = Encoding.ASCII.GetBytes(_json);
+					var _compressedJson = LZMAtools.CompressByteArrayToLZMAByteArray(_bytes);
+					_toyoPartsJSON.Add(_compressedJson);
+					Debug.Log(_compressedJson);
+				}
+				
+				SetFirstGameState(_toyoPartsJSON);
+				
+				
+				byte[] text1 = Encoding.ASCII.GetBytes(new string ('X', 10000));
+				byte[] compressed = LZMAtools.CompressByteArrayToLZMAByteArray(text1);
+				byte[] text2 = LZMAtools.DecompressLZMAByteArrayToByteArray(compressed);
+     
+				string longstring = "defined input is deluciously delicious.14 And here and Nora called The reversal from ground from here and executed with touch the country road, Nora made of, reliance on, can’t publish the goals of grandeur, said to his book and encouraging an envelope, and enable entry into the chryssial shimmering of hers, so God of information in her hands Spiros sits down the sign of winter? —It’s kind of Spice Christ. It is one hundred birds circle above the text: They did we said. 69 percent dead. Sissy Cogan’s shadow. —Are you x then sings.) I’m 96 percent dead humanoid figure,";
+				byte[] text3 = Encoding.ASCII.GetBytes(longstring);
+				byte[] compressed2 = LZMAtools.CompressByteArrayToLZMAByteArray(text3);
+				byte[] text4 = LZMAtools.DecompressLZMAByteArrayToByteArray(compressed2);
+   */
+

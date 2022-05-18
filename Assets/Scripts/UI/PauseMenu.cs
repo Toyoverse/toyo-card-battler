@@ -32,13 +32,10 @@ public class PauseMenu : MonoBehaviour
         SceneControl.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
-    void StartGame() => StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand()); 
-
     public void Host()
     {
         _gameLauncher.OnHostOptions();
         _gameLauncher.OnEnterRoom();
-        StartGame();
         _uiController.EnableOrDisable(false);
     }
 
@@ -46,7 +43,6 @@ public class PauseMenu : MonoBehaviour
     {
         _gameLauncher.OnJoinOptions();
         _gameLauncher.OnEnterRoom();
-        StartGame();
         _uiController.EnableOrDisable(false);
     }
 
@@ -54,7 +50,6 @@ public class PauseMenu : MonoBehaviour
     {
         _gameLauncher.OnSharedOptions();
         _gameLauncher.OnEnterRoom();
-        StartGame();
         _uiController.EnableOrDisable(false);
     }
 }

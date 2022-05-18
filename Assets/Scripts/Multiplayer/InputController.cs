@@ -18,13 +18,8 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 {
 	private int IDCardForQueue { get; set; }
 
-	private int PreviousStateID { get; set; }
-
 	private List<int> _listCardIDsInQueue = new ();
 	public List<ICard> ListCardIDsInQueue => _listCardIDsInQueue.Select(CardUtils.FindCardByID).ToList();
-
-	public static bool fetchInput = true;
-	public bool ToggleReady { get; set; }
 
 	private Vector2 _moveDelta;
 	private Vector2 _aimDelta;
@@ -37,9 +32,7 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	private bool _primaryFire;
 	private bool _secondaryFire;
 
-
-	
-	private PlayerInputData _frameworkInput = new PlayerInputData();
+	private PlayerInputData _frameworkInput = new ();
 
 	#region LazyProperties
 	
@@ -57,21 +50,15 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 
 	#endregion
 
-	//private MobileInput _mobileInput;
-
 	/// <summary>
 	/// Hook up to the Fusion callbacks so we can handle the input polling
 	/// </summary>
 	public override void Spawned()
 	{
-		// Technically, it does not really matter which InputController fills the input structure, since the actual data will only be sent to the one that does have authority,
-		// but in the name of clarity, let's make sure we give input control to the gameobject that also has Input authority.
 		if (Object.HasInputAuthority)
 		{
 			Runner.AddCallbacks(this);
 		}
-
-		//Debug.Log("Spawned [" + this + "] IsClient=" + Runner.IsClient + " IsServer=" + Runner.IsServer + " HasInputAuth=" + Object.HasInputAuthority + " HasStateAuth=" + Object.HasStateAuthority);
 	}
 
 
@@ -81,11 +68,6 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	private void OnEnable()
 	{
 		CardHand.OnCardPlayed += AddCardToQueue;
-		/*
-		if (!FusionLauncher.IsConnected) return;
-		var myNetworkRunner = FindObjectOfType<NetworkRunner>();
-		myNetworkRunner.AddCallbacks(this);
-		*/
 	}
 	
 	public void OnDisable()
@@ -97,7 +79,6 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 			return;
 		myNetworkRunner.RemoveCallbacks(this);
 	}
-
 
 	/// <summary>
 	/// Get Unity input and store them in a struct for Fusion
@@ -152,18 +133,6 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 			PlayerNetworkManager.SetGameState(data);
 		}
 
-		if (PreviousStateID != PlayerNetworkManager.CurrentStateID && !Object.HasStateAuthority)
-		{
-			//Todo Running 2 times, once for each player... fix that.
-			
-			PreviousStateID = PlayerNetworkManager.CurrentStateID;
-			GameState _state = PlayerNetworkManager.GetCurrentGameState();
-			
-			/*
-			Debug.Log(_state.newCardId);
-			Debug.Log(_state.GameStatePlayerRef.PlayerId);
-			*/
-		}
 
 	}
 

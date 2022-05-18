@@ -55,17 +55,22 @@ namespace Card.DeckSystem
 
             return _countEachPart.Any(_part => _part.Value >= NumberRequiredForSynergy);
         }
+        
+        public void InitializeFullToyo(FullToyoSO fullToyoSo)
+        {
+            FullToyo.InitializeToyoDebug(this, fullToyoSo);
+            InitializeDeckFromToyo();
+            return; //Todo Get Toyo from Database
+            
+        }
 
         public void InitializeFullToyo()
         {
             FullToyo.InitializeToyo(this);
             InitializeDeckFromToyo();
             return; //Todo Get Toyo from Database
-            
         }
-
         
-
 
         public void InitializeDeckFromToyo()
         {

@@ -26,6 +26,14 @@ namespace ToyoSystem
             SetPieceInCardData();
             CardsFromPiece = CardUtils.CreateCardsFromCardData(PartData.CardsFromPiece, handler);
         }
+        
+        public ToyoPart(ToyoPartSO partData)
+        {
+            PartData = partData;
+            ToyoPiece = partData.ToyoPiece;
+            ToyoTechnoalloy = partData.ToyoTechnoalloy;
+            PartStat = partData.ToyoPartStat;
+        }
 
         void SetPieceInCardData()
         {

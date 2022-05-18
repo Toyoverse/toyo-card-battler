@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using APSystem;
 using Card;
 using HealthSystem;
+using Player;
 using PlayerHand;
 using ToyoSystem;
 using UnityEngine;
@@ -12,18 +13,18 @@ namespace CombatSystem
     public class DamageSystem : MonoBehaviour
     {
         protected IPlayerHand CardHand { get; set; }
-        protected IHealth PlayerHealth { get; set; }
-        protected IHealth EnemyHealth { get; set; }
+        protected IHealth PlayerHealth => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealth;
+        protected IHealth EnemyHealth => PlayerNetworkManager.GetEnemy().MyPlayerHealth;
         protected IAp PlayerAP { get; set; }
         protected IAp EnemyAP { get; set; }
+        
+        //Todo Enemy Full Toyo
         protected IFullToyo FullToyo { get; set; }
         protected DamageInformation DamageInformation { get; set; }
 
         private void Start()
         {
             CardHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
-            PlayerHealth = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IHealth>();
-            EnemyHealth = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IHealth>();
             PlayerAP = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IAp>();
             EnemyAP = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IAp>();
             FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
@@ -41,11 +42,16 @@ namespace CombatSystem
             CardHand.OnCardPlayed -= ProcessCardPlayed;
         }
 
-        private void ProcessCardPlayed(ICard _card)
+        public void ProcessCardPlayed(ICard _card)
         {
             DamageInformation = new DamageInformation(_card, FullToyo);
-
             ProcessCardAPCost(_card);
+            ProcessCardPlay(_card);
+        }
+        
+        public void ProcessMultiplayerEnemyCardPlayed(ICard _card)
+        {
+            DamageInformation = new DamageInformation(_card, FullToyo, true);
             ProcessCardPlay(_card);
         }
 
@@ -133,9 +139,14 @@ namespace CombatSystem
             //TODO: Get fast attack card and Execute the counterattack - Start new combo
         }
 
-        private void DoDamage(/*HitListInfo hit*/ float damage)
-            => EnemyHealth?.OnTakeDamage.Invoke(/*hit.Damage*/ damage);
-
+        private void DoDamage(float damage)
+        {
+            if(DamageInformation.IsMultiplayerEnemyCard)
+                PlayerHealth?.OnTakeDamage.Invoke(damage);
+            else
+                EnemyHealth?.OnTakeDamage.Invoke(damage);
+        }
+        
         private void CheckLifeSteal(float damage)
         {
             var _lifeStealFactor = BoundSystem.GetLifeStealFactor(DamageInformation);
@@ -174,8 +185,9 @@ namespace CombatSystem
         public List<EffectData> MyBuffs;
         public List<EffectData> EnemyBuffs;
         public EffectData[] EffectData;
+        public bool IsMultiplayerEnemyCard; //Information for the host
 
-        public DamageInformation(ICard card, IFullToyo fullToyo)
+        public DamageInformation(ICard card, IFullToyo fullToyo, bool isMultiplayerEnemyCard = false)
         {
             HitVariation = card.CardData.HitListInfos;
             CardType = card.CardData.CardType;
@@ -188,6 +200,7 @@ namespace CombatSystem
             MyBuffs = fullToyo.Buffs;
             EnemyBuffs = fullToyo.Buffs; //TODO: Get Enemy Toyo Buffs
             EffectData = card.CardData.EffectData;
+            IsMultiplayerEnemyCard = isMultiplayerEnemyCard;
         }
     }
 }

@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Card.DeckSystem;
 using Fusion;
 using Fusion.Sockets;
 using FusionExamples.FusionHelpers;
 using Multiplayer;
-using Player;
 using UnityEngine;
 
 
@@ -13,6 +11,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
 {
     public static bool IsConnected => Instance.Runner != null && Instance.Runner.IsCloudReady;
     public static FusionLauncher Instance;
+    public static bool IsServer => Instance.Runner.IsServer;
 
     private NetworkRunner Runner;
     private ConnectionStatus Status;
@@ -103,27 +102,12 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
     
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        //Vector3 spawnPosition = new Vector3((player.RawEncoded%runner.Config.Simulation.DefaultPlayers)*3,1,0);
-        //NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-        //_spawnedCharacters.Add(player, networkPlayerObject);
-
        if (runner.IsServer) InstantiatePlayer(runner, player);
-        
-        //Debug.Log("Spawning Player: " + player.PlayerId);
-        
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        /*       if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
-        {
-            runner.Despawn(networkObject);
-            _spawnedCharacters.Remove(player);
-        }*/
-
-        //Debug.Log("Player Left");
         OnDespawnPlayer?.Invoke(runner, player);
-
         SetConnectionStatus(Status, "Player Left");
     }
 
@@ -160,18 +144,14 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
 
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        //Debug.Log("Connected to server");
         if (runner.GameMode == GameMode.Shared)
-        {
-            //Debug.Log("Shared Mode - Spawning Player");
             InstantiatePlayer(runner, runner.LocalPlayer);
-        }
+
         SetConnectionStatus(ConnectionStatus.Connected, "");
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        //Debug.Log("Disconnected from server");
         SetConnectionStatus(ConnectionStatus.Disconnected, "");
     }
 
@@ -182,7 +162,6 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        //Debug.Log($"Connect failed {reason}");
         SetConnectionStatus(ConnectionStatus.Failed, reason.ToString());
     }
     
@@ -207,18 +186,10 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
             OnSpawnWorld = null;
         }
 
-        SaveAllCardIDS();
-        
         OnSpawnPlayer?.Invoke(runner, playerref);
     }
 
-    void SaveAllCardIDS()
-    {
-        var _deck = FindObjectOfType<Deck>();
-        var _allIDS = _deck.AllCardIDS;
-        PlayerNetworkManager.Instance.AddNewCardsID(_allIDS);
-    }
-    
+
     public void SetConnectionStatus(ConnectionStatus status, string message)
     {
         Status = status;

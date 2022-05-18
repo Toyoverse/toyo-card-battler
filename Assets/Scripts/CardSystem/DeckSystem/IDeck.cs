@@ -10,7 +10,7 @@ namespace Card.DeckSystem
         void InitializeDeckFromToyo();
         ICard GetTopCard();
         void ShuffleDeck();
-        void InitializeFullToyo();
+        void InitializeFullToyo(FullToyoSO fullToyoSo);
 
         List<int> AllCardIDS { get;}
     }

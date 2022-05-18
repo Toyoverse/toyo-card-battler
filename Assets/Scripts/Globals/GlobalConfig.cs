@@ -17,6 +17,8 @@ using UnityEngine;
         [FoldoutGroup("Card Transforms")] public Transform graveyardPosition;
 
         [FoldoutGroup("Game Parameters")] public GameObject UI;
+        [FoldoutGroup("Game Parameters")] public GameObject PlayerUI;
+        [FoldoutGroup("Game Parameters")] public GameObject EnemyUI;
         
         [FoldoutGroup("Temp Settings")] public int maxAP;
         [FoldoutGroup("Temp Settings")] public float timeForApRegen = 20.0f;
@@ -24,7 +26,7 @@ using UnityEngine;
         [FoldoutGroup("Cheats")] public bool IgnoreAPCost;
         [FoldoutGroup("Cheats")] public bool IgnoreDamageCalculations;
 
-        [FoldoutGroup("Leveling")] public PlayerXPConfigSO playerXpConfigSo;
+        //[FoldoutGroup("Leveling")] public PlayerXPConfigSO playerXpConfigSo;
 
         internal BattleReferences battleReferences;
         
