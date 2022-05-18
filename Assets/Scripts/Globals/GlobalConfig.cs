@@ -22,6 +22,9 @@ using UnityEngine;
         [FoldoutGroup("Temp Settings")] public float timeForApRegen = 20.0f;
         
         [FoldoutGroup("Cheats")] public bool IgnoreAPCost;
+        [FoldoutGroup("Cheats")] public bool IgnoreDamageCalculations;
+
+        [FoldoutGroup("Leveling")] public PlayerXPConfigSO playerXpConfigSo;
 
         internal BattleReferences battleReferences;
         
