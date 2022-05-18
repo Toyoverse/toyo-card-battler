@@ -82,7 +82,11 @@ namespace CombatSystem
             if (GlobalConfig.Instance.IgnoreDamageCalculations)
             {
                 foreach (var t in _hitListInfos)
+                {
                     DoDamage(t.Damage);
+                }
+
+                return;
             }
 
             //TODO: Consider hit time in the animation.
