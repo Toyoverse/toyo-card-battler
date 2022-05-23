@@ -720,7 +720,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1068560386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1074,61 +1074,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 598252294}
     m_Modifications:
-    - target: {fileID: 1791782468, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_Name
-      value: Background Health
-      objectReference: {fileID: 0}
-    - target: {fileID: 1791782470, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_Color.b
-      value: 0.6898659
-      objectReference: {fileID: 0}
-    - target: {fileID: 1791782470, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_Color.g
-      value: 0.6898659
-      objectReference: {fileID: 0}
-    - target: {fileID: 1791782470, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_Color.r
-      value: 0.7264151
-      objectReference: {fileID: 0}
-    - target: {fileID: 2326050366543912387, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2326050366686043036, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_FillAmount
-      value: 0.894
-      objectReference: {fileID: 0}
     - target: {fileID: 2326050366686043039, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2326050366686043039, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2326050367151978972, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2326050367541475966, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2326050367541475966, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2326050367541475966, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2326050368158129934, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_Value
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 3742961803770373554, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5016990761223637636, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
       propertyPath: m_Pivot.x
@@ -1217,6 +1177,10 @@ PrefabInstance:
     - target: {fileID: 6485689479282384494, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
       propertyPath: m_Name
       value: PlayerUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485689479282384494, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6b2b9579fc65664485977c5d65e7c42, type: 3}
@@ -1313,6 +1277,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 598252290}
     - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: maxAP
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
       propertyPath: EnemyUI
       value: 
       objectReference: {fileID: 160795557}
@@ -1336,6 +1304,14 @@ PrefabInstance:
       propertyPath: CombatConfigSO
       value: 
       objectReference: {fileID: 11400000, guid: 1aa5f23b028ba5648af396a020863f99, type: 2}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: DeckDatabaseSo
+      value: 
+      objectReference: {fileID: 11400000, guid: 931dcc18aad29c044bdacb7fa32af8f0, type: 2}
+    - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
+      propertyPath: timeForApRegen
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2433744480688969845, guid: 92fb9bf855904cb4781315f03d5cd1ed, type: 3}
       propertyPath: graveyardPosition
       value: 
@@ -1465,21 +1441,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 598252294}
     m_Modifications:
-    - target: {fileID: 6123726219081038574, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
-      propertyPath: m_Value
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 6123726220094181507, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6123726220094181507, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6123726220257984113, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
       propertyPath: m_Name
       value: EnemyUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123726220257984113, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6123726220257984118, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
       propertyPath: m_Pivot.x
@@ -1565,9 +1541,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7990966795823491469, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
-      propertyPath: m_Name
-      value: Background Health
+    - target: {fileID: 6123726220299593367, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123726220299593367, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}

@@ -1203,7 +1203,7 @@ GameObject:
   - component: {fileID: 4018820684908438314}
   - component: {fileID: 7251578651739513757}
   m_Layer: 5
-  m_Name: Fill (1)
+  m_Name: Background Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

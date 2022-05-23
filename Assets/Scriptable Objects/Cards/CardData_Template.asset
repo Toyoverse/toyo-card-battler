@@ -17,7 +17,7 @@ MonoBehaviour:
   CardType: 3
   DefenseType: 0
   CardImage: {fileID: 0}
-  ApCost: 2
+  ApCost: 4
   AttackType: 0
   AttackSubType: 0
   CardDuration: 5
