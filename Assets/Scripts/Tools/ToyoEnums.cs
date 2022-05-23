@@ -1,34 +1,32 @@
-﻿using System;
-
-public enum CARD_TYPE
+﻿public enum CARD_TYPE
 {
-    HEAVY,
-    FAST,
-    DEFENSE,
-    BOND,
-    SUPER
+    HEAVY = 0,
+    FAST = 1,
+    DEFENSE = 2,
+    BOND = 3,
+    SUPER = 4
 }
 
 public enum ATTACK_TYPE
 {
-    CYBER,
-    PHYSICAL
+    CYBER = 0,
+    PHYSICAL = 1
 }
 
 public enum DEFENSE_TYPE
 {
-    BLOCK,
-    DODGE
+    BLOCK = 0,
+    DODGE = 1
 }
 
 public enum ATTACK_SUB_TYPE
 {
-    NEUTRAL,
-    PIERCING,
-    SMASHING,
-    SLASHING,
-    MAGNETIC,
-    ELECTRIC
+    NEUTRAL = 0,
+    PIERCING = 1,
+    SMASHING = 2,
+    SLASHING = 3,
+    MAGNETIC = 4,
+    ELECTRIC = 5
 }
 
 public enum EFFECT_TYPE
@@ -47,56 +45,68 @@ public enum EFFECT_TYPE
 
 public enum TOYO_PIECE
 {
-    HEAD,
-    CHEST,
-    R_ARM,
-    L_ARM,
-    R_HAND,
-    L_HAND,
-    R_LEG,
-    L_LEG,
-    R_FOOT,
-    L_FOOT
+    HEAD = 0,
+    CHEST = 1,
+    R_ARM = 2,
+    L_ARM = 3,
+    R_HAND = 4,
+    L_HAND = 5,
+    R_LEG = 6,
+    L_LEG = 7,
+    R_FOOT = 8,
+    L_FOOT = 9
 }
 
 public enum TOYO_RARITY
 {
-    COMMON,
-    UNCOMMON,
-    RARE,
-    LIMITED,
-    COLLECTOR,
-    PROTOTYPE
+    COMMON = 0,
+    UNCOMMON = 1,
+    RARE = 2,
+    LIMITED = 3,
+    COLLECTOR = 4,
+    PROTOTYPE = 5
 }
 
 public enum TOYO_TECHNOALLOY
 {
-    SIDERITE,
-    MERCURY,
-    TITANIUM,
-    ALUMINUM,
-    CARBON,
-    SILICON
+    SIDERITE = 0,
+    MERCURY = 1,
+    TITANIUM = 2,
+    ALUMINUM = 3,
+    CARBON = 4,
+    SILICON = 5
 }
 
 public enum TOYO_STAT
 {
-    VITALITY,
-    RESISTANCE,
-    RESILIENCE,
-    PHYSICAL_STRENGTH,
-    CYBER_FORCE,
-    TECHNIQUE,
-    ANALYSIS,
-    AGILITY,
-    SPEED,
-    PRECISION,
-    STAMINA,
-    LUCK
+    VITALITY = 0,
+    RESISTANCE = 1,
+    RESILIENCE = 2,
+    PHYSICAL_STRENGTH = 3,
+    CYBER_FORCE = 4,
+    TECHNIQUE = 5,
+    ANALYSIS = 6,
+    AGILITY = 7,
+    SPEED = 8,
+    PRECISION = 9,
+    STAMINA = 10,
+    LUCK = 11
 }
 
 public enum TOYO_TYPE
 {
-    ALLY,
-    ENEMY
+    ALLY = 0,
+    ENEMY = 1
+}
+
+public enum RANKING_TYPE
+{
+    COOPER = 0,
+    STEEL = 1,
+    BRONZE = 2,
+    SILVER = 3,
+    GOLD = 4,
+    PLATINUM = 5,
+    SIDERITE = 6,
+    MASTER = 7
 }

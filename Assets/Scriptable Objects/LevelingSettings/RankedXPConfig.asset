@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c012541c5994ca24ea3964db707a2e64, type: 3}
+  m_Name: RankedXPConfig
+  m_EditorClassIdentifier: 
+  Leagues:
+  - leagueRank: 0
+    baseMultiplier: 0
+    xpWonPerMatch: 8
+    xpLostPerMatch: 0
+    betValues: []
+    betRate: 0.5
+  - leagueRank: 1
+    baseMultiplier: 0
+    xpWonPerMatch: 8
+    xpLostPerMatch: 1
+    betValues: []
+    betRate: 0.5
+  - leagueRank: 2
+    baseMultiplier: 0
+    xpWonPerMatch: 8
+    xpLostPerMatch: 2
+    betValues: []
+    betRate: 0
+  - leagueRank: 3
+    baseMultiplier: 0
+    xpWonPerMatch: 8
+    xpLostPerMatch: 3
+    betValues: []
+    betRate: 0
+  - leagueRank: 4
+    baseMultiplier: 0
+    xpWonPerMatch: 8
+    xpLostPerMatch: 6
+    betValues: []
+    betRate: 0
+  - leagueRank: 5
+    baseMultiplier: 0
+    xpWonPerMatch: 7
+    xpLostPerMatch: 6
+    betValues: []
+    betRate: 0
+  - leagueRank: 6
+    baseMultiplier: 0
+    xpWonPerMatch: 6
+    xpLostPerMatch: 6
+    betValues: []
+    betRate: 0
+  - leagueRank: 7
+    baseMultiplier: 0
+    xpWonPerMatch: 6
+    xpLostPerMatch: 8
+    betValues: []
+    betRate: 0
+  BaseValue: 10

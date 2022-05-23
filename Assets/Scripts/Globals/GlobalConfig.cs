@@ -27,7 +27,13 @@ using UnityEngine;
         [FoldoutGroup("Cheats")] public bool IgnoreAPCost;
         [FoldoutGroup("Cheats")] public bool IgnoreDamageCalculations;
 
-        //[FoldoutGroup("Leveling")] public PlayerXPConfigSO playerXpConfigSo;
+        [FoldoutGroup("Leveling")] public PlayerXPConfigSO playerXpConfigSo;
+        [FoldoutGroup("Leveling")] public ToyoPartsXPConfigSO partXpConfigSo;
+        [FoldoutGroup("Leveling")] public RankedXPConfigSO rankingXpConfigSo;
+        
+        
+        [FoldoutGroup("Match")] public NormalMatchConfigSO normalMatchConfigSo;
+        [FoldoutGroup("Match")] public RankedMatchConfigSO rankedMatchConfigSo;
 
         internal BattleReferences battleReferences;
         

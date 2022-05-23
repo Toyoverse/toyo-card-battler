@@ -14,6 +14,8 @@ namespace ToyoSystem
         public List<ToyoPartStat> PartStat { get; set; }
         public List<ToyoPartStat> BonusPartStat { get; set; }
         public List<ICard> CardsFromPiece { get; set; }
+        public float Experience { get; set; }
+        public int Level { get; set; }
 
         private ToyoPartSO PartData;
 

@@ -40,7 +40,7 @@ namespace PlayerHand
                 yield return new WaitForSeconds(0.2f);
                 DrawCard();
             }
-
+            
         }
 
         #endregion

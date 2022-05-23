@@ -46,16 +46,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globalCardDataSO: {fileID: 11400000, guid: cf818cf7922fbf547a2685d17b178add, type: 2}
+  CombatConfigSO: {fileID: 0}
   cardDefaultPrefab: {fileID: 8932913532635961775, guid: 631f78885287ff7458945b9ef4328493, type: 3}
   gameView: {fileID: 0}
   deckPosition: {fileID: 0}
   handPivot: {fileID: 0}
   graveyardPosition: {fileID: 0}
-  battleReferences: {fileID: 0}
   UI: {fileID: 0}
+  PlayerUI: {fileID: 0}
+  EnemyUI: {fileID: 0}
   maxAP: 4
   timeForApRegen: 2
   IgnoreAPCost: 1
+  IgnoreDamageCalculations: 0
+  playerXpConfigSo: {fileID: 11400000, guid: fcf47e04f866192488b002ac9ceef524, type: 2}
+  partXpConfigSo: {fileID: 11400000, guid: 142994f934f8d8e41b291ff8974a6780, type: 2}
+  rankingXpConfigSo: {fileID: 11400000, guid: 119425cfdef57cd4fa32622a251aed6b, type: 2}
+  normalMatchConfigSo: {fileID: 11400000, guid: 264a1f9652952af499e4894172d61577, type: 2}
+  rankedMatchConfigSo: {fileID: 11400000, guid: 8ee61675bd8575c4c9404774267d0707, type: 2}
 --- !u!114 &2433744480480174364
 MonoBehaviour:
   m_ObjectHideFlags: 0

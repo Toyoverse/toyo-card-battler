@@ -11,5 +11,7 @@ namespace ToyoSystem
         List<ToyoPartStat> PartStat { get; }
         List<ToyoPartStat> BonusPartStat { get; }
         List<ICard> CardsFromPiece { get; set; }
+        float Experience { get; set; }
+        int Level { get; set; }
     }
 }

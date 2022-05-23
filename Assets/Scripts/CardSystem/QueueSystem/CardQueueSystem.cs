@@ -112,10 +112,8 @@ namespace Card.QueueSystem
                     if(GetCardQueuePlayer().Count > 0 || GetCardQueueEnemy().Count > 0)
                         PlayNextCardInQueue();
                 }
-
             }
             UpdateUI();
-
         }
 
         private void UpdateUI()
@@ -132,7 +130,6 @@ namespace Card.QueueSystem
             }
             
             currentCardDuration.text = Mathf.Round(GetNetworkedCurrentCardDuration()).ToString();
-
         }
     }
 }
