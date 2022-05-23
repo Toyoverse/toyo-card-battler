@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Card;
+using Card.QueueSystem;
 using CombatSystem;
 using ExitGames.Client.Photon;
 using Extensions;
@@ -14,7 +15,9 @@ namespace Player
 {
     public class PlayerNetworkManager : NetworkBehaviour
     {
-
+        [Networked]
+        public bool IsWorldReady { get; set; }
+        
         public GameObject PlayerUI => GlobalConfig.Instance.PlayerUI;
         private IHealth PlayerHealth;
         
@@ -43,6 +46,10 @@ namespace Player
         
         public static PlayerNetworkObject GetEnemy() => Instance.Players.FirstOrDefault(_player => _player.IsEnemy);
 
+        public static List<ICard> GetCardQueuePlayer() => Instance.PlayerCardQueue;
+        
+        public static List<ICard> GetCardQueueEnemy() => Instance.EnemyCardQueue;
+        
         #endregion
 
         #region Host
@@ -51,11 +58,34 @@ namespace Player
         
         private GameState GetGameState(int _currentStateID) => LastGameStates.Get(_currentStateID);
 
-        private Lazy<DamageSystem> _damageSystem = new (FindObjectOfType<DamageSystem>);
-        public DamageSystem DamageSystem => _damageSystem.Value;
+        private CardQueueSystem _cardQueueSystem;
+        public CardQueueSystem CardQueueSystem => _cardQueueSystem ??= FindObjectOfType<CardQueueSystem>();
 
         private List<int> AllCardIDS = new();
         public List<ICard> AllCards = new();
+
+        public List<ICard> PlayerCardQueue = new();
+        public List<ICard> EnemyCardQueue = new();
+
+        [Networked] public int PlayerQueueSize { get; set; }
+        [Networked] public int EnemyQueueSize { get; set; }
+        [Networked] public float CurrentCardDuration { get; set; }
+
+
+        public override void FixedUpdateNetwork()
+        {
+            if (Object.HasStateAuthority)
+            {
+                if (CardQueueSystem != null) 
+                    CurrentCardDuration = CardQueueSystem.GetOfflineCurrentCardDuration();
+                
+                PlayerQueueSize = PlayerCardQueue.Count;
+                EnemyQueueSize = EnemyCardQueue.Count;
+                if(!IsWorldReady)
+                    IsWorldReady = true;
+            }
+        }
+
 
         /*
          * Todo: VERY BAD -- Temporary - Changing for unity adressables next sprint
@@ -71,7 +101,6 @@ namespace Player
             
             NextGameState();
             LastGameStates.Set(CurrentStateID, state);
-            //PrintDebugData();
         }
         
         public void SetGameState(PlayerInputData _playerInput)
@@ -83,18 +112,21 @@ namespace Player
                 newCardId = _playerInput.PlayedCardID
             };
             LastGameStates.Set(CurrentStateID, state);
-            //PrintDebugData();
+            
             if (Object.HasStateAuthority)
                 CheckForCardsPlayed();
         }
 
+        /*
+         * Main location for card synchronization
+         */
         private void CheckForCardsPlayed()
         {
             if (GetCurrentGameState().GameStatePlayerRef == Runner.LocalPlayer) return;
             var _id = GetCurrentGameState().newCardId;
             if (_id <= 0) return;
             var _card = CardUtils.FindCardByID(_id);
-            DamageSystem.ProcessMultiplayerEnemyCardPlayed(_card);
+            CardQueueSystem.AddEnemyCardToQueue(_card);
         }
         
         private void NextGameState()

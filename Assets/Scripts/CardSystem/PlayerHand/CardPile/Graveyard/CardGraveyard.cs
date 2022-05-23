@@ -14,12 +14,12 @@ namespace Card.CardPile.Graveyard
 
         private void OnEnable()
         {
-            PlayerHand.OnCardPlayed += AddCard;
+            PlayerHand.OnAddCardToQueue += AddCard;
         }
 
         private void OnDisable()
         {
-            PlayerHand.OnCardPlayed -= AddCard;
+            PlayerHand.OnAddCardToQueue -= AddCard;
         }
 
         public override void AddCard(ICard card)

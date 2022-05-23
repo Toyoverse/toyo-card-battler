@@ -23,10 +23,11 @@ namespace FusionExamples.Tanknarok
 		[SerializeField] private TMP_InputField _room;
 		[SerializeField] private TextMeshProUGUI _progress;
 		[SerializeField] private GameObject _uiGame;
+		[SerializeField] private GameObject _cardQueueSystem;
 
 
 		private FusionLauncher.ConnectionStatus _status = FusionLauncher.ConnectionStatus.Disconnected;
-		private GameMode _gameMode;
+		private GameMode _gameMode = GameMode.Single;
 		private NetworkRunner Runner;
 		
 		private void Awake()
@@ -42,6 +43,9 @@ namespace FusionExamples.Tanknarok
 
 		private void Update()
 		{
+			
+			if(!_cardQueueSystem.activeSelf && PlayerNetworkManager.Instance != null && PlayerNetworkManager.Instance.IsWorldReady)
+				_cardQueueSystem.SetActive(true);
 			/*
 			if (_uiProgress.isShowing)
 			{
@@ -146,6 +150,8 @@ namespace FusionExamples.Tanknarok
 			{
 				//var _playerNetworkManager = networkObject.gameObject.GetComponent<PlayerNetworkManager>();
 			}
+			
+			
 		}
 
 		private void OnSpawnPlayer(NetworkRunner runner, PlayerRef playerref)
@@ -164,7 +170,7 @@ namespace FusionExamples.Tanknarok
 
 			}
 			
-
+				
 
 			SetFirstGameStateDebug();
 

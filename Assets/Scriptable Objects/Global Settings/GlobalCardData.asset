@@ -17,9 +17,9 @@ MonoBehaviour:
   HoverScale: 1.3
   HoverSpeed: 15
   HoverHeight: 3
-  Height: 0.12
-  Spacing: -1
-  FullAngle: -20
+  Height: 0
+  Spacing: -0.3
+  FullAngle: 0
   RotationSpeed: 20
   RotationSpeedEnemy: 500
   MovementSpeed: 4
@@ -29,25 +29,3 @@ MonoBehaviour:
   LayerToRenderNormal: 0
   LayerToRenderTop: 1
   offsetZ: -1
-  comboSystemFactor: 5
-  heavyCardSumFactor: 1
-  heavyCardMultiplierFactor: 1
-  fastCardSumFactor: 0
-  fastCardMultiplierFactor: 1
-  superCardSumFactor: 0
-  superCardMultiplierFactor: 1
-  criticalLuckFactor: 0.025
-  criticalPrecisionFactor: 0.05
-  maxCriticalChance: 0.5
-  criticalDamageModifier: 2
-  defenseInCriticalMultiplier: 0
-  enemyResistanceMultiplier: 0.9
-  enemyResilienceMultiplier: 0.9
-  analysisMultiplier: 0.11
-  techDefMultiplier: 0.1
-  speedMultiplier: 0.11
-  agilityDefMultiplier: 0.1
-  baseCounterChance: 5
-  counterLuckFactor: 0.1
-  counterAgilityMultiplier: 0.1
-  counterTechMultiplier: 0.1

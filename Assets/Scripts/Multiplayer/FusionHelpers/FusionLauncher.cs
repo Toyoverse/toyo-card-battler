@@ -12,7 +12,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
     public static bool IsConnected => Instance.Runner != null && Instance.Runner.IsCloudReady;
     public static FusionLauncher Instance;
     public static bool IsServer => Instance.Runner.IsServer;
-
+    
     private NetworkRunner Runner;
     private ConnectionStatus Status;
     private FusionObjectPoolRoot Pool;

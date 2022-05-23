@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using APSystem;
 using Card;
+using Extensions;
 using HealthSystem;
 using Player;
 using PlayerHand;
@@ -12,7 +13,8 @@ namespace CombatSystem
 {
     public class DamageSystem : MonoBehaviour
     {
-        protected IPlayerHand CardHand { get; set; }
+        private IPlayerHand _cardHand;
+        public IPlayerHand CardHand => _cardHand ??= this.LazyFindOfType(ref _cardHand);
         protected IHealth PlayerHealth => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealth;
         protected IHealth EnemyHealth => PlayerNetworkManager.GetEnemy().MyPlayerHealth;
         protected IAp PlayerAP { get; set; }
@@ -24,35 +26,34 @@ namespace CombatSystem
 
         private void Start()
         {
-            CardHand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
             PlayerAP = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IAp>();
             EnemyAP = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IAp>();
             FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
-            CardHand.OnCardPlayed += ProcessCardPlayed;
         }
 
         void OnEnable()
         {
-            if(CardHand?.OnCardPlayed != null)
-                CardHand.OnCardPlayed += ProcessCardPlayed;
+            CardHand.OnCardPlayed += ProcessCardPlayed;
+            CardHand.OnNetworkCardPlayed += ProcessNetworkCardPlayed;
         }
 
         private void OnDisable()
         {
             CardHand.OnCardPlayed -= ProcessCardPlayed;
+            CardHand.OnNetworkCardPlayed += ProcessNetworkCardPlayed;
         }
 
         public void ProcessCardPlayed(ICard _card)
         {
             DamageInformation = new DamageInformation(_card, FullToyo);
             ProcessCardAPCost(_card);
-            ProcessCardPlay(_card);
+            ProcessCardByType(_card);
         }
         
-        public void ProcessMultiplayerEnemyCardPlayed(ICard _card)
+        public void ProcessNetworkCardPlayed(ICard _card)
         {
             DamageInformation = new DamageInformation(_card, FullToyo, true);
-            ProcessCardPlay(_card);
+            ProcessCardByType(_card);
         }
 
         private void ProcessCardAPCost(ICard _card)
@@ -63,7 +64,7 @@ namespace CombatSystem
             PlayerAP?.OnUseAP.Invoke(_apCost);
         }
 
-        private void ProcessCardPlay(ICard card)
+        private void ProcessCardByType(ICard card)
         {
             switch (card.CardData.CardType)
             {
@@ -189,7 +190,7 @@ namespace CombatSystem
 
         public DamageInformation(ICard card, IFullToyo fullToyo, bool isMultiplayerEnemyCard = false)
         {
-            HitVariation = card.CardData.HitListInfos;
+            HitVariation = card.CardData.HitListInfos ?? new List<HitListInfo>(); 
             CardType = card.CardData.CardType;
             AttackType = card.CardData.AttackType;
             AttackSubType = card.CardData.AttackSubType;

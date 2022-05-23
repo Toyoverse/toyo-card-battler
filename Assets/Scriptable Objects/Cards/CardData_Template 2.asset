@@ -20,6 +20,7 @@ MonoBehaviour:
   ApCost: 2
   AttackType: 0
   AttackSubType: 4
+  CardDuration: 5
   ApplyEffect: 0
   EffectName: 
   EffectData:

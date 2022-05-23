@@ -58,7 +58,9 @@ namespace Card
          */
         public static ICard FindCardByID(int _id)
         {
-            var _cards = GameObject.FindObjectsOfType<CardComponent>();
+            var _cards = GameObject.FindObjectsOfType<CardComponent>(true);
+
+            //var _cards = GlobalConfig.Instance.DeckDatabaseSo.AllCards;
 
             return _cards.FirstOrDefault(_card => _card.CardID == _id);
         }

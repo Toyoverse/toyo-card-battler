@@ -67,12 +67,12 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	
 	private void OnEnable()
 	{
-		CardHand.OnCardPlayed += AddCardToQueue;
+		CardHand.OnAddCardToQueue += AddCardToQueue;
 	}
 	
 	public void OnDisable()
 	{
-		CardHand.OnCardPlayed -= AddCardToQueue;
+		CardHand.OnAddCardToQueue -= AddCardToQueue;
 		if (FusionLauncher.IsConnected == false) return;
 		var myNetworkRunner = FindObjectOfType<NetworkRunner>();
 		if (myNetworkRunner == null)

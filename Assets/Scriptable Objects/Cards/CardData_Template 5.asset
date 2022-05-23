@@ -20,10 +20,13 @@ MonoBehaviour:
   ApCost: 1
   AttackType: 0
   AttackSubType: 0
+  CardDuration: 5
   ApplyEffect: 0
   EffectName: 
   EffectData:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  HitListInfos: []
+  HitListInfos:
+  - FrameToHit: 1
+    Damage: 20

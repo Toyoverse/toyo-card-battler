@@ -8,6 +8,7 @@ using UnityEngine;
     {
         [FoldoutGroup("Card Parameters")] public GlobalCardDataSO globalCardDataSO;
         [FoldoutGroup("Card Parameters")] public CombatConfigSO CombatConfigSO;
+        [FoldoutGroup("Card Parameters")] public DeckDatabaseSO DeckDatabaseSo;
         [FoldoutGroup("Card Parameters")] public GameObject cardDefaultPrefab;
         
         

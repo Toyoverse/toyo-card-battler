@@ -30,6 +30,9 @@ public class CardData : UniqueScriptableObject
     [SerializeField]
     public ATTACK_SUB_TYPE AttackSubType;
     
+    [SerializeField] [Range(0f, 20.0f)] [Tooltip("Duration in seconds")]
+    public float CardDuration = 2f;
+    
     //[SerializeField]
     //public Animation AttackAnimation;
     

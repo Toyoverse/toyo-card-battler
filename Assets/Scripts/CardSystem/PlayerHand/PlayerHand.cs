@@ -31,12 +31,12 @@ namespace PlayerHand
                 return;
             }
             card.ValidateCardAP(MyPlayerRef);
-
             SelectedCard = null;
             RemoveCard(card);
-            OnCardPlayed?.Invoke(card);
             EnableCards();
             NotifyPileChange();
+            OnAddCardToQueue?.Invoke(card);
+
         }
 
         public void SelectCard(ICard card)
@@ -90,6 +90,14 @@ namespace PlayerHand
             get => OnCardPlayed;
             set => OnCardPlayed = value;
         }
+        
+        private event Action<ICard> OnNetworkCardPlayed = card => { };
+
+        Action<ICard> IPlayerHand.OnNetworkCardPlayed
+        {
+            get => OnNetworkCardPlayed;
+            set => OnNetworkCardPlayed = value;
+        }
 
         private event Action<ICard> OnCardSelected = card => { };
 
@@ -97,6 +105,14 @@ namespace PlayerHand
         {
             get => OnCardSelected;
             set => OnCardSelected = value;
+        }
+        
+        private event Action<ICard> OnAddCardToQueue = card => { };
+
+        Action<ICard> IPlayerHand.OnAddCardToQueue
+        {
+            get => OnAddCardToQueue;
+            set => OnAddCardToQueue = value;
         }
 
         #endregion

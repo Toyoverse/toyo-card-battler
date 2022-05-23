@@ -16,7 +16,6 @@ namespace Player
 	[RequireComponent(typeof(NetworkCharacterControllerPrototype))]
     public class PlayerNetworkObject : NetworkBehaviour, IPlayer
     {
-
 	    public const float MAX_HEALTH = 100.0f;
 		[Networked(OnChanged = nameof(OnStateChanged))]
 		public State state { get; set; }
