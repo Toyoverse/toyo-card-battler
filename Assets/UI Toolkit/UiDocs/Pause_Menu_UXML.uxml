@@ -8,6 +8,7 @@
             <ui:Button text="Shared" display-tooltip-when-elided="true" name="SharedButton" class="button-style" />
             <ui:Button text="Restart" display-tooltip-when-elided="true" name="RestartButton" class="button-style" />
             <ui:Button text="Main Menu" display-tooltip-when-elided="true" name="QuitButton" class="button-style" />
+            <ui:Button text="Single Player" display-tooltip-when-elided="true" name="SinglePlayer" class="button-style" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

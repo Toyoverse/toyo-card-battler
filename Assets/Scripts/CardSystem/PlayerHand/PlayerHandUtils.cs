@@ -2,6 +2,7 @@
 using Card;
 using Card.DeckSystem;
 using Extensions;
+using Fusion;
 using ToyoSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,7 +29,7 @@ namespace PlayerHand
 
         public IEnumerator DrawFirstHand(FullToyoSO fullToyoSo)
         {
-            while (!FusionLauncher.IsConnected)
+            while (!FusionLauncher.IsConnected && FusionLauncher.GameMode != GameMode.Single)
                 yield return null;
             IsHandDrawed = true;
             Deck?.InitializeFullToyo(fullToyoSo);

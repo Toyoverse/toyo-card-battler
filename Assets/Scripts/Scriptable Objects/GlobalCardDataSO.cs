@@ -110,5 +110,23 @@ namespace Scriptable_Objects
         
         [SerializeField] [Range(-5, 5)] 
         public int offsetZ = -1;
+        
+        [SerializeField]
+        public GameObject fastCardPrefab;
+        
+        [SerializeField]
+        public GameObject bondCardPrefab;
+        
+        [SerializeField]
+        public GameObject defenseCardPrefab;
+        
+        [SerializeField]
+        public GameObject heavyCardPrefab;
+        
+        [SerializeField]
+        public GameObject superCardPrefab;
+        
+        
+        
     }
 }

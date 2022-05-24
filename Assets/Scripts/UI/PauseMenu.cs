@@ -52,4 +52,10 @@ public class PauseMenu : MonoBehaviour
         _gameLauncher.OnEnterRoom();
         _uiController.EnableOrDisable(false);
     }
+    
+    public void Single()
+    {
+        _gameLauncher.OnEnterRoom();
+        _uiController.EnableOrDisable(false);
+    }
 }

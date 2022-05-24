@@ -148,6 +148,12 @@ namespace Player
 				MyPlayerHealth.Parent = this;
 			}
 
+			if (FusionLauncher.GameMode == GameMode.Single)
+			{
+				var _enemyUI = PlayerNetworkManager.Instance.EnemyUI;
+				_enemyUI.SetActive(true);
+			}
+
 			Health = MAX_HEALTH;
 			/*Health = MyPlayerHealth.GetHealth();
 

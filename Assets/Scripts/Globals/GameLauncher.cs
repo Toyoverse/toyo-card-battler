@@ -157,6 +157,12 @@ namespace FusionExamples.Tanknarok
 		private void OnSpawnPlayer(NetworkRunner runner, PlayerRef playerref)
 		{
 			runner.Spawn(playerNetworkObjectPrefab, Vector3.zero, Quaternion.identity, playerref, InitNetworkState);
+
+			if (_gameMode == GameMode.Single)
+			{
+				runner.Spawn(playerNetworkObjectPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
+			}
+			
 			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
 			{
 				
@@ -169,7 +175,6 @@ namespace FusionExamples.Tanknarok
 				//	StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(_fullToyo));
 
 			}
-			
 				
 
 			SetFirstGameStateDebug();
