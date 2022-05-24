@@ -20,6 +20,7 @@ namespace Leveling
 
         private static void CalculateWinResult(ref MatchInformation matchInfo)
         {
+            var _oldLevel = matchInfo.Level;
             PlayerXP.ApplyPlayerXP(GetPlayerXpInWin(matchInfo), ref matchInfo);
             matchInfo.ToyoPart = GetRandomPart(matchInfo.FullToyo);
             ToyoPartsXP.ApplyPartXP(GetPartXpInWin(matchInfo), ref matchInfo);
@@ -33,7 +34,7 @@ namespace Leveling
             else
             {
                 matchInfo.PremiumBattleTokens = GetPremiumTokensInWin(ref matchInfo);
-                CheckUnlockRewards(matchInfo);
+                CheckUnlockRewards(matchInfo, _oldLevel);
             }
         }
         
@@ -55,6 +56,7 @@ namespace Leveling
         private static IToyoPart GetRandomPart(FullToyo fullToyo)
             => fullToyo.ToyoParts[(TOYO_PIECE)Random.Range(0, 
                 Enum.GetValues(typeof(TOYO_PIECE)).Cast<int>().Max())];
+        //TODO: Receber parte do globalconfig
 
         private static float GetPlayerXpInWin(MatchInformation matchInfo)
             => matchInfo.isRanked
@@ -71,12 +73,12 @@ namespace Leveling
         private static float GetPartXpInWin(MatchInformation matchInfo)
             => matchInfo.isRanked
                 ? matchInfo.MmrLevel / GlobalConfig.Instance.rankedMatchConfigSo.winConfig.partDivider
-                : matchInfo.MmrLevel * GlobalConfig.Instance.normalMatchConfigSo.winConfig.partFactor;
+                : matchInfo.MmrLevel * GlobalConfig.Instance.normalMatchConfigSo.winConfig.partMultiplier;
 
         private static float GetPartXpInLose(MatchInformation matchInfo)
             => matchInfo.isRanked
                 ? matchInfo.MmrLevel / GlobalConfig.Instance.rankedMatchConfigSo.loseConfig.partDivider
-                : (float)Math.Ceiling(matchInfo.MmrLevel / GlobalConfig.Instance.normalMatchConfigSo.loseConfig.partFactor);
+                : (float)Math.Ceiling(matchInfo.MmrLevel * GlobalConfig.Instance.normalMatchConfigSo.loseConfig.partMultiplier);
 
         private static float GetRankedXpInWin(MatchInformation matchInfo)
             => GetActiveLeague(matchInfo).xpWonPerMatch +
@@ -91,13 +93,13 @@ namespace Leveling
 
         private static float GetMmrStreakInWin(MatchInformation matchInfo)
             => matchInfo.isRanked
-                ? matchInfo.MmrStreak * GlobalConfig.Instance.rankedMatchConfigSo.winConfig.mmrStreakFactor
-                : matchInfo.MmrStreak * GlobalConfig.Instance.normalMatchConfigSo.winConfig.mmrStreakFactor;
+                ? matchInfo.MmrStreak * GlobalConfig.Instance.rankedMatchConfigSo.winConfig.mmrStreakMultiplier
+                : matchInfo.MmrStreak * GlobalConfig.Instance.normalMatchConfigSo.winConfig.mmrStreakMultiplier;
 
         private static float GetMmrStreakInLose(MatchInformation matchInfo)
             => matchInfo.isRanked
-                ? matchInfo.MmrStreak / GlobalConfig.Instance.rankedMatchConfigSo.loseConfig.mmrStreakFactor
-                : matchInfo.MmrStreak / GlobalConfig.Instance.normalMatchConfigSo.loseConfig.mmrStreakFactor;
+                ? matchInfo.MmrStreak * GlobalConfig.Instance.rankedMatchConfigSo.loseConfig.mmrStreakMultiplier
+                : matchInfo.MmrStreak * GlobalConfig.Instance.normalMatchConfigSo.loseConfig.mmrStreakMultiplier;
         
         private static League GetActiveLeague(MatchInformation matchInfo)
             => GlobalConfig.Instance.rankingXpConfigSo.Leagues.FirstOrDefault(league => league.leagueRank == matchInfo.Ranking);
@@ -119,12 +121,15 @@ namespace Leveling
                     ? matchInfo.PremiumBattleTokens - GlobalConfig.Instance.normalMatchConfigSo.loseConfig.premiumTokensSum
                     : 0;
 
-        private static void CheckUnlockRewards(MatchInformation matchInfo)
+        private static void CheckUnlockRewards(MatchInformation matchInfo, int oldLevel)
         {
             foreach (var reward in GlobalConfig.Instance.playerXpConfigSo.Rewards)
+            {
+                if(reward.level <= oldLevel)
+                    continue;
                 if (matchInfo.Level >= reward.level)
                     Debug.Log("Reward: " + reward.reward);
-                    //TODO: Validate if this reward has already been redeemed.
+            }
         }
     }
 }

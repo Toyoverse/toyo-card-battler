@@ -20,43 +20,43 @@ MonoBehaviour:
     betValues: []
     betRate: 0.5
   - leagueRank: 1
-    baseMultiplier: 0
+    baseMultiplier: 1
     xpWonPerMatch: 8
     xpLostPerMatch: 1
     betValues: []
     betRate: 0.5
   - leagueRank: 2
-    baseMultiplier: 0
+    baseMultiplier: 2
     xpWonPerMatch: 8
     xpLostPerMatch: 2
     betValues: []
     betRate: 0
   - leagueRank: 3
-    baseMultiplier: 0
+    baseMultiplier: 4
     xpWonPerMatch: 8
     xpLostPerMatch: 3
     betValues: []
     betRate: 0
   - leagueRank: 4
-    baseMultiplier: 0
+    baseMultiplier: 6
     xpWonPerMatch: 8
     xpLostPerMatch: 6
     betValues: []
     betRate: 0
   - leagueRank: 5
-    baseMultiplier: 0
+    baseMultiplier: 10
     xpWonPerMatch: 7
     xpLostPerMatch: 6
     betValues: []
     betRate: 0
   - leagueRank: 6
-    baseMultiplier: 0
+    baseMultiplier: 15
     xpWonPerMatch: 6
     xpLostPerMatch: 6
     betValues: []
     betRate: 0
   - leagueRank: 7
-    baseMultiplier: 0
+    baseMultiplier: 20
     xpWonPerMatch: 6
     xpLostPerMatch: 8
     betValues: []

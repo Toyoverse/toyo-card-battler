@@ -32,7 +32,6 @@ namespace Player
             FullToyo = matchInfo.FullToyo;
             Bound = matchInfo.Bound;
             PremiumBattleTokens = matchInfo.PremiumBattleTokens;
-            Debug.Log("MatchInfo Updated!");
         }
         
         [Button]

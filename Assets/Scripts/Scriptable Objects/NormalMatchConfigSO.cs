@@ -20,10 +20,8 @@ namespace Scriptable_Objects
     public class NormalMatchInformation
     {
         public float playerXPSum;
-        [Tooltip("If it's a win, consider a multiplication factor, if it's a defeat, consider a divisor.")]
-        public float partFactor;
-        [Tooltip("If it's a win, consider a multiplication factor, if it's a defeat, consider a divisor.")]
-        public float mmrStreakFactor;
+        public float partMultiplier;
+        public float mmrStreakMultiplier;
         public int premiumTokensSum;
     }
 }
