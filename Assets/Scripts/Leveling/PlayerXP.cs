@@ -1,5 +1,4 @@
 using Player;
-using UnityEngine;
 
 namespace Leveling
 {
@@ -9,7 +8,6 @@ namespace Leveling
 
         public static void ApplyPlayerXP(float battleXP, ref MatchInformation matchInfo)
         {
-            Debug.Log("BattleXP: " + battleXP);
             matchInfo.Experience += battleXP;
             UpdateLevelAndXp(ref matchInfo);
         }
@@ -31,15 +29,12 @@ namespace Leveling
         private static void UpdateLevelAndXp(ref MatchInformation matchInfo)
         {
             consideredMilestone = GetConsideredMilestone(matchInfo);
-            Debug.Log("NextMilestone: " + consideredMilestone);
             while (matchInfo.Experience >= consideredMilestone)
             {
-                Debug.Log("XP >= NextMilestone");
                 matchInfo.Level++;
                 matchInfo.Experience -= consideredMilestone;
                 consideredMilestone = GetConsideredMilestone(matchInfo);
             }
-            Debug.Log("Level: " + matchInfo.Level + " | XP: " + matchInfo.Experience);
         }
     }
 }
