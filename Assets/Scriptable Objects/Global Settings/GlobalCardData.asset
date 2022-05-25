@@ -18,7 +18,7 @@ MonoBehaviour:
   HoverSpeed: 15
   HoverHeight: 3
   Height: 0
-  Spacing: -0.3
+  Spacing: 2.2
   FullAngle: 0
   RotationSpeed: 20
   RotationSpeedEnemy: 500
@@ -29,3 +29,8 @@ MonoBehaviour:
   LayerToRenderNormal: 0
   LayerToRenderTop: 1
   offsetZ: -1
+  fastCardPrefab: {fileID: 0}
+  bondCardPrefab: {fileID: 0}
+  defenseCardPrefab: {fileID: 0}
+  heavyCardPrefab: {fileID: 0}
+  superCardPrefab: {fileID: 0}
