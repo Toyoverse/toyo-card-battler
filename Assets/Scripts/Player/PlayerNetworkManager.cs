@@ -70,15 +70,21 @@ namespace Player
         [Networked] public int PlayerQueueSize { get; set; }
         [Networked] public int EnemyQueueSize { get; set; }
         [Networked] public float CurrentCardDuration { get; set; }
-
+        [Networked] public int PlayerCurrentCombo { get; set; }
+        [Networked] public int EnemyCurrentCombo { get; set; }
+        [Networked] public bool IsHostCardPlaying { get; set; }
 
         public override void FixedUpdateNetwork()
         {
             if (Object.HasStateAuthority)
             {
-                if (CardQueueSystem != null) 
+                if (CardQueueSystem != null)
+                {
                     CurrentCardDuration = CardQueueSystem.GetOfflineCurrentCardDuration();
-                
+                    PlayerCurrentCombo = CardQueueSystem.ComboSystem.GetOfflinePlayerCurrentCombo();
+                    EnemyCurrentCombo = CardQueueSystem.ComboSystem.GetOfflineEnemyCurrentCombo();
+                }
+
                 PlayerQueueSize = PlayerCardQueue.Count;
                 EnemyQueueSize = EnemyCardQueue.Count;
                 if(!IsWorldReady)

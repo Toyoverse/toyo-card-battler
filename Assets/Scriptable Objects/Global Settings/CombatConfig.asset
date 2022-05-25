@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: CombatConfig
   m_EditorClassIdentifier: 
   comboSystemFactor: 5
-  heavyCardSumFactor: 1
-  heavyCardMultiplierFactor: 1
+  comboSum: 1
+  comboBreakMultiplier: 0
   fastCardSumFactor: 0
-  fastCardMultiplierFactor: 1
+  heavyCardSumFactor: 1
   superCardSumFactor: 0
+  fastCardMultiplierFactor: 1
+  heavyCardMultiplierFactor: 1
   superCardMultiplierFactor: 1
   criticalLuckFactor: 0.025
   criticalPrecisionFactor: 0.05

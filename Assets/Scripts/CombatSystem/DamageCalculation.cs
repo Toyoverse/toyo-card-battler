@@ -1,10 +1,10 @@
 ﻿using System;
-using UnityEngine;
+using Player;
 using Random = UnityEngine.Random;
 
-namespace CombatSystem
+namespace CombatSystem 
 {
-    public static class DamageCalculation
+    public static class DamageCalculation 
     {
         public static float[] CalculateDamage(DamageInformation dmgInfo)
         {
@@ -99,14 +99,17 @@ namespace CombatSystem
             var _comboFactor = 1;
             if (dmgInfo.CardType == CARD_TYPE.HEAVY)
                 _comboFactor = GlobalConfig.Instance.CombatConfigSO.comboSystemFactor;
-            return dmgInfo.CurrentCombo / _comboFactor;
+
+            if (PlayerNetworkManager.Instance.IsHostCardPlaying)
+                return PlayerNetworkManager.Instance.PlayerCurrentCombo / _comboFactor;
+            else 
+                return PlayerNetworkManager.Instance.EnemyCurrentCombo / _comboFactor;
         }
 
         private static bool CheckCriticalHit(DamageInformation dmgInfo)
         {   
             var _precision = dmgInfo.ToyoStats[TOYO_STAT.PRECISION];
             _precision *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.PRECISION);
-            Debug.Log("MyTOYO_PRECISION: " + _precision);
 
             var _luck = dmgInfo.ToyoStats[TOYO_STAT.LUCK];
             _luck *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.LUCK);

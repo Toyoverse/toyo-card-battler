@@ -9,6 +9,13 @@ namespace Scriptable_Objects
         [Tooltip("Amount by which the COMBO is divided in the calculation of HEAVY ATTACK DAMAGE.")]
         [SerializeField] [Range(1, 20)] 
         public int comboSystemFactor = 5;
+        
+        [Tooltip("Value added to the current combo when it increases (A new card has been successfully played).")]
+        [SerializeField] [Range(1, 5)] 
+        public int comboSum = 1;
+        [Tooltip("Value multiplied by the current combo when it ends. Example: currentCombo * 0 = 0;")]
+        [SerializeField] [Range(0, 5)] 
+        public int comboBreakMultiplier = 0;
 
         [Header("Attack Sum")]
         [Tooltip("Value added to FAST ATTACK calculations.")]

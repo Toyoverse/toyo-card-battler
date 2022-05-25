@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Extensions;
+using Fusion;
 using Player;
 using PlayerHand;
 using TMPro;
@@ -14,6 +16,14 @@ namespace Card.QueueSystem
         public TextMeshProUGUI playerQueueSize;
         public TextMeshProUGUI enemyQueueSize;
         public TextMeshProUGUI currentCardDuration;
+        public TextMeshProUGUI playerCurrentCombo;
+        public TextMeshProUGUI enemyCurrentCombo; 
+        
+        public GameObject playerComboObj;
+        public GameObject enemyComboObj;
+
+        private ComboSystem _comboSystem;
+        public ComboSystem ComboSystem => _comboSystem ??= this.LazyNew(ref _comboSystem);
         
         private IPlayerHand _playerHand;
         public IPlayerHand PlayerHand => _playerHand ??= this.LazyFindOfType(ref _playerHand);
@@ -93,9 +103,17 @@ namespace Card.QueueSystem
         private void PlayNextCardInQueue()
         {
             if (GetPlayerQueueSize() > 0)
+            {
+                ComboSystem.ComboPlus(false);
+                PlayerNetworkManager.Instance.IsHostCardPlaying = true;
                 PopFromPlayerQueue();
+            }
             else if (GetEnemyQueueSize() > 0) // Else added to avoid nullpointer because of null CardBeingExecuted - It will be fixed in the interrupt system
+            {
+                ComboSystem.ComboPlus(true);
+                PlayerNetworkManager.Instance.IsHostCardPlaying = false;
                 PopFromEnemyQueue();
+            }
         }
 
         private void Update()
@@ -106,11 +124,13 @@ namespace Card.QueueSystem
                     CurrentCardDuration -= Time.deltaTime;
                 else
                     CardBeingExecuted = null;
-            
+
                 if (CardBeingExecuted == null)
                 {
                     if(GetCardQueuePlayer().Count > 0 || GetCardQueueEnemy().Count > 0)
                         PlayNextCardInQueue();
+                    else
+                        ComboSystem.ComboBreak();
                 }
             }
             UpdateUI();
@@ -122,14 +142,71 @@ namespace Card.QueueSystem
             {
                 playerQueueSize.text = GetPlayerQueueSize().ToString();
                 enemyQueueSize.text = GetEnemyQueueSize().ToString();
+                playerCurrentCombo.text = ComboSystem.GetNetworkedPlayerCurrentCombo().ToString();
+                enemyCurrentCombo.text = ComboSystem.GetNetworkedEnemyCurrentCombo().ToString();
             }
             else
             {
                 enemyQueueSize.text = GetPlayerQueueSize().ToString();
                 playerQueueSize.text = GetEnemyQueueSize().ToString();
+                enemyCurrentCombo.text = ComboSystem.GetNetworkedPlayerCurrentCombo().ToString();
+                playerCurrentCombo.text = ComboSystem.GetNetworkedEnemyCurrentCombo().ToString();
             }
             
             currentCardDuration.text = Mathf.Round(GetNetworkedCurrentCardDuration()).ToString();
+            ActiveComboUI();
+        }
+
+        private void ActiveComboUI()
+        {
+            if (FusionLauncher.IsServer)
+            {
+                if (PlayerNetworkManager.Instance.PlayerCurrentCombo > 0)
+                {
+                    if (!playerComboObj.activeInHierarchy)
+                        playerComboObj.SetActive(true);
+                }
+                else
+                {
+                    if(playerComboObj.activeInHierarchy)
+                        playerComboObj.SetActive(false);
+                }
+
+                if (PlayerNetworkManager.Instance.EnemyCurrentCombo > 0)
+                {
+                    if(!enemyComboObj.activeInHierarchy)
+                        enemyComboObj.SetActive(true);
+                }
+                else
+                {
+                    if(enemyComboObj.activeInHierarchy)
+                        enemyComboObj.SetActive(false);
+                }
+            }
+            else
+            {
+                if (PlayerNetworkManager.Instance.PlayerCurrentCombo > 0)
+                {
+                    if (!enemyComboObj.activeInHierarchy)
+                        enemyComboObj.SetActive(true);
+                }
+                else
+                {
+                    if(enemyComboObj.activeInHierarchy)
+                        enemyComboObj.SetActive(false);
+                }
+
+                if (PlayerNetworkManager.Instance.EnemyCurrentCombo > 0)
+                {
+                    if(!playerComboObj.activeInHierarchy)
+                        playerComboObj.SetActive(true);
+                }
+                else
+                {
+                    if(playerComboObj.activeInHierarchy)
+                        playerComboObj.SetActive(false);
+                }
+            }
         }
     }
 }

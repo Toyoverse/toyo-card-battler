@@ -216,6 +216,11 @@ namespace Player
 			MyPlayerHealth?.OnChangeHP.Invoke(Health);
 		}
 
+		public void OnComboChanged()
+		{
+			Debug.LogError("Behaviour.OnComboChanged");
+		}
+
 		private void ResetPlayer()
 		{
 			Debug.Log($"Resetting player {playerID}, tick={Runner.Simulation.Tick}, life={Health}, hasAuthority={Object.HasStateAuthority} to state={state}");

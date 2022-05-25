@@ -180,7 +180,6 @@ namespace CombatSystem
         public DEFENSE_TYPE DefenseType;
         public Dictionary<TOYO_STAT, float> ToyoStats;
         public Dictionary<TOYO_STAT, float> EnemyToyoStats;
-        public int CurrentCombo;
         public List<EffectData> MyBuffs;
         public List<EffectData> EnemyBuffs;
         public EffectData[] EffectData;
@@ -195,7 +194,6 @@ namespace CombatSystem
             DefenseType = card.CardData.DefenseType;
             ToyoStats = fullToyo.ToyoStats;
             EnemyToyoStats = fullToyo.ToyoStats; //TODO: Get Enemy Toyo Stats
-            CurrentCombo = 1; //Todo Implement Combo System
             MyBuffs = fullToyo.Buffs;
             EnemyBuffs = fullToyo.Buffs; //TODO: Get Enemy Toyo Buffs
             EffectData = card.CardData.EffectData;
