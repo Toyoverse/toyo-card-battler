@@ -1,5 +1,5 @@
+using System;
 using FusionExamples.Tanknarok;
-using PlayerHand;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,44 +17,30 @@ public class PauseMenu : MonoBehaviour
     void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.P)) //TODO: Move this for correct local
-        {
             _uiController.EnableOrDisable(!_uiController.UiDoc.enabled);
-        }
     }
 
-    public void CallMainMenu()
-    {
-        SceneControl.LoadSceneAsync(0);
-    }
+    public void CallMainMenu() => SceneControl.LoadSceneAsync(0);
 
     public void Restart()
+        => SceneControl.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+
+    public void Host() => StartRoom(_gameLauncher.OnHostOptions);
+
+    public void Join() => StartRoom(_gameLauncher.OnJoinOptions);
+
+    public void Shared() => StartRoom(_gameLauncher.OnSharedOptions);
+
+    public void Single() => StartRoom();
+
+    public void Dummy()
     {
-        SceneControl.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        StartRoom();
     }
 
-    public void Host()
+    private void StartRoom(Action roomType = null)
     {
-        _gameLauncher.OnHostOptions();
-        _gameLauncher.OnEnterRoom();
-        _uiController.EnableOrDisable(false);
-    }
-
-    public void Join()
-    {
-        _gameLauncher.OnJoinOptions();
-        _gameLauncher.OnEnterRoom();
-        _uiController.EnableOrDisable(false);
-    }
-
-    public void Shared()
-    {
-        _gameLauncher.OnSharedOptions();
-        _gameLauncher.OnEnterRoom();
-        _uiController.EnableOrDisable(false);
-    }
-    
-    public void Single()
-    {
+        roomType?.Invoke();
         _gameLauncher.OnEnterRoom();
         _uiController.EnableOrDisable(false);
     }
