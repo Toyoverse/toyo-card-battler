@@ -33,11 +33,6 @@ public class PauseMenu : MonoBehaviour
 
     public void Single() => StartRoom();
 
-    public void Dummy()
-    {
-        StartRoom();
-    }
-
     private void StartRoom(Action roomType = null)
     {
         roomType?.Invoke();

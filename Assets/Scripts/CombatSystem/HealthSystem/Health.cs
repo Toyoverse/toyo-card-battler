@@ -70,6 +70,8 @@ public class Health : MonoBehaviour, IHealth
     void GainHP(float _value)
     {
         var _health = GetHealth() + _value;
+        if (_health > PlayerNetworkObject.MAX_HEALTH)
+            _health = PlayerNetworkObject.MAX_HEALTH;
         Parent.Health = _health;
         MyHealthUI?.OnUpdateHealthUI?.Invoke(_health);
     }
@@ -77,6 +79,8 @@ public class Health : MonoBehaviour, IHealth
     void TakeDamage(float _value)
     {
         var _health = GetHealth() - _value;
+        if (_health < 0)
+            _health = 0;
         Parent.Health = _health;
         MyHealthUI?.OnUpdateHealthUI?.Invoke(_health);
     }

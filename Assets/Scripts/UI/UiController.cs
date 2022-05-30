@@ -51,12 +51,12 @@ public class UiController : MonoBehaviour
         if (!on)
         {
             EnableEvents(false);
-            UiDoc.enabled = on;
+            UiDoc.enabled = false;
         }
-        else
+        else //It needs to be in an if/else because of the order it's executed.
         {
-            UiDoc.enabled = on;
-            Start();
+            UiDoc.enabled = true;
+            EnableEvents(true);
         }
     }
 }
