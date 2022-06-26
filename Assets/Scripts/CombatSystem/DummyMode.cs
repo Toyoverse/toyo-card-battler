@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using Player;
 using Scriptable_Objects;
-using Tools;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 
 namespace CombatSystem
 {
-    [UseAttributes]
     public class DummyMode : MonoBehaviour
     {
         public static bool IsDummyMode { get; private set; }
@@ -98,7 +97,7 @@ namespace CombatSystem
                 });
         }
 
-        [Tools.Button]
+        [Button]
         public void SetDefaultValues()
         {
             this.hpRegen = defaultConfig.hpRegen;

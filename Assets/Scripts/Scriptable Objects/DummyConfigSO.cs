@@ -1,4 +1,4 @@
-using Tools;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Scriptable_Objects
