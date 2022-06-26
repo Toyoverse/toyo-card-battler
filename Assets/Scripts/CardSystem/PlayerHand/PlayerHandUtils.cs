@@ -56,17 +56,6 @@ namespace PlayerHand
             PlayerHand.AddCard(_card);
         }
 
-        //Old
-        void DrawCardDebug()
-        {
-            var cardGo = Instantiate(GlobalConfig.Instance.cardDefaultPrefab, GlobalConfig.Instance.gameView);
-            cardGo.name = "Card_" + Count;
-            var card = cardGo.GetComponent<ICard>();
-            card.transform.position = GlobalConfig.Instance.deckPosition.position;
-            Count++;
-            PlayerHand.AddCard(card);
-        }
-
         public void PlayCard()
         {
             if (PlayerHand.Cards.Count > 0)

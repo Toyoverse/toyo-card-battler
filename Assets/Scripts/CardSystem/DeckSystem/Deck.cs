@@ -132,10 +132,11 @@ namespace Card.DeckSystem
             {
                 for (var _index = 0; _index < _deck.Count; _index++)
                 {
-                    var cardGo = Instantiate(GlobalConfig.Instance.cardDefaultPrefab, transform);
+                    var _currentCardData = _deck[_index];
+                    var cardGo = Instantiate(CardUtils.GetCardPrefabByType(_currentCardData.CardType), transform);
                     cardGo.name = "Card_" + _cardPackIndex+ "_" +_index;
                     var card = cardGo.GetComponent<ICard>();
-                    card.CardData = _deck[_index];
+                    card.CardData = _currentCardData;
                     AddCard(card);
                     cardGo.transform.position = GlobalConfig.Instance.deckPosition.position;
                 }

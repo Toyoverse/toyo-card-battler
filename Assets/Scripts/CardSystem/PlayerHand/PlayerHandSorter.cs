@@ -1,10 +1,8 @@
 ﻿using System;
 using Card;
 using Card.CardPile;
-using DefaultNamespace;
 using Extensions;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PlayerHand
 {
@@ -18,7 +16,7 @@ namespace PlayerHand
         private void Awake()
         {
             PlayerHand = GetComponent<IPlayerHand>();
-            CardImage = GlobalConfig.Instance.cardDefaultPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
+            CardImage = GlobalConfig.Instance.globalCardDataSO.fastCardPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
         }
 
         private void OnEnable()

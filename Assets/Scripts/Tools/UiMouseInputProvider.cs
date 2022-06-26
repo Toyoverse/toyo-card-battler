@@ -4,9 +4,6 @@ using UnityEngine.EventSystems;
 
 namespace Tools
 {
-    /// <summary>
-    ///     Interface for all the Unity Mouse Input System.
-    /// </summary>
     public interface IMouseInput :
         IPointerClickHandler,
         IBeginDragHandler,
@@ -18,18 +15,15 @@ namespace Tools
         IPointerEnterHandler,
         IPointerExitHandler
     {
-        //clicks
         new Action<PointerEventData> OnPointerClick { get; set; }
         new Action<PointerEventData> OnPointerDown { get; set; }
         new Action<PointerEventData> OnPointerUp { get; set; }
 
-        //drag
         new Action<PointerEventData> OnBeginDrag { get; set; }
         new Action<PointerEventData> OnDrag { get; set; }
         new Action<PointerEventData> OnEndDrag { get; set; }
         new Action<PointerEventData> OnDrop { get; set; }
 
-        //enter
         new Action<PointerEventData> OnPointerEnter { get; set; }
         new Action<PointerEventData> OnPointerExit { get; set; }
 
@@ -46,33 +40,22 @@ namespace Tools
         Right
     }
 
-    /// <summary>
-    ///     Wrap of all the Unity Input System into a Monobehavior.
-    /// </summary>
     [RequireComponent(typeof(Collider))]
     public class UiMouseInputProvider : MonoBehaviour, IMouseInput
     {
-        //----------------------------------------------------------------------------------------------------------
 
         #region Unity Callbacks
 
         private void Awake()
         {
-            // Currently using PhysicsRaycaster, but can be also considered PhysicsRaycaster2D.
             if (Camera.main.GetComponent<PhysicsRaycaster>() == null)
                 throw new Exception(GetType() + " needs an " + typeof(PhysicsRaycaster) + " on the MainCamera");
         }
 
         #endregion
 
-        //----------------------------------------------------------------------------------------------------------
-
         #region Drag Direction
 
-        /// <summary>
-        ///     While dragging returns the direction of the movement.
-        /// </summary>
-        /// <returns></returns>
         private DragDirection GetDragDirection()
         {
             var currentPosition = Input.mousePosition;
@@ -93,11 +76,8 @@ namespace Tools
 
         #endregion
 
-        //----------------------------------------------------------------------------------------------------------
-
         #region Delegates
 
-        //TODO: Consider to implement Safe Invokes.
         Action<PointerEventData> IMouseInput.OnPointerDown { get; set; } = eventData => { };
         Action<PointerEventData> IMouseInput.OnPointerUp { get; set; } = eventData => { };
         Action<PointerEventData> IMouseInput.OnPointerClick { get; set; } = eventData => { };
@@ -110,7 +90,6 @@ namespace Tools
 
         #endregion
 
-        //----------------------------------------------------------------------------------------------------------
 
         #region Properties and Fields
 
@@ -120,7 +99,6 @@ namespace Tools
 
         #endregion
 
-        //----------------------------------------------------------------------------------------------------------
 
         #region Unity Mouse Events
 
@@ -170,7 +148,5 @@ namespace Tools
         }
 
         #endregion
-
-        //----------------------------------------------------------------------------------------------------------
     }
 }

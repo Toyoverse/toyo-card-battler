@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Card;
-using Tools;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ToyoPart", menuName = "ScriptableObject/ToyoPart")]
-[UseAttributes]
 public class ToyoPartSO : ScriptableObject
 {
     [Header("ToyoPiece")]

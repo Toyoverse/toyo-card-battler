@@ -1,12 +1,10 @@
-
 using Leveling;
-using Tools;
+using Sirenix.OdinInspector;
 using ToyoSystem;
 using UnityEngine;
 
 namespace Player
 {
-    [UseAttributes]
     public class PlayerInfo : MonoBehaviour, IPlayerInfo
     {
         public float Experience;

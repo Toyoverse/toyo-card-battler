@@ -28,3 +28,5 @@ MonoBehaviour:
   HitListInfos:
   - FrameToHit: 1
     Damage: 10
+  - FrameToHit: 5
+    Damage: 20

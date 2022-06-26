@@ -4,8 +4,8 @@ using HealthSystem.HealthUI;
 using Player;
 using Tools;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
-[UseAttributes]
 public class Health : MonoBehaviour, IHealth
 {
     public PlayerNetworkObject Parent { get; set; }

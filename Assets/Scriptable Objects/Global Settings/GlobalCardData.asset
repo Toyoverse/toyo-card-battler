@@ -29,8 +29,8 @@ MonoBehaviour:
   LayerToRenderNormal: 0
   LayerToRenderTop: 1
   offsetZ: -1
-  fastCardPrefab: {fileID: 0}
-  bondCardPrefab: {fileID: 0}
-  defenseCardPrefab: {fileID: 0}
-  heavyCardPrefab: {fileID: 0}
-  superCardPrefab: {fileID: 0}
+  fastCardPrefab: {fileID: 8932913532635961775, guid: 51bf0210ba8c139478a7185ea26e6b07, type: 3}
+  bondCardPrefab: {fileID: 8932913532635961775, guid: 31daf047a102f19489846a3334b43542, type: 3}
+  defenseCardPrefab: {fileID: 8932913532635961775, guid: 7322514233c61ca4e82ce99cdf02ac23, type: 3}
+  heavyCardPrefab: {fileID: 8932913532635961775, guid: 51bf0210ba8c139478a7185ea26e6b07, type: 3}
+  superCardPrefab: {fileID: 8932913532635961775, guid: 31daf047a102f19489846a3334b43542, type: 3}

@@ -1,12 +1,11 @@
 using System;
 using APSystem;
 using APSystem.ApUI;
-using Tools;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace APSystem
 {
-    [UseAttributes]
     public class Ap : MonoBehaviour, IAp
     {
         private int AP;

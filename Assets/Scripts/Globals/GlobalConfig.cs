@@ -1,6 +1,6 @@
 ﻿using System;
 using Scriptable_Objects;
-using Tools;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
     [Serializable]
@@ -9,7 +9,6 @@ using UnityEngine;
         [FoldoutGroup("Card Parameters")] public GlobalCardDataSO globalCardDataSO;
         [FoldoutGroup("Card Parameters")] public CombatConfigSO CombatConfigSO;
         [FoldoutGroup("Card Parameters")] public DeckDatabaseSO DeckDatabaseSo;
-        [FoldoutGroup("Card Parameters")] public GameObject cardDefaultPrefab;
         
         
         [FoldoutGroup("Card Transforms")] public Transform gameView;

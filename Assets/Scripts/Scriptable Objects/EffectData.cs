@@ -1,5 +1,5 @@
-﻿using Tools;
-using UnityEngine;
+﻿using UnityEngine;
+using Sirenix.OdinInspector;
 
 [CreateAssetMenu(fileName = "EffectData", menuName = "ScriptableObject/EffectData", order = 2)]
 public class EffectData : ScriptableObject

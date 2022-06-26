@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Tools;
 using UnityEngine;
 using UnityEngine.UI;
+using Sirenix.OdinInspector;
+
 
 [CreateAssetMenu(fileName = "CardData", menuName = "ScriptableObject/CardData", order = 0)]
 public class CardData : UniqueScriptableObject

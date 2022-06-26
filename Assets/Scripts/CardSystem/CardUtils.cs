@@ -43,7 +43,7 @@ namespace Card
 
         static ICard InstantiateCard(ICardPile handler, CardData cardData)
         {
-            var cardGo = Object.Instantiate(GlobalConfig.Instance.cardDefaultPrefab, GlobalConfig.Instance.deckPosition);
+            var cardGo = Object.Instantiate(GetCardPrefabByType(cardData.CardType), GlobalConfig.Instance.deckPosition);
             cardGo.name = "Card_" +cardData.toyoPart +"_"+cardData.CardName;
             var card = cardGo.GetComponent<ICard>();
             card.CardData = cardData;
@@ -70,6 +70,19 @@ namespace Card
         {
             var _cards = GameObject.FindObjectsOfType<CardComponent>();
             return _cards.Where(_card => _id.Contains(_card.CardID)).Cast<ICard>().ToList();
+        }
+        
+        public static GameObject GetCardPrefabByType(CARD_TYPE _type)
+        {
+            return _type switch
+            {
+                CARD_TYPE.HEAVY => GlobalConfig.Instance.globalCardDataSO.heavyCardPrefab,
+                CARD_TYPE.FAST => GlobalConfig.Instance.globalCardDataSO.fastCardPrefab,
+                CARD_TYPE.DEFENSE => GlobalConfig.Instance.globalCardDataSO.defenseCardPrefab,
+                CARD_TYPE.BOND => GlobalConfig.Instance.globalCardDataSO.bondCardPrefab,
+                CARD_TYPE.SUPER => GlobalConfig.Instance.globalCardDataSO.superCardPrefab,
+                _ => throw new ArgumentOutOfRangeException(nameof(_type), _type, null)
+            };
         }
         
         private static bool CanIPlayThisCard(ICard _card, List<EffectData> _effectList)

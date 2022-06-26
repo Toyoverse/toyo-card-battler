@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Tools;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "FakeDatabase", menuName = "ScriptableObject/FakeDatabase")]

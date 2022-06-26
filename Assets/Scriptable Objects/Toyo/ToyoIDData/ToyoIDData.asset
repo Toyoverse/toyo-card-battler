@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82a009489a3440049a37a81f2d9b594b, type: 3}
   m_Name: ToyoIDData
   m_EditorClassIdentifier: 
-  Id: 05772532-f068-44b6-abb5-42e6971f5d36
-  Name: Johnny
+  Id: 5772532
+  Name: Tatsu
   ToyoPiece: 0
