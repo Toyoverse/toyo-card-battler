@@ -6,7 +6,6 @@ using Fusion;
 using Fusion.Sockets;
 using Player;
 using PlayerHand;
-using UnityEngine;
 using Extensions;
 
 
@@ -21,16 +20,6 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	private List<int> _listCardIDsInQueue = new ();
 	public List<ICard> ListCardIDsInQueue => _listCardIDsInQueue.Select(CardUtils.FindCardByID).ToList();
 
-	private Vector2 _moveDelta;
-	private Vector2 _aimDelta;
-	private Vector2 _leftPos;
-	private Vector2 _leftDown;
-	private Vector2 _rightPos;
-	private Vector2 _rightDown;
-	private bool _leftTouchWasDown;
-	private bool _rightTouchWasDown;
-	private bool _primaryFire;
-	private bool _secondaryFire;
 
 	private PlayerInputData _frameworkInput = new ();
 
