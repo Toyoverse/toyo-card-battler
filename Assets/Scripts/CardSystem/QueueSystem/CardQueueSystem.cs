@@ -7,6 +7,7 @@ using Fusion;
 using Player;
 using PlayerHand;
 using TMPro;
+using Tools.Extensions;
 using UnityEngine;
 
 namespace Card.QueueSystem

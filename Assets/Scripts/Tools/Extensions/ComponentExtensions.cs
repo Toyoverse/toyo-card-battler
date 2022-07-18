@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Extensions
+namespace Tools.Extensions
 {
     /// <summary>
     ///     Extension methods for UnityEngine.Component.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using APSystem;
+﻿using CombatSystem.APSystem;
 using Fusion;
 using HealthSystem;
 using Infrastructure;
@@ -30,7 +26,7 @@ namespace Player
 		public IPlayerHand MyPlayerHand;
 		public IFullToyo MyFullToyo;
 		public IHealth MyPlayerHealth;
-		public IAp MyPlayerAP;
+		public IApModel MyPlayerApModel;
 		
 		//[Networked]
 		IPlayerHand IPlayer.PlayerHand => MyPlayerHand;
@@ -42,7 +38,7 @@ namespace Player
 		IHealth IPlayer.PlayerHealth => MyPlayerHealth;
         
 		//[Networked]
-		IAp IPlayer.PlayerAP => MyPlayerAP;
+		IApModel IPlayer.PlayerApModel => MyPlayerApModel;
 
 		public FullToyoSO FullToyoSo; 
 
@@ -76,7 +72,7 @@ namespace Player
 		{
 			_cc = GetComponent<NetworkCharacterControllerPrototype>();
 			MyBattleReferences = FindObjectOfType<BattleReferences>();
-			MyPlayerAP = MyBattleReferences.PlayerUI.GetComponentInChildren<IAp>();
+			MyPlayerApModel = MyBattleReferences.PlayerUI.GetComponentInChildren<IApModel>();
 			MyFullToyo = MyBattleReferences.Toyo.GetComponent<IFullToyo>();
 			MyPlayerHand = MyBattleReferences.hand.GetComponent<IPlayerHand>();
 		}
@@ -233,47 +229,5 @@ namespace Player
 			Destroy(_deathExplosionInstance);
 			PlayerNetworkManager.RemovePlayer(this);
 		}
-
-		public void DespawnObject()
-		{
-			if (state == State.Dead)
-				return;
-
-			state = State.Despawned;
-		}
-
-		public async void TriggerDespawn()
-		{
-			DespawnObject();
-			PlayerNetworkManager.RemovePlayer(this);
-
-			await Task.Delay(300); // wait for effects
-
-			if (Object == null) { return; }
-
-			if (Object.HasStateAuthority)
-			{
-				Runner.Despawn(Object);
-			}
-			else if (Runner.IsSharedModeMasterClient)
-			{
-				Object.RequestStateAuthority();
-
-				while (Object.HasStateAuthority == false)
-				{
-					await Task.Delay(100); // wait for Auth transfer
-				}
-
-				if (Object.HasStateAuthority)
-				{
-					Runner.Despawn(Object);
-				}
-			}
- 
-		}
-		
-
     }
-    
-
 }

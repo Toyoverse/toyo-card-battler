@@ -3,6 +3,7 @@ using Card;
 using Card.DeckSystem;
 using Extensions;
 using Fusion;
+using Tools.Extensions;
 using ToyoSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;

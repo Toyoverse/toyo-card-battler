@@ -1,12 +1,10 @@
 using System;
-using APSystem;
-using APSystem.ApUI;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-namespace APSystem
+namespace CombatSystem.APSystem
 {
-    public class Ap : MonoBehaviour, IAp
+    public class ApModel : MonoBehaviour, IApModel
     {
         private int AP;
         private int MaxAP;
@@ -21,13 +19,13 @@ namespace APSystem
             return AP;
         }
         
-        int IAp.GetAP()
+        int IApModel.GetAP()
         {
             return GetAP();
         }
 
-        private IApUI MyApUI;
-        IApUI IAp.ApUI => MyApUI;
+        private IApPresenter _myApPresenter;
+        IApPresenter IApModel.ApPresenter => _myApPresenter;
 
         #endregion
 
@@ -35,7 +33,7 @@ namespace APSystem
 
         void Awake()
         {
-            MyApUI = GetComponent<ApUI.ApUI>();
+            _myApPresenter = GetComponent<ApPresenter>();
             timeForApRegen = GlobalConfig.Instance.timeForApRegen;
             partialAP = MaxAP = AP = GlobalConfig.Instance.maxAP;
         }
@@ -73,7 +71,7 @@ namespace APSystem
         void GainAPRegen(float _value)
         {
             partialAP += _value;
-            MyApUI?.OnUpdateAPUI?.Invoke(partialAP);
+            _myApPresenter?.OnUpdateAPUI?.Invoke(partialAP);
 
             if (Mathf.FloorToInt(partialAP) > AP)
                 AP++;
@@ -92,14 +90,14 @@ namespace APSystem
         {
             AP += _value;
             partialAP = AP;
-            MyApUI?.OnUpdateAPUI?.Invoke(AP);
+            _myApPresenter?.OnUpdateAPUI?.Invoke(AP);
         }
 
         void UseAP(int _value)
         {
             AP -= _value;
             partialAP = AP;
-            MyApUI?.OnUpdateAPUI?.Invoke(AP);
+            _myApPresenter?.OnUpdateAPUI?.Invoke(AP);
         }
 
         public int testHPValue = 1;

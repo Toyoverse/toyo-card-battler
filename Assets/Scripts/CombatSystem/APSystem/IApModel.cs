@@ -1,13 +1,12 @@
 ﻿using System;
-using APSystem.ApUI;
 
-namespace APSystem
+namespace CombatSystem.APSystem
 {
-    public interface IAp
+    public interface IApModel
     {
         int GetAP();
 
-        IApUI ApUI { get;}
+        IApPresenter ApPresenter { get;}
         
         Action<int> OnGainAP { get; set; }
         

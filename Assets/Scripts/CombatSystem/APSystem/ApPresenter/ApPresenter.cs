@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections;
 using TMPro;
 using Tools;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace APSystem.ApUI
+namespace CombatSystem.APSystem
 {
-    public class ApUI : MonoBehaviour, IApUI 
+    public class ApPresenter : MonoBehaviour, IApPresenter 
     {
         public SpriteRenderer MyRenderer { get; set;}
         public IMouseInput MyInput { get; set;}
@@ -53,8 +52,8 @@ namespace APSystem.ApUI
         public MonoBehaviour MonoBehaviour => this;
         public Action<float> OnUpdateAPUI { get; set; }
 
-        SpriteRenderer IApUI.Renderer => MyRenderer;
-        IMouseInput IApUI.Input => MyInput;
+        SpriteRenderer IApPresenter.Renderer => MyRenderer;
+        IMouseInput IApPresenter.Input => MyInput;
         
     }
 }

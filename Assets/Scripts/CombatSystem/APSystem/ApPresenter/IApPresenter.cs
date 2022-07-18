@@ -2,9 +2,9 @@
 using Tools;
 using UnityEngine;
 
-namespace APSystem.ApUI
+namespace CombatSystem.APSystem
 {
-    public interface IApUI 
+    public interface IApPresenter 
     {
         Action<float> OnUpdateAPUI { get; set; }
         SpriteRenderer Renderer { get; }

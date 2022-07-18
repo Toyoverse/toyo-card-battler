@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Tools;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "ToyoIDData", menuName = "ScriptableObject/ToyoIDData")]
     public class ToyoIDData : UniqueScriptableObject

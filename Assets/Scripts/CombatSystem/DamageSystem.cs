@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using APSystem;
 using Card;
-using Extensions;
+using CombatSystem.APSystem;
+using Tools.Extensions;
 using HealthSystem;
 using Player;
 using PlayerHand;
@@ -17,8 +17,8 @@ namespace CombatSystem
         public IPlayerHand CardHand => _cardHand ??= this.LazyFindOfType(ref _cardHand);
         protected IHealth PlayerHealth => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealth;
         protected IHealth EnemyHealth => PlayerNetworkManager.GetEnemy().MyPlayerHealth;
-        protected IAp PlayerAP { get; set; }
-        protected IAp EnemyAP { get; set; }
+        protected IApModel PlayerApModel { get; set; }
+        protected IApModel EnemyApModel { get; set; }
         
         //Todo Enemy Full Toyo
         protected IFullToyo FullToyo { get; set; }
@@ -26,8 +26,8 @@ namespace CombatSystem
 
         private void Start()
         {
-            PlayerAP = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IAp>();
-            EnemyAP = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IAp>();
+            PlayerApModel = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IApModel>();
+            EnemyApModel = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IApModel>();
             FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
         }
 
@@ -61,7 +61,7 @@ namespace CombatSystem
             var _apCost = _card.CardData?.ApCost ?? 0;
             _apCost += BoundSystem.GetCostMod(DamageInformation);
             _apCost = _apCost < 0 ? 0 : _apCost;
-            PlayerAP?.OnUseAP.Invoke(_apCost);
+            PlayerApModel?.OnUseAP.Invoke(_apCost);
         }
 
         private void ProcessCardByType(ICard card)
@@ -165,9 +165,9 @@ namespace CombatSystem
         public void ApMod(TOYO_TYPE toyo, float sumValue)
         {
             if (toyo == TOYO_TYPE.ALLY)
-                PlayerAP?.OnChangeAP.Invoke((int)sumValue); 
+                PlayerApModel?.OnChangeAP.Invoke((int)sumValue); 
             else
-                EnemyAP?.OnChangeAP.Invoke((int)sumValue); 
+                EnemyApModel?.OnChangeAP.Invoke((int)sumValue); 
         }
     }
     

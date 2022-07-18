@@ -158,8 +158,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 142112501}
-        m_TargetAssemblyTypeName: DummyMode, Assembly-CSharp
-        m_MethodName: OpenOptions
+        m_TargetAssemblyTypeName: CombatSystem.DummyMode.DummyModeModel, Assembly-CSharp
+        m_MethodName: CallOpenOrCloseOptions
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -172,8 +172,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 142112501}
-        m_TargetAssemblyTypeName: DummyMode, Assembly-CSharp
-        m_MethodName: OpenOptions
+        m_TargetAssemblyTypeName: CombatSystem.DummyMode.DummyModeModel, Assembly-CSharp
+        m_MethodName: CallOpenOrCloseOptions
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -234,11 +234,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 142112498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 318664e55120be44bac0f4e4600e0069, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a8edf549e792954d88c354400c702d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   defaultConfig: {fileID: 11400000, guid: 5cbcaae25413fb544a247be3ee6e5525, type: 2}
-  UiDoc: {fileID: 142112500}
 --- !u!4 &142112502
 Transform:
   m_ObjectHideFlags: 0

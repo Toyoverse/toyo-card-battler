@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 namespace CombatSystem
 {
-    public class DefenseSystem : MonoBehaviour
+    public static class DefenseSystem
     {
         public static bool DefenseCardSuccess(DamageInformation dmgInfo)
             => GetDefenseChance(dmgInfo) >= Random.Range(0, 100);

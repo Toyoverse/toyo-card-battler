@@ -48,7 +48,7 @@ public class Health : MonoBehaviour, IHealth
         OnGainHP -= GainHP;
         OnTakeDamage -= TakeDamage;
         OnChangeHP -= ChangeHP;
-        OnInitialize += Initialize;
+        OnInitialize -= Initialize;
     }
     
     #endregion

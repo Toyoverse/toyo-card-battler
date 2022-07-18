@@ -1,6 +1,7 @@
 ﻿using DefaultNamespace;
 using Extensions;
 using Patterns.StateMachine;
+using Tools.Extensions;
 using UnityEngine;
 
 namespace Card.CardStateMachine.States

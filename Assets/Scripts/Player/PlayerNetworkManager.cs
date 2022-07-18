@@ -5,7 +5,7 @@ using Card;
 using Card.QueueSystem;
 using CombatSystem;
 using ExitGames.Client.Photon;
-using Extensions;
+using Tools.Extensions;
 using Fusion;
 using HealthSystem;
 using Multiplayer;

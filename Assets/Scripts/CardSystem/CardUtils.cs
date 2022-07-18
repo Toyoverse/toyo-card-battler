@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSystem;
 using Card.CardPile;
 using CombatSystem;
 using Fusion;
@@ -25,7 +24,7 @@ namespace Card
         public static void ValidateCardAP(this ICard card, PlayerRef _playerRef)
         {
             var _player = PlayerNetworkManager.GetPlayer(_playerRef);
-            var _ap = _player.MyPlayerAP.GetAP();
+            var _ap = _player.MyPlayerApModel.GetAP();
             if (card.CardData.ApCost > _ap) NotEnoughAP();
         }
 

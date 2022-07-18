@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using Tools;
 
 
 [CreateAssetMenu(fileName = "CardData", menuName = "ScriptableObject/CardData", order = 0)]
