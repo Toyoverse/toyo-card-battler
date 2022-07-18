@@ -17,6 +17,8 @@ namespace CombatSystem.DummyMode
 
         private DummyModeModel _myDummyModeModel;
 
+        #region CallBacks
+
         private void Start()
         {
             _myDummyModeModel = GetComponent<DummyModeModel>();
@@ -39,6 +41,8 @@ namespace CombatSystem.DummyMode
             OnOpenOptions -= OpenOrCloseOptions;
             OnDisableOptionsBtn -= DisableOptionsBtn;
         }
+        
+        #endregion
 
         private void StartDummy(DummyConfigSO dummyConfig)
         {
@@ -110,39 +114,43 @@ namespace CombatSystem.DummyMode
         private static void ChangePlayerHealthEvent(bool addEvent)
         {
             if (addEvent)
-                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealth.HealthUI.OnUpdateHealthUI
+                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
                     += PlayerRecoverHpEvent;
             else
-                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealth.HealthUI.OnUpdateHealthUI
+                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
                     -= PlayerRecoverHpEvent;
         }
         
         private static void ChangeEnemyHealthEvent(bool addEvent)
         {
             if (addEvent)
-                PlayerNetworkManager.GetEnemy().MyPlayerHealth.HealthUI.OnUpdateHealthUI
+                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
                     += EnemyRecoverHpEvent;
             else
-                PlayerNetworkManager.GetEnemy().MyPlayerHealth.HealthUI.OnUpdateHealthUI
+                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
                     -= EnemyRecoverHpEvent;
         }
         
         private static void PlayerRecoverHpEvent(float hp)
         {
             if (hp < PlayerNetworkObject.MAX_HEALTH)
-                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealth.OnChangeHP.Invoke(PlayerNetworkObject.MAX_HEALTH);
+                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.OnChangeHP.Invoke(PlayerNetworkObject.MAX_HEALTH);
         }
         
         private static void EnemyRecoverHpEvent(float hp)
         {
             if (hp < PlayerNetworkObject.MAX_HEALTH)
-                PlayerNetworkManager.GetEnemy().MyPlayerHealth.OnChangeHP.Invoke(PlayerNetworkObject.MAX_HEALTH);
+                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.OnChangeHP.Invoke(PlayerNetworkObject.MAX_HEALTH);
         }
-        
+
+        #region Events
+
         public Action<DummyConfigSO> OnStartDummy { get; private set; }
         public Action<bool> OnChangePlayerHealth { get; private set; }
         public Action<bool> OnChangeEnemyHealth { get; private set; }
         public Action<bool> OnOpenOptions { get; private set; }
         public Action OnDisableOptionsBtn { get; set;}
+
+        #endregion
     }
 }

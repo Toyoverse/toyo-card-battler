@@ -2,16 +2,16 @@
 using Tools;
 using UnityEngine;
 
-namespace HealthSystem.HealthUI
+namespace HealthSystem
 {
-    public interface IHealthUI 
+    public interface IHealthPresenter 
     {
         Action<float> OnUpdateHealthUI { get; set; }
         SpriteRenderer Renderer { get; }
         IMouseInput Input { get; }
         MonoBehaviour MonoBehaviour { get; }
-        GameObject gameObject { get; }
-        Transform transform { get; }
+        GameObject GameObject { get; }
+        Transform Transform { get; }
         Camera MainCamera { get; }
     }
 }

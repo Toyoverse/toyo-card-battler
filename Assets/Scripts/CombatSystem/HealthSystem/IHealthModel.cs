@@ -1,14 +1,13 @@
 ﻿using System;
-using HealthSystem.HealthUI;
 using Player;
 
 namespace HealthSystem
 {
-    public interface IHealth
+    public interface IHealthModel
     {
         float GetHealth();
 
-        IHealthUI HealthUI{ get;}
+        IHealthPresenter HealthPresenter{ get;}
         
         PlayerNetworkObject Parent{ get; set; }
         

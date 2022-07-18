@@ -20,7 +20,9 @@ namespace CombatSystem.DummyMode
         [SerializeField]
         private DummyConfigSO defaultConfig;
         private DummyModePresenter _myDummyModePresenter;
-        
+
+        #region CallBacks
+
         private void Start()
         {
             _myDummyModePresenter = GetComponent<DummyModePresenter>();
@@ -41,6 +43,8 @@ namespace CombatSystem.DummyMode
             if (_enemyHpRegen)
                 _myDummyModePresenter.OnChangeEnemyHealth?.Invoke(false);
         }
+        
+        #endregion
 
         private void StartDummy()
         {

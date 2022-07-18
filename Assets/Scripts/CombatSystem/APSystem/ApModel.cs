@@ -12,26 +12,9 @@ namespace CombatSystem.APSystem
         private float timeForApRegen;
         private float currentTimerRegen;
 
-        #region GetterAndSetter
-
-        public int GetAP()
-        {
-            return AP;
-        }
-        
-        int IApModel.GetAP()
-        {
-            return GetAP();
-        }
-
-        private IApPresenter _myApPresenter;
-        IApPresenter IApModel.ApPresenter => _myApPresenter;
-
-        #endregion
-
         #region CallBacks
 
-        void Awake()
+        private void Awake()
         {
             _myApPresenter = GetComponent<ApPresenter>();
             timeForApRegen = GlobalConfig.Instance.timeForApRegen;
@@ -52,14 +35,14 @@ namespace CombatSystem.APSystem
             }
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             OnGainAP += GainAP;
             OnUseAP += UseAP;
             OnChangeAP += ChangeAP;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             OnGainAP -= GainAP;
             OnUseAP -= UseAP;
@@ -68,7 +51,7 @@ namespace CombatSystem.APSystem
 
         #endregion
 
-        void GainAPRegen(float _value)
+        private void GainAPRegen(float _value)
         {
             partialAP += _value;
             _myApPresenter?.OnUpdateAPUI?.Invoke(partialAP);
@@ -78,7 +61,7 @@ namespace CombatSystem.APSystem
               
         }
 
-        void ChangeAP(int _value)
+        private void ChangeAP(int _value)
         {
             if(_value > 0)
                 GainAP(_value);
@@ -86,14 +69,14 @@ namespace CombatSystem.APSystem
                 UseAP(_value);
         }
         
-        void GainAP(int _value)
+        private void GainAP(int _value)
         {
             AP += _value;
             partialAP = AP;
             _myApPresenter?.OnUpdateAPUI?.Invoke(AP);
         }
 
-        void UseAP(int _value)
+        private void UseAP(int _value)
         {
             AP -= _value;
             partialAP = AP;
@@ -114,8 +97,29 @@ namespace CombatSystem.APSystem
             GainAP(testHPValue);
         }
 
+        #region Getters/Setters
+
+        public int GetAP()
+        {
+            return AP;
+        }
+        
+        int IApModel.GetAP()
+        {
+            return GetAP();
+        }
+
+        private IApPresenter _myApPresenter;
+        IApPresenter IApModel.ApPresenter => _myApPresenter;
+
+        #endregion
+
+        #region Events
+
         public Action<int> OnGainAP { get; set; }
         public Action<int> OnChangeAP { get; set; }
         public Action<int> OnUseAP { get; set; }
+        
+        #endregion
     }
 }

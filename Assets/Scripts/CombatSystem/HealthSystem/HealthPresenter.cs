@@ -5,23 +5,25 @@ using Tools;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HealthSystem.HealthUI
+namespace HealthSystem
 {
-    public class HealthUI : MonoBehaviour, IHealthUI 
+    public class HealthPresenter : MonoBehaviour, IHealthPresenter 
     {
         
         private float tempMaxHealth = 100.0f;
         private float UISpeed = 1.0f;
-
+        
+        private IEnumerator smoothHealthCoroutine;
         private TextMeshProUGUI textValue;
         
         public SpriteRenderer MyRenderer { get; set;}
         public IMouseInput MyInput { get; set;}
         public Transform MyTransform { get; set; }
-
         public Slider HealthSlider;
 
-        void Awake()
+        #region CallBacks
+
+        private void Awake()
         {
             MyTransform = transform;
             MyRenderer = GetComponent<SpriteRenderer>();
@@ -30,27 +32,27 @@ namespace HealthSystem.HealthUI
         }
         
             
-        void OnEnable()
+        private void OnEnable()
         {
             OnUpdateHealthUI += UpdateHealthUI;
             SetMaxHealth();
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             OnUpdateHealthUI -= UpdateHealthUI;
         }
+        
+        #endregion
 
-        void UpdateHealthUI(float _currentHealth)
+        private void UpdateHealthUI(float _currentHealth)
         {
             if (smoothHealthCoroutine != null) StopCoroutine(smoothHealthCoroutine);
             smoothHealthCoroutine = SmoothHealthCoroutine(_currentHealth);
             StartCoroutine(smoothHealthCoroutine);
         }
-        
-        private IEnumerator smoothHealthCoroutine;
 
-        IEnumerator SmoothHealthCoroutine(float _currentHealth)
+        private IEnumerator SmoothHealthCoroutine(float _currentHealth)
         {
             var lerpTime = 0.0f;
             var sliderValue = HealthSlider.value;
@@ -64,24 +66,30 @@ namespace HealthSystem.HealthUI
             SetSliderValue(_currentHealth);
         }
 
-        void SetSliderValue(float _value)
+        private void SetSliderValue(float _value)
         {
             HealthSlider.value = _value;
             textValue.text = Mathf.Round(_value).ToString();
         }
 
-        void SetMaxHealth()
+        private void SetMaxHealth()
         {
             HealthSlider.maxValue = tempMaxHealth;
             HealthSlider.value = tempMaxHealth;
         }
 
+        public Transform Transform { get; }
         public Camera MainCamera => Camera.main;
         public MonoBehaviour MonoBehaviour => this;
-        public Action<float> OnUpdateHealthUI { get; set; }
+        public GameObject GameObject { get; }
 
-        SpriteRenderer IHealthUI.Renderer => MyRenderer;
-        IMouseInput IHealthUI.Input => MyInput;
+        SpriteRenderer IHealthPresenter.Renderer => MyRenderer;
+        IMouseInput IHealthPresenter.Input => MyInput;
+
+        #region Events
+
+        public Action<float> OnUpdateHealthUI { get; set; }
         
+        #endregion
     }
 }

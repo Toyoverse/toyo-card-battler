@@ -25,7 +25,7 @@ namespace Player
 
 		public IPlayerHand MyPlayerHand;
 		public IFullToyo MyFullToyo;
-		public IHealth MyPlayerHealth;
+		public IHealthModel MyPlayerHealthModel;
 		public IApModel MyPlayerApModel;
 		
 		//[Networked]
@@ -35,7 +35,7 @@ namespace Player
 		IFullToyo IPlayer.FullToyo => MyFullToyo;
 		
 		//[Networked]
-		IHealth IPlayer.PlayerHealth => MyPlayerHealth;
+		IHealthModel IPlayer.PlayerHealthModel => MyPlayerHealthModel;
         
 		//[Networked]
 		IApModel IPlayer.PlayerApModel => MyPlayerApModel;
@@ -132,16 +132,16 @@ namespace Player
 			{
 				var _playerUI = PlayerNetworkManager.Instance.PlayerUI;
 				_playerUI.SetActive(true);
-				MyPlayerHealth = _playerUI.GetComponentInChildren<IHealth>();
-				MyPlayerHealth.Parent = this;
+				MyPlayerHealthModel = _playerUI.GetComponentInChildren<IHealthModel>();
+				MyPlayerHealthModel.Parent = this;
 			}
 			else
 			{
 				var _enemyUI = PlayerNetworkManager.Instance.EnemyUI;
 				_enemyUI.SetActive(true);
-				MyPlayerHealth = _enemyUI.GetComponentInChildren<IHealth>();
+				MyPlayerHealthModel = _enemyUI.GetComponentInChildren<IHealthModel>();
 				IsEnemy = true;
-				MyPlayerHealth.Parent = this;
+				MyPlayerHealthModel.Parent = this;
 			}
 
 			if (FusionLauncher.GameMode == GameMode.Single)
@@ -209,7 +209,7 @@ namespace Player
 
 		public void OnHealthChanged()
 		{
-			MyPlayerHealth?.OnChangeHP.Invoke(Health);
+			MyPlayerHealthModel?.OnChangeHP.Invoke(Health);
 		}
 
 		public void OnComboChanged()

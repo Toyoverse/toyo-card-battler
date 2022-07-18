@@ -8,52 +8,60 @@ namespace CombatSystem.APSystem
 {
     public class ApPresenter : MonoBehaviour, IApPresenter 
     {
+        private TextMeshProUGUI _textValue;
+        
         public SpriteRenderer MyRenderer { get; set;}
         public IMouseInput MyInput { get; set;}
         public Transform MyTransform { get; set; }
-        private TextMeshProUGUI textValue;
-
         public Slider APSlider;
 
-        void Awake()
+        #region CallBacks
+
+        private void Awake()
         {
             MyTransform = transform;
             MyRenderer = GetComponent<SpriteRenderer>();
             MyInput = GetComponent<IMouseInput>();
-            textValue = GetComponentInChildren<TextMeshProUGUI>();
+            _textValue = GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             OnUpdateAPUI += UpdateAPUI;
             SetMaxAP(GlobalConfig.Instance.maxAP);
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             OnUpdateAPUI -= UpdateAPUI;
         }
-
-        void UpdateAPUI(float _currentAP) => SetSliderValue(_currentAP);
         
-        void SetSliderValue(float _value)
+        #endregion
+
+        void UpdateAPUI(float currentAP) => SetSliderValue(currentAP);
+        
+        private void SetSliderValue(float value)
         {
-            APSlider.value = _value;
-            textValue.text = Mathf.Floor(_value).ToString();
+            APSlider.value = value;
+            _textValue.text = Mathf.Floor(value).ToString();
         }
         
-        void SetMaxAP(float _maxAp)
+        private void SetMaxAP(float maxAp)
         {
-            APSlider.maxValue = _maxAp;
-            APSlider.value = _maxAp;
+            APSlider.maxValue = maxAp;
+            APSlider.value = maxAp;
         }
 
         public Camera MainCamera => Camera.main;
         public MonoBehaviour MonoBehaviour => this;
-        public Action<float> OnUpdateAPUI { get; set; }
 
         SpriteRenderer IApPresenter.Renderer => MyRenderer;
         IMouseInput IApPresenter.Input => MyInput;
-        
+
+        #region Events
+
+        public Action<float> OnUpdateAPUI { get; set; }
+
+        #endregion
     }
 }

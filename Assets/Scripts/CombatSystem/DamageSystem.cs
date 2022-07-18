@@ -15,8 +15,8 @@ namespace CombatSystem
     {
         private IPlayerHand _cardHand;
         public IPlayerHand CardHand => _cardHand ??= this.LazyFindOfType(ref _cardHand);
-        protected IHealth PlayerHealth => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealth;
-        protected IHealth EnemyHealth => PlayerNetworkManager.GetEnemy().MyPlayerHealth;
+        protected IHealthModel PlayerHealthModel => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel;
+        protected IHealthModel EnemyHealthModel => PlayerNetworkManager.GetEnemy().MyPlayerHealthModel;
         protected IApModel PlayerApModel { get; set; }
         protected IApModel EnemyApModel { get; set; }
         
@@ -141,9 +141,9 @@ namespace CombatSystem
         private void DoDamage(float damage)
         {
             if(DamageInformation.IsMultiplayerEnemyCard)
-                PlayerHealth?.OnTakeDamage.Invoke(damage);
+                PlayerHealthModel?.OnTakeDamage.Invoke(damage);
             else
-                EnemyHealth?.OnTakeDamage.Invoke(damage);
+                EnemyHealthModel?.OnTakeDamage.Invoke(damage);
         }
         
         private void CheckLifeSteal(float damage)
@@ -151,15 +151,15 @@ namespace CombatSystem
             var _lifeStealFactor = BoundSystem.GetLifeStealFactor(DamageInformation);
             if (!(_lifeStealFactor > 0)) return;
             var _hpMod = damage * _lifeStealFactor;
-            PlayerHealth?.OnGainHP.Invoke(_hpMod);
+            PlayerHealthModel?.OnGainHP.Invoke(_hpMod);
         }
 
         public void HpMod(TOYO_TYPE toyo, float sumValue)
         {
             if (toyo == TOYO_TYPE.ALLY)
-                PlayerHealth?.OnChangeHP.Invoke(sumValue); 
+                PlayerHealthModel?.OnChangeHP.Invoke(sumValue); 
             else
-                EnemyHealth?.OnChangeHP.Invoke(sumValue); 
+                EnemyHealthModel?.OnChangeHP.Invoke(sumValue); 
         }
 
         public void ApMod(TOYO_TYPE toyo, float sumValue)
