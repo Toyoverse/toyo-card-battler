@@ -25,8 +25,8 @@ namespace Player
 
 		public IPlayerHand MyPlayerHand;
 		public IFullToyo MyFullToyo;
-		public IHealthModel MyPlayerHealthModel;
-		public IApModel MyPlayerApModel;
+		public HealthModel MyPlayerHealthModel;
+		public ApModel MyPlayerApModel;
 		
 		//[Networked]
 		IPlayerHand IPlayer.PlayerHand => MyPlayerHand;
@@ -35,10 +35,10 @@ namespace Player
 		IFullToyo IPlayer.FullToyo => MyFullToyo;
 		
 		//[Networked]
-		IHealthModel IPlayer.PlayerHealthModel => MyPlayerHealthModel;
+		HealthModel IPlayer.PlayerHealthModel => MyPlayerHealthModel;
         
 		//[Networked]
-		IApModel IPlayer.PlayerApModel => MyPlayerApModel;
+		ApModel IPlayer.PlayerApModel => MyPlayerApModel;
 
 		public FullToyoSO FullToyoSo; 
 
@@ -72,7 +72,7 @@ namespace Player
 		{
 			_cc = GetComponent<NetworkCharacterControllerPrototype>();
 			MyBattleReferences = FindObjectOfType<BattleReferences>();
-			MyPlayerApModel = MyBattleReferences.PlayerUI.GetComponentInChildren<IApModel>();
+			MyPlayerApModel = MyBattleReferences.PlayerUI.GetComponentInChildren<ApModel>();
 			MyFullToyo = MyBattleReferences.Toyo.GetComponent<IFullToyo>();
 			MyPlayerHand = MyBattleReferences.hand.GetComponent<IPlayerHand>();
 		}
@@ -132,14 +132,14 @@ namespace Player
 			{
 				var _playerUI = PlayerNetworkManager.Instance.PlayerUI;
 				_playerUI.SetActive(true);
-				MyPlayerHealthModel = _playerUI.GetComponentInChildren<IHealthModel>();
+				MyPlayerHealthModel = _playerUI.GetComponentInChildren<HealthModel>();
 				MyPlayerHealthModel.Parent = this;
 			}
 			else
 			{
 				var _enemyUI = PlayerNetworkManager.Instance.EnemyUI;
 				_enemyUI.SetActive(true);
-				MyPlayerHealthModel = _enemyUI.GetComponentInChildren<IHealthModel>();
+				MyPlayerHealthModel = _enemyUI.GetComponentInChildren<HealthModel>();
 				IsEnemy = true;
 				MyPlayerHealthModel.Parent = this;
 			}
@@ -209,7 +209,7 @@ namespace Player
 
 		public void OnHealthChanged()
 		{
-			MyPlayerHealthModel?.OnChangeHP.Invoke(Health);
+			MyPlayerHealthModel?.OnChangeHp.Invoke(Health);
 		}
 
 		public void OnComboChanged()

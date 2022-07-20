@@ -619,8 +619,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6123726218484420665}
   - component: {fileID: 6123726218484420668}
-  - component: {fileID: 6123726218484420671}
-  - component: {fileID: 6123726218484420670}
+  - component: {fileID: 6867635434897470137}
+  - component: {fileID: 6029985813450817358}
   m_Layer: 5
   m_Name: ApUI
   m_TagString: Untagged
@@ -702,7 +702,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6123726218484420671
+--- !u!114 &6867635434897470137
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -711,11 +711,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6123726218484420664}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14afaa044fec95f49b3a0f0e7ae3eec4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e71760e325eea941af0c15e385eb377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  APSlider: {fileID: 6123726218484420668}
---- !u!114 &6123726218484420670
+  apSlider: {fileID: 6123726218484420668}
+--- !u!114 &6029985813450817358
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -724,10 +724,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6123726218484420664}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73dc3c30b39638e4fad868a6da823e2a, type: 3}
+  m_Script: {fileID: 11500000, guid: ac189c5aa5def024ead5fa8197a7634f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testHPValue: 1
 --- !u!1 &6123726218511544052
 GameObject:
   m_ObjectHideFlags: 0
@@ -1088,7 +1087,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a05460df0f866a49a8234b47723d90a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testHPValue: 10
 --- !u!114 &6123726219081038568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1101,7 +1099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d56f3d9894414cdfa10be80baa945c7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthSlider: {fileID: 6123726219081038574}
+  healthSlider: {fileID: 6123726219081038574}
 --- !u!1 &6123726219548671026
 GameObject:
   m_ObjectHideFlags: 0

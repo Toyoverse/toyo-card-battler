@@ -1,124 +1,104 @@
 using System;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 namespace CombatSystem.APSystem
 {
-    public class ApModel : MonoBehaviour, IApModel
+    [RequireComponent(typeof(ApPresenter))]
+    public class ApModel : MonoBehaviour
     {
-        private int AP;
-        private int MaxAP;
-        private float partialAP;
-        private float timeForApRegen;
-        private float currentTimerRegen;
+        private int _ap;
+        private int _maxAP;
+        private float _partialAP;
+        private float _timeForApRegen;
+        private float _currentTimerRegen;
+        private ApPresenter _myApPresenter;
 
         #region CallBacks
 
         private void Awake()
         {
             _myApPresenter = GetComponent<ApPresenter>();
-            timeForApRegen = GlobalConfig.Instance.timeForApRegen;
-            partialAP = MaxAP = AP = GlobalConfig.Instance.maxAP;
+            _timeForApRegen = GlobalConfig.Instance.timeForApRegen;
+            _partialAP = _maxAP = Ap = GlobalConfig.Instance.maxAP;
         }
 
         private void Update()
         {
-            if (currentTimerRegen <= timeForApRegen && AP < MaxAP)
+            if (_currentTimerRegen <= _timeForApRegen && Ap < _maxAP)
             {
-                currentTimerRegen += Time.deltaTime;
-                var _value = Time.deltaTime / timeForApRegen;
+                _currentTimerRegen += Time.deltaTime;
+                var _value = Time.deltaTime / _timeForApRegen;
                 GainAPRegen(_value);
             }
             else
             {
-                currentTimerRegen = 0.0f;
+                _currentTimerRegen = 0.0f;
             }
         }
 
         private void OnEnable()
         {
-            OnGainAP += GainAP;
-            OnUseAP += UseAP;
-            OnChangeAP += ChangeAP;
+            OnGainAp += GainAP;
+            OnUseAp += UseAP;
+            OnChangeAp += ChangeAP;
         }
 
         private void OnDisable()
         {
-            OnGainAP -= GainAP;
-            OnUseAP -= UseAP;
-            OnChangeAP -= ChangeAP;
+            OnGainAp -= GainAP;
+            OnUseAp -= UseAP;
+            OnChangeAp -= ChangeAP;
         }
 
         #endregion
 
-        private void GainAPRegen(float _value)
+        private void GainAPRegen(float value)
         {
-            partialAP += _value;
-            _myApPresenter?.OnUpdateAPUI?.Invoke(partialAP);
+            _partialAP += value;
+            _myApPresenter.OnUpdateApUI?.Invoke(_partialAP);
 
-            if (Mathf.FloorToInt(partialAP) > AP)
-                AP++;
+            if (Mathf.FloorToInt(_partialAP) > Ap)
+                Ap++;
               
         }
 
-        private void ChangeAP(int _value)
+        private void ChangeAP(int value)
         {
-            if(_value > 0)
-                GainAP(_value);
+            if(value > 0)
+                GainAP(value);
             else
-                UseAP(_value);
+                UseAP(value);
         }
         
-        private void GainAP(int _value)
+        private void GainAP(int value)
         {
-            AP += _value;
-            partialAP = AP;
-            _myApPresenter?.OnUpdateAPUI?.Invoke(AP);
+            Ap += value;
+            _partialAP = Ap;
+            _myApPresenter.OnUpdateApUI?.Invoke(Ap);
         }
 
-        private void UseAP(int _value)
+        private void UseAP(int value)
         {
-            AP -= _value;
-            partialAP = AP;
-            _myApPresenter?.OnUpdateAPUI?.Invoke(AP);
-        }
-
-        public int testHPValue = 1;
-
-        [Button]
-        public void TestDamage()
-        {
-            UseAP(testHPValue);
-        }
-
-        [Button]
-        public void TestHealing()
-        {
-            GainAP(testHPValue);
+            Ap -= value;
+            _partialAP = Ap;
+            _myApPresenter.OnUpdateApUI?.Invoke(Ap);
         }
 
         #region Getters/Setters
 
-        public int GetAP()
+        public int Ap
         {
-            return AP;
+            get => _ap;
+            set => _ap = value;
         }
-        
-        int IApModel.GetAP()
-        {
-            return GetAP();
-        }
-
-        private IApPresenter _myApPresenter;
-        IApPresenter IApModel.ApPresenter => _myApPresenter;
 
         #endregion
 
         #region Events
 
-        public Action<int> OnGainAP { get; set; }
-        public Action<int> OnChangeAP { get; set; }
-        public Action<int> OnUseAP { get; set; }
+        public Action<int> OnGainAp { get; set; }
+        public Action<int> OnChangeAp { get; set; }
+        public Action<int> OnUseAp { get; set; }
         
         #endregion
     }

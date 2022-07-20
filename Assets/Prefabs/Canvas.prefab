@@ -176,7 +176,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1591
 --- !u!1 &1087491430616635181
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,4 +369,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d56f3d9894414cdfa10be80baa945c7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthSlider: {fileID: 5760407434622696052}
+  healthSlider: {fileID: 5760407434622696052}

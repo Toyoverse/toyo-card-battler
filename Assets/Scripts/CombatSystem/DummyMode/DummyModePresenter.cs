@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Player;
 using Scriptable_Objects;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,6 +11,7 @@ namespace CombatSystem.DummyMode
     public class DummyModePresenter : MonoBehaviour
     {
         public UIDocument uiDoc;
+        
         private List<Toggle> _toggles;
         private List<Slider> _sliders;
         private Button _openOptionsButton;
@@ -29,7 +31,8 @@ namespace CombatSystem.DummyMode
             OnStartDummy += StartDummy;
             OnChangePlayerHealth += ChangePlayerHealthEvent;
             OnChangeEnemyHealth += ChangeEnemyHealthEvent;
-            OnOpenOptions += OpenOrCloseOptions;
+            OnOpenOptions += OpenOptions;
+            OnCloseOptions += CloseOptions;
             OnDisableOptionsBtn += DisableOptionsBtn;
         }
 
@@ -38,7 +41,8 @@ namespace CombatSystem.DummyMode
             OnStartDummy -= StartDummy;
             OnChangePlayerHealth -= ChangePlayerHealthEvent;
             OnChangeEnemyHealth -= ChangeEnemyHealthEvent;
-            OnOpenOptions -= OpenOrCloseOptions;
+            OnOpenOptions -= OpenOptions;
+            OnCloseOptions -= CloseOptions;
             OnDisableOptionsBtn -= DisableOptionsBtn;
         }
         
@@ -55,11 +59,23 @@ namespace CombatSystem.DummyMode
             _optionsPanel = _root?.Q<VisualElement>("OptionsPanel");
             if (_openOptionsButton != null) _openOptionsButton.visible = true;
         }
-        
-        private void OpenOrCloseOptions(bool value)
+
+        [Button]
+        public void CallSetDefaultValues()
         {
-            _optionsPanel.visible = value;
-            _openOptionsButton.visible = !value;
+            _myDummyModeModel.SetDefaultValues();
+        }
+        
+        private void OpenOptions()
+        {
+            _optionsPanel.visible = true;
+            _openOptionsButton.visible = false;
+        }
+
+        private void CloseOptions()
+        {
+            _optionsPanel.visible = false;
+            _openOptionsButton.visible = true;
         }
 
         private void DisableOptionsBtn()
@@ -134,13 +150,13 @@ namespace CombatSystem.DummyMode
         private static void PlayerRecoverHpEvent(float hp)
         {
             if (hp < PlayerNetworkObject.MAX_HEALTH)
-                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.OnChangeHP.Invoke(PlayerNetworkObject.MAX_HEALTH);
+                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkObject.MAX_HEALTH);
         }
         
         private static void EnemyRecoverHpEvent(float hp)
         {
             if (hp < PlayerNetworkObject.MAX_HEALTH)
-                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.OnChangeHP.Invoke(PlayerNetworkObject.MAX_HEALTH);
+                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkObject.MAX_HEALTH);
         }
 
         #region Events
@@ -148,7 +164,8 @@ namespace CombatSystem.DummyMode
         public Action<DummyConfigSO> OnStartDummy { get; private set; }
         public Action<bool> OnChangePlayerHealth { get; private set; }
         public Action<bool> OnChangeEnemyHealth { get; private set; }
-        public Action<bool> OnOpenOptions { get; private set; }
+        public Action OnOpenOptions { get; private set; }
+        public Action OnCloseOptions { get; private set; }
         public Action OnDisableOptionsBtn { get; set;}
 
         #endregion

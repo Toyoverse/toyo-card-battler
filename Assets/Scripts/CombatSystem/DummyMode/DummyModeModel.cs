@@ -1,46 +1,44 @@
 using Scriptable_Objects;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace CombatSystem.DummyMode
 {
+    [RequireComponent(typeof(DummyModePresenter))]
     public class DummyModeModel : MonoBehaviour
     {
         public static bool IsDummyMode { get; private set; }
-        
-        [Header("Player")]
-        private bool _hpRegen;
-        private bool _ignoreApCosts;
-        private float _hpRegenSpeed;
-        private float _apRegenSpeed;
-        [Header("Enemy")]
-        private bool _enemyHpRegen;
-        private float _enemyHpRegenSpeed;
-
         [SerializeField]
         private DummyConfigSO defaultConfig;
+        
+        private bool _hpRegen;
+        private bool _ignoreApCosts;
+        private bool _enemyHpRegen;
+        private float _hpRegenSpeed;
+        private float _apRegenSpeed;
+        private float _enemyHpRegenSpeed;
+
         private DummyModePresenter _myDummyModePresenter;
 
         #region CallBacks
 
-        private void Start()
+        private void Awake()
         {
             _myDummyModePresenter = GetComponent<DummyModePresenter>();
         }
         
         private void OnEnable()
         {
-            if (_hpRegen)
+            if (HpRegen)
                 _myDummyModePresenter.OnChangePlayerHealth?.Invoke(true);
-            if (_enemyHpRegen)
+            if (EnemyHpRegen)
                 _myDummyModePresenter.OnChangeEnemyHealth?.Invoke(true);
         }
 
         private void OnDisable()
         {
-            if (_hpRegen)
+            if (HpRegen)
                 _myDummyModePresenter.OnChangePlayerHealth?.Invoke(false);
-            if (_enemyHpRegen)
+            if (EnemyHpRegen)
                 _myDummyModePresenter.OnChangeEnemyHealth?.Invoke(false);
         }
         
@@ -52,36 +50,41 @@ namespace CombatSystem.DummyMode
             _myDummyModePresenter.OnStartDummy?.Invoke(defaultConfig);
         }
         
-        [Button]
-        private void SetDefaultValues()
+        public void SetDefaultValues()
         {
-            _hpRegen = defaultConfig.hpRegen;
-            _hpRegenSpeed = defaultConfig.hpRegenSpeed;
-            _ignoreApCosts = defaultConfig.ignoreApCosts;
-            _apRegenSpeed = defaultConfig.apRegenSpeed;
-            _enemyHpRegen = defaultConfig.enemyHpRegen;
-            _enemyHpRegenSpeed = defaultConfig.enemyHpRegenSpeed;
+            HpRegen = defaultConfig.hpRegen;
+            HpRegenSpeed = defaultConfig.hpRegenSpeed;
+            IgnoreApCosts = defaultConfig.ignoreApCosts;
+            ApRegenSpeed = defaultConfig.apRegenSpeed;
+            EnemyHpRegen = defaultConfig.enemyHpRegen;
+            EnemyHpRegenSpeed = defaultConfig.enemyHpRegenSpeed;
         }
 
         private void DisableAllValues()
         {
-            _hpRegen = false;
-            _hpRegenSpeed = 0;
-            _ignoreApCosts = false;
-            _apRegenSpeed = 1; //TODO: Add default AP regen
-            _enemyHpRegen = false;
-            _enemyHpRegenSpeed = 0;
+            HpRegen = false;
+            HpRegenSpeed = 0;
+            IgnoreApCosts = false;
+            ApRegenSpeed = 1; //TODO: Add default AP regen
+            EnemyHpRegen = false;
+            EnemyHpRegenSpeed = 0;
         }
 
-        public void CallOpenOrCloseOptions(bool open)
+        public void CallOpenOptions()
         {
-            _myDummyModePresenter.OnOpenOptions?.Invoke(open);
+            _myDummyModePresenter.OnOpenOptions?.Invoke();
         }
 
-        public void SetDummyMode(bool on)
+        public void CallCloseOptions()
         {
-            IsDummyMode = on; //CHECK WITH JHONE THE REASON OF THIS
-            if (on)
+            _myDummyModePresenter.OnOpenOptions?.Invoke();
+
+        }
+
+        public void SetDummyMode(bool value)
+        {
+            IsDummyMode = value; 
+            if (value)
                 StartDummy();
             else
             {

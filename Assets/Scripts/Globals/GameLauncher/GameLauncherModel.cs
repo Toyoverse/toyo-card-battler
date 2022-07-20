@@ -1,35 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Card.DeckSystem;
+﻿using Card.DeckSystem;
 using Fusion;
 using Infrastructure;
 using Multiplayer;
 using Player;
 using PlayerHand;
-using TMPro;
 using ToyoSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Globals
 {
-	/// <summary>
-	/// App entry point and main UI flow management.
-	/// </summary>
-	public class GameLauncher : MonoBehaviour
+	public class GameLauncherModel : MonoBehaviour
 	{
-		[SerializeField] private PlayerNetworkManager _playerNetworkManagerPrefab;
-		[FormerlySerializedAs("_playerPrefab")] [SerializeField] private PlayerNetworkObject playerNetworkObjectPrefab;
-		[SerializeField] private TMP_InputField _room;
-		[SerializeField] private TextMeshProUGUI _progress;
-		[SerializeField] private GameObject _uiGame;
-		[SerializeField] private GameObject _cardQueueSystem;
+		[SerializeField]
+		[FormerlySerializedAs("_playerNetworkManagerPrefab")] private PlayerNetworkManager playerNetworkManagerPrefab;
+		[SerializeField]
+		[FormerlySerializedAs("_playerPrefab")] private PlayerNetworkObject playerNetworkObjectPrefab;
+		[SerializeField]
+		[FormerlySerializedAs("_cardQueueSystem")] private GameObject cardQueueSystem;
 
 
 		private FusionLauncher.ConnectionStatus _status = FusionLauncher.ConnectionStatus.Disconnected;
+		private NetworkRunner _runner;
 		private GameMode _gameMode = GameMode.Single;
-		private NetworkRunner Runner;
 		
 		private void Awake()
 		{
@@ -39,18 +32,15 @@ namespace Globals
 		private void Start()
 		{
 			OnConnectionStatusUpdate(null, FusionLauncher.ConnectionStatus.Disconnected, "");
-			
 		}
 
 		private void Update()
 		{
 			
-			if(!_cardQueueSystem.activeSelf && PlayerNetworkManager.Instance != null && PlayerNetworkManager.Instance.IsWorldReady)
-				_cardQueueSystem.SetActive(true);
-			
+			if(!cardQueueSystem.activeSelf && PlayerNetworkManager.Instance != null && PlayerNetworkManager.Instance.IsWorldReady)
+				cardQueueSystem.SetActive(true);
 		}
 
-		// What mode to play - Called from the start menu
 		public void OnHostOptions()
 		{
 			SetGameMode(GameMode.Host);
@@ -73,16 +63,16 @@ namespace Globals
 
 		public void OnEnterRoom()
 		{
-			FusionLauncher launcher = FindObjectOfType<FusionLauncher>();
-			if (launcher == null)
-				launcher = new GameObject("Launcher").AddComponent<FusionLauncher>();
+			FusionLauncher _launcher = FindObjectOfType<FusionLauncher>();
+			if (_launcher == null)
+				_launcher = new GameObject("Launcher").AddComponent<FusionLauncher>();
 
-			LevelManager lm = FindObjectOfType<LevelManager>();
-			lm.launcher = launcher;
+			LevelManager _lm = FindObjectOfType<LevelManager>();
+			_lm.launcher = _launcher;
 
 			//var text = _room.text;
-			var text = "test";
-			launcher.Launch(_gameMode, text, lm, OnConnectionStatusUpdate, OnSpawnWorld, OnSpawnPlayer, OnDespawnPlayer);
+			var _text = "test";
+			_launcher.Launch(_gameMode, _text, _lm, OnConnectionStatusUpdate, OnSpawnWorld, OnSpawnPlayer, OnDespawnPlayer);
 		}
 		
 		private void OnConnectionStatusUpdate(NetworkRunner runner, FusionLauncher.ConnectionStatus status, string reason)
@@ -102,25 +92,22 @@ namespace Globals
 						break;
 				}
 			}
-
 			_status = status;
 		}
 
 		private void OnSpawnWorld(NetworkRunner runner)
 		{
 			Debug.Log("Spawning GameManager");
-			runner.Spawn(_playerNetworkManagerPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
+			runner.Spawn(playerNetworkManagerPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
 			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
 			{
 				//var _playerNetworkManager = networkObject.gameObject.GetComponent<PlayerNetworkManager>();
 			}
-			
-			
 		}
 
-		private void OnSpawnPlayer(NetworkRunner runner, PlayerRef playerref)
+		private void OnSpawnPlayer(NetworkRunner runner, PlayerRef playerRef)
 		{
-			runner.Spawn(playerNetworkObjectPrefab, Vector3.zero, Quaternion.identity, playerref, InitNetworkState);
+			runner.Spawn(playerNetworkObjectPrefab, Vector3.zero, Quaternion.identity, playerRef, InitNetworkState);
 
 			if (_gameMode == GameMode.Single)
 			{
@@ -131,7 +118,7 @@ namespace Globals
 			{
 				
 				var _player = networkObject.gameObject.GetComponent<PlayerNetworkObject>();
-				Debug.Log($"Initializing player {playerref.PlayerId}");
+				Debug.Log($"Initializing player {playerRef.PlayerId}");
 				var _fullToyo = DatabaseManager.Instance.GetFullToyoFromFakeID(DatabaseManager.Instance.GetPlayerDatabaseID());
 				_player.InitNetworkState(_fullToyo);
 				
@@ -139,10 +126,7 @@ namespace Globals
 				//	StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(_fullToyo));
 
 			}
-				
-
 			SetFirstGameStateDebug();
-
 		}
 		
 		
@@ -157,7 +141,7 @@ namespace Globals
 		}
 
 
-		private void OnDespawnPlayer(NetworkRunner runner, PlayerRef playerref)
+		private void OnDespawnPlayer(NetworkRunner runner, PlayerRef playerRef)
 		{
 			
 		}

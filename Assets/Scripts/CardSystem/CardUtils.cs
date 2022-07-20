@@ -5,7 +5,6 @@ using Card.CardPile;
 using CombatSystem;
 using Fusion;
 using Player;
-using ToyoSystem;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -24,7 +23,7 @@ namespace Card
         public static void ValidateCardAP(this ICard card, PlayerRef _playerRef)
         {
             var _player = PlayerNetworkManager.GetPlayer(_playerRef);
-            var _ap = _player.MyPlayerApModel.GetAP();
+            var _ap = _player.MyPlayerApModel.Ap;
             if (card.CardData.ApCost > _ap) NotEnoughAP();
         }
 

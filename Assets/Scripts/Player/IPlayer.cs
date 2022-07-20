@@ -10,8 +10,8 @@ namespace Player
     {
         IPlayerHand PlayerHand { get; }
         IFullToyo FullToyo { get; }
-        IHealthModel PlayerHealthModel { get; }
-        IApModel PlayerApModel { get; }
+        HealthModel PlayerHealthModel { get; }
+        ApModel PlayerApModel { get; }
         BattleReferences MyBattleReferences { get; set; }
         PlayerRef NetworkPlayerRef { get; set; }
 

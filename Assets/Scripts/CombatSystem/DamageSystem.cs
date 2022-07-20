@@ -15,10 +15,10 @@ namespace CombatSystem
     {
         private IPlayerHand _cardHand;
         public IPlayerHand CardHand => _cardHand ??= this.LazyFindOfType(ref _cardHand);
-        protected IHealthModel PlayerHealthModel => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel;
-        protected IHealthModel EnemyHealthModel => PlayerNetworkManager.GetEnemy().MyPlayerHealthModel;
-        protected IApModel PlayerApModel { get; set; }
-        protected IApModel EnemyApModel { get; set; }
+        protected HealthModel PlayerHealthModel => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel;
+        protected HealthModel EnemyHealthModel => PlayerNetworkManager.GetEnemy().MyPlayerHealthModel;
+        protected ApModel PlayerApModel { get; set; }
+        protected ApModel EnemyApModel { get; set; }
         
         //Todo Enemy Full Toyo
         protected IFullToyo FullToyo { get; set; }
@@ -26,8 +26,8 @@ namespace CombatSystem
 
         private void Start()
         {
-            PlayerApModel = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<IApModel>();
-            EnemyApModel = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<IApModel>();
+            PlayerApModel = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<ApModel>();
+            EnemyApModel = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<ApModel>();
             FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
         }
 
@@ -61,7 +61,7 @@ namespace CombatSystem
             var _apCost = _card.CardData?.ApCost ?? 0;
             _apCost += BoundSystem.GetCostMod(DamageInformation);
             _apCost = _apCost < 0 ? 0 : _apCost;
-            PlayerApModel?.OnUseAP.Invoke(_apCost);
+            PlayerApModel?.OnUseAp.Invoke(_apCost);
         }
 
         private void ProcessCardByType(ICard card)
@@ -151,23 +151,23 @@ namespace CombatSystem
             var _lifeStealFactor = BoundSystem.GetLifeStealFactor(DamageInformation);
             if (!(_lifeStealFactor > 0)) return;
             var _hpMod = damage * _lifeStealFactor;
-            PlayerHealthModel?.OnGainHP.Invoke(_hpMod);
+            PlayerHealthModel?.OnGainHp.Invoke(_hpMod);
         }
 
         public void HpMod(TOYO_TYPE toyo, float sumValue)
         {
             if (toyo == TOYO_TYPE.ALLY)
-                PlayerHealthModel?.OnChangeHP.Invoke(sumValue); 
+                PlayerHealthModel?.OnChangeHp.Invoke(sumValue); 
             else
-                EnemyHealthModel?.OnChangeHP.Invoke(sumValue); 
+                EnemyHealthModel?.OnChangeHp.Invoke(sumValue); 
         }
 
         public void ApMod(TOYO_TYPE toyo, float sumValue)
         {
             if (toyo == TOYO_TYPE.ALLY)
-                PlayerApModel?.OnChangeAP.Invoke((int)sumValue); 
+                PlayerApModel?.OnChangeAp.Invoke((int)sumValue); 
             else
-                EnemyApModel?.OnChangeAP.Invoke((int)sumValue); 
+                EnemyApModel?.OnChangeAp.Invoke((int)sumValue); 
         }
     }
     

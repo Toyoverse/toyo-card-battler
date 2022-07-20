@@ -6,61 +6,54 @@ using UnityEngine.UI;
 
 namespace CombatSystem.APSystem
 {
-    public class ApPresenter : MonoBehaviour, IApPresenter 
+    public class ApPresenter : MonoBehaviour 
     {
-        private TextMeshProUGUI _textValue;
+        public Slider apSlider;
         
-        public SpriteRenderer MyRenderer { get; set;}
-        public IMouseInput MyInput { get; set;}
-        public Transform MyTransform { get; set; }
-        public Slider APSlider;
+        private TextMeshProUGUI _textValue;
 
         #region CallBacks
 
         private void Awake()
         {
-            MyTransform = transform;
-            MyRenderer = GetComponent<SpriteRenderer>();
-            MyInput = GetComponent<IMouseInput>();
             _textValue = GetComponentInChildren<TextMeshProUGUI>();
         }
 
         private void OnEnable()
         {
-            OnUpdateAPUI += UpdateAPUI;
+            OnUpdateApUI += UpdateApUI;
             SetMaxAP(GlobalConfig.Instance.maxAP);
         }
 
         private void OnDisable()
         {
-            OnUpdateAPUI -= UpdateAPUI;
+            OnUpdateApUI -= UpdateApUI;
         }
         
         #endregion
 
-        void UpdateAPUI(float currentAP) => SetSliderValue(currentAP);
+        private void UpdateApUI(float currentAP) => SetSliderValue(currentAP);
         
         private void SetSliderValue(float value)
         {
-            APSlider.value = value;
+            apSlider.value = value;
             _textValue.text = Mathf.Floor(value).ToString();
         }
         
         private void SetMaxAP(float maxAp)
         {
-            APSlider.maxValue = maxAp;
-            APSlider.value = maxAp;
+            apSlider.maxValue = maxAp;
+            apSlider.value = maxAp;
         }
 
-        public Camera MainCamera => Camera.main;
-        public MonoBehaviour MonoBehaviour => this;
+        #region Getters/Setters
 
-        SpriteRenderer IApPresenter.Renderer => MyRenderer;
-        IMouseInput IApPresenter.Input => MyInput;
+        
+        #endregion
 
         #region Events
 
-        public Action<float> OnUpdateAPUI { get; set; }
+        public Action<float> OnUpdateApUI { get; set; }
 
         #endregion
     }

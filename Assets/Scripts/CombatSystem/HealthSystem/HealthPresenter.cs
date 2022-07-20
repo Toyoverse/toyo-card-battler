@@ -1,37 +1,29 @@
 ﻿using System;
 using System.Collections;
+using Player;
 using TMPro;
 using Tools;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace HealthSystem
 {
-    public class HealthPresenter : MonoBehaviour, IHealthPresenter 
+    public class HealthPresenter : MonoBehaviour 
     {
+        public Slider healthSlider;
+        public float uISpeed = 1.0f;
         
-        private float tempMaxHealth = 100.0f;
-        private float UISpeed = 1.0f;
-        
-        private IEnumerator smoothHealthCoroutine;
-        private TextMeshProUGUI textValue;
-        
-        public SpriteRenderer MyRenderer { get; set;}
-        public IMouseInput MyInput { get; set;}
-        public Transform MyTransform { get; set; }
-        public Slider HealthSlider;
+        private IEnumerator _smoothHealthCoroutine;
+        private TextMeshProUGUI _textValue;
 
         #region CallBacks
 
         private void Awake()
         {
-            MyTransform = transform;
-            MyRenderer = GetComponent<SpriteRenderer>();
-            MyInput = GetComponent<IMouseInput>();
-            textValue = GetComponentInChildren<TextMeshProUGUI>();
+            _textValue = GetComponentInChildren<TextMeshProUGUI>();
         }
-        
-            
+
         private void OnEnable()
         {
             OnUpdateHealthUI += UpdateHealthUI;
@@ -45,46 +37,43 @@ namespace HealthSystem
         
         #endregion
 
-        private void UpdateHealthUI(float _currentHealth)
+        private void UpdateHealthUI(float currentHealth)
         {
-            if (smoothHealthCoroutine != null) StopCoroutine(smoothHealthCoroutine);
-            smoothHealthCoroutine = SmoothHealthCoroutine(_currentHealth);
-            StartCoroutine(smoothHealthCoroutine);
+            if (_smoothHealthCoroutine != null) StopCoroutine(_smoothHealthCoroutine);
+            _smoothHealthCoroutine = SmoothHealthCoroutine(currentHealth);
+            StartCoroutine(_smoothHealthCoroutine);
         }
 
-        private IEnumerator SmoothHealthCoroutine(float _currentHealth)
+        private IEnumerator SmoothHealthCoroutine(float currentHealth)
         {
-            var lerpTime = 0.0f;
-            var sliderValue = HealthSlider.value;
-            while (lerpTime < UISpeed)
+            var _lerpTime = 0.0f;
+            var _sliderValue = healthSlider.value;
+            while (_lerpTime < uISpeed)
             {
-                var _newhealth = Mathf.Lerp(sliderValue, _currentHealth, lerpTime/UISpeed);
-                SetSliderValue(_newhealth);
-                lerpTime += Time.deltaTime;
+                var _newHealth = Mathf.Lerp(_sliderValue, currentHealth, _lerpTime/uISpeed);
+                SetSliderValue(_newHealth);
+                _lerpTime += Time.deltaTime;
                 yield return null;
             }
-            SetSliderValue(_currentHealth);
+            SetSliderValue(currentHealth);
         }
 
-        private void SetSliderValue(float _value)
+        private void SetSliderValue(float value)
         {
-            HealthSlider.value = _value;
-            textValue.text = Mathf.Round(_value).ToString();
+            healthSlider.value = value;
+            _textValue.text = Mathf.Round(value).ToString();
         }
 
         private void SetMaxHealth()
         {
-            HealthSlider.maxValue = tempMaxHealth;
-            HealthSlider.value = tempMaxHealth;
+            healthSlider.maxValue = PlayerNetworkObject.MAX_HEALTH;
+            healthSlider.value = PlayerNetworkObject.MAX_HEALTH;
         }
 
-        public Transform Transform { get; }
-        public Camera MainCamera => Camera.main;
-        public MonoBehaviour MonoBehaviour => this;
-        public GameObject GameObject { get; }
+        #region Getters/Setters
 
-        SpriteRenderer IHealthPresenter.Renderer => MyRenderer;
-        IMouseInput IHealthPresenter.Input => MyInput;
+        
+        #endregion
 
         #region Events
 

@@ -5,12 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    private GameLauncher _gameLauncher;
+    private GameLauncherModel _gameLauncherModel;
     private UiController _uiController;
     
     private void Start()
     {
-        _gameLauncher = FindObjectOfType<GameLauncher>();
+        _gameLauncherModel = FindObjectOfType<GameLauncherModel>();
         _uiController = this.GetComponent<UiController>();
     }
 
@@ -25,18 +25,18 @@ public class PauseMenu : MonoBehaviour
     public void Restart()
         => SceneControl.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
 
-    public void Host() => StartRoom(_gameLauncher.OnHostOptions);
+    public void Host() => StartRoom(_gameLauncherModel.OnHostOptions);
 
-    public void Join() => StartRoom(_gameLauncher.OnJoinOptions);
+    public void Join() => StartRoom(_gameLauncherModel.OnJoinOptions);
 
-    public void Shared() => StartRoom(_gameLauncher.OnSharedOptions);
+    public void Shared() => StartRoom(_gameLauncherModel.OnSharedOptions);
 
     public void Single() => StartRoom();
 
     private void StartRoom(Action roomType = null)
     {
         roomType?.Invoke();
-        _gameLauncher.OnEnterRoom();
+        _gameLauncherModel.OnEnterRoom();
         _uiController.EnableOrDisable(false);
     }
 }

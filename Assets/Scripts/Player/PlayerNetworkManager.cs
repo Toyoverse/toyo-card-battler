@@ -19,10 +19,10 @@ namespace Player
         public bool IsWorldReady { get; set; }
         
         public GameObject PlayerUI => GlobalConfig.Instance.PlayerUI;
-        private IHealthModel _playerHealthModel;
+        private HealthModel _playerHealthModel;
         
         public GameObject EnemyUI =>  GlobalConfig.Instance.EnemyUI;
-        private IHealthModel _enemyHealthModel;
+        private HealthModel _enemyHealthModel;
 
         [Networked, Capacity(4)] public NetworkArray<GameState> LastGameStates => default;
         [Networked] public int CurrentStateID { get; set; }

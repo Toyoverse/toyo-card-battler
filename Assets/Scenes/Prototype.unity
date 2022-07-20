@@ -404,8 +404,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerNetworkManagerPrefab: {fileID: 2741775862472828005, guid: 00ffcd06a2982514785398a023025a85, type: 3}
   playerNetworkObjectPrefab: {fileID: 1996170898940310986, guid: e5511437c49fb034391b70497db2afa1, type: 3}
-  _room: {fileID: 0}
-  _progress: {fileID: 0}
   _uiGame: {fileID: 598252290}
   _cardQueueSystem: {fileID: 745712882}
 --- !u!1 &598252290
