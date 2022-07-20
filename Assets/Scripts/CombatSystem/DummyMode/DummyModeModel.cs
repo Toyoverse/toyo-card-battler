@@ -77,7 +77,7 @@ namespace CombatSystem.DummyMode
 
         public void CallCloseOptions()
         {
-            _myDummyModePresenter.OnOpenOptions?.Invoke();
+            _myDummyModePresenter.OnCloseOptions?.Invoke();
 
         }
 

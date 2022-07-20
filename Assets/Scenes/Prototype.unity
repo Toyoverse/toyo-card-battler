@@ -132,9 +132,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 142112502}
-  - component: {fileID: 142112501}
   - component: {fileID: 142112500}
   - component: {fileID: 142112499}
+  - component: {fileID: 142112501}
+  - component: {fileID: 142112503}
   m_Layer: 0
   m_Name: DummyMode
   m_TagString: Untagged
@@ -159,8 +160,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 142112501}
         m_TargetAssemblyTypeName: CombatSystem.DummyMode.DummyModeModel, Assembly-CSharp
-        m_MethodName: CallOpenOrCloseOptions
-        m_Mode: 6
+        m_MethodName: CallOpenOptions
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -173,8 +174,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 142112501}
         m_TargetAssemblyTypeName: CombatSystem.DummyMode.DummyModeModel, Assembly-CSharp
-        m_MethodName: CallOpenOrCloseOptions
-        m_Mode: 6
+        m_MethodName: CallCloseOptions
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -253,6 +254,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &142112503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142112498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c422bece8040618c59f0ce38cedb5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiDoc: {fileID: 142112500}
 --- !u!1 &160795557 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6123726220257984113, guid: 1536fc0c3b3bf3644a5d8c0fde87a47b, type: 3}
@@ -402,10 +416,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62c4e98ecd14f30ae614a5ef83ca04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNetworkManagerPrefab: {fileID: 2741775862472828005, guid: 00ffcd06a2982514785398a023025a85, type: 3}
+  playerNetworkManagerPrefab: {fileID: 2741775862472828005, guid: 00ffcd06a2982514785398a023025a85, type: 3}
   playerNetworkObjectPrefab: {fileID: 1996170898940310986, guid: e5511437c49fb034391b70497db2afa1, type: 3}
-  _uiGame: {fileID: 598252290}
-  _cardQueueSystem: {fileID: 745712882}
+  cardQueueSystem: {fileID: 745712882}
 --- !u!1 &598252290
 GameObject:
   m_ObjectHideFlags: 0
