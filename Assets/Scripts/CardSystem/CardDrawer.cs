@@ -3,13 +3,14 @@ using PlayerHand;
 using Tools;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 namespace Card
 {
     public class CardDrawer : MonoBehaviour
     {
-        private Lazy<PlayerHandUtils> _drawer = new (FindObjectOfType<PlayerHandUtils>);
-        public PlayerHandUtils Drawer => _drawer.Value;
+        [Inject]
+        private PlayerHandUtils _drawer;
         
         private IMouseInput Input { get; set; }
 
@@ -21,7 +22,7 @@ namespace Card
 
         private void DrawCard(PointerEventData obj)
         {
-            Drawer.DrawCard();
+            _drawer.DrawCard();
         }
     }
 }

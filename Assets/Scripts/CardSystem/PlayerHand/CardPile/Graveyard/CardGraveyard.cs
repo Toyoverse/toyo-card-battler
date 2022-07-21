@@ -3,15 +3,20 @@ using Extensions;
 using PlayerHand;
 using Tools.Extensions;
 using UnityEngine;
+using Zenject;
 
 namespace Card.CardPile.Graveyard
 {
     public class CardGraveyard : CardPile
     {
-        private Transform graveyardPosition => GlobalConfig.Instance.graveyardPosition;
-
         private IPlayerHand _playerHand;
-        public IPlayerHand PlayerHand => _playerHand ??= this.LazyFindOfType(ref _playerHand);
+        public IPlayerHand PlayerHand => _playerHand;
+        
+        [Inject]
+        public void Construct(IPlayerHand playerHand)
+        {
+            _playerHand = playerHand;
+        }
 
         private void OnEnable()
         {
@@ -28,7 +33,7 @@ namespace Card.CardPile.Graveyard
             card.ValidateCard();
 
             Cards.Add(card);
-            card.transform.SetParent(graveyardPosition);
+            card.transform.SetParent(transform);
             card.gameObject.SetActive(false);
             card.Discard();
             NotifyPileChange();

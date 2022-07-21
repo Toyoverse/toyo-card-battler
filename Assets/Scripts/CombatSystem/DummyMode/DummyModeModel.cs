@@ -1,5 +1,6 @@
 using Scriptable_Objects;
 using UnityEngine;
+using Zenject;
 
 namespace CombatSystem.DummyMode
 {
@@ -7,8 +8,8 @@ namespace CombatSystem.DummyMode
     public class DummyModeModel : MonoBehaviour
     {
         public static bool IsDummyMode { get; private set; }
-        [SerializeField]
-        private DummyConfigSO defaultConfig;
+        [Inject]
+        private DummyConfigSO _dummyConfig;
         
         private bool _hpRegen;
         private bool _ignoreApCosts;
@@ -47,17 +48,17 @@ namespace CombatSystem.DummyMode
         private void StartDummy()
         {
             SetDefaultValues();
-            _myDummyModePresenter.OnStartDummy?.Invoke(defaultConfig);
+            _myDummyModePresenter.OnStartDummy?.Invoke(_dummyConfig);
         }
         
         public void SetDefaultValues()
         {
-            HpRegen = defaultConfig.hpRegen;
-            HpRegenSpeed = defaultConfig.hpRegenSpeed;
-            IgnoreApCosts = defaultConfig.ignoreApCosts;
-            ApRegenSpeed = defaultConfig.apRegenSpeed;
-            EnemyHpRegen = defaultConfig.enemyHpRegen;
-            EnemyHpRegenSpeed = defaultConfig.enemyHpRegenSpeed;
+            HpRegen = _dummyConfig.hpRegen;
+            HpRegenSpeed = _dummyConfig.hpRegenSpeed;
+            IgnoreApCosts = _dummyConfig.ignoreApCosts;
+            ApRegenSpeed = _dummyConfig.apRegenSpeed;
+            EnemyHpRegen = _dummyConfig.enemyHpRegen;
+            EnemyHpRegenSpeed = _dummyConfig.enemyHpRegenSpeed;
         }
 
         private void DisableAllValues()

@@ -12,7 +12,6 @@ namespace Player
         IFullToyo FullToyo { get; }
         HealthModel PlayerHealthModel { get; }
         ApModel PlayerApModel { get; }
-        BattleReferences MyBattleReferences { get; set; }
         PlayerRef NetworkPlayerRef { get; set; }
 
     }

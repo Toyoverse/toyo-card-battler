@@ -7,6 +7,7 @@ using Extensions;
 using Tools.Extensions;
 using ToyoSystem;
 using UnityEngine;
+using Zenject;
 
 namespace Card.DeckSystem
 {
@@ -16,13 +17,20 @@ namespace Card.DeckSystem
         public List<ICard> Cards => _cards.Value;
         
         private IFullToyo _fullToyo;
-        public IFullToyo FullToyo => this.LazyFindOfType(ref _fullToyo);
+        public IFullToyo FullToyo => _fullToyo;
         
         private ICardPile _graveyard;
-        public ICardPile Graveyard => this.LazyFindOfType(ref _graveyard);
-
+        public ICardPile Graveyard => _graveyard;
+        
         public List<int> _allCardsID;
-        public List<int> AllCardIDS => _allCardsID ??= new List<int>(); 
+        public List<int> AllCardIDS => _allCardsID ??= new List<int>();
+
+        [Inject]
+        public void Construct(IFullToyo fullToyo, CardGraveyard graveyard)
+        {
+            _fullToyo = fullToyo;
+            _graveyard = graveyard;
+        }
         
         Action<ICard[]> ICardPile.OnPileChanged
         {

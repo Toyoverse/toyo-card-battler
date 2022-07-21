@@ -5,15 +5,15 @@ using Fusion;
 using ToyoSystem;
 using UnityEngine;
 using System.Linq;
+using Zenject;
 
 namespace PlayerHand
 {
     public class PlayerHand : CardPile, IPlayerHand
     {
+        [Inject]
         private IFullToyo _fullToyo;
-
-        IFullToyo FullToyo 
-            => _fullToyo ??= GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
+        private IFullToyo FullToyo => _fullToyo;
 
         public void PlaySelected()
         {
