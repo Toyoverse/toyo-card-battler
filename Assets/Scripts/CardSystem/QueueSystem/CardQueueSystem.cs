@@ -9,6 +9,7 @@ using PlayerHand;
 using TMPro;
 using Tools.Extensions;
 using UnityEngine;
+using Zenject;
 
 namespace Card.QueueSystem
 {
@@ -24,11 +25,17 @@ namespace Card.QueueSystem
         public GameObject enemyComboObj;
 
         private ComboSystem _comboSystem;
-        public ComboSystem ComboSystem => _comboSystem ??= this.LazyNew(ref _comboSystem);
+        public ComboSystem ComboSystem => _comboSystem;
         
         private IPlayerHand _playerHand;
-        public IPlayerHand PlayerHand => _playerHand ??= this.LazyFindOfType(ref _playerHand);
+        public IPlayerHand PlayerHand => _playerHand;
 
+        [Inject]
+        public void Construct(ComboSystem comboSystem, IPlayerHand playerHand)
+        {
+            _playerHand = playerHand;
+            _comboSystem = comboSystem;
+        }
         private void OnEnable()
         {
             PlayerHand.OnAddCardToQueue += AddPlayedCardToQueue;

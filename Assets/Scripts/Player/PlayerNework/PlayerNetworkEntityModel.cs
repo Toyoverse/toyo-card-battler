@@ -6,6 +6,7 @@ using Multiplayer;
 using PlayerHand;
 using ToyoSystem;
 using UnityEngine;
+using Zenject;
 
 namespace Player
 {
@@ -100,6 +101,12 @@ namespace Player
 			// The NCC must use snapshots on proxies for lag compensated raycasts to work properly against them.
 			// The benefit of "Auto" is that it will update automatically if InputAuthority is changed (this is not relevant in this game, but worth keeping in mind)
 			GetComponent<NetworkCharacterControllerPrototype>().InterpolationDataSource = InterpolationDataSources.Auto;
+		}
+		
+		[Inject]
+		public void Construct(IPlayerHand playerHand)
+		{
+			MyPlayerHand = playerHand;
 		}
 
 		private void InitializeHealth()

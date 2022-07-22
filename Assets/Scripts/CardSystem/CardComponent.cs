@@ -10,6 +10,7 @@ using Tools;
 using Tools.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class CardComponent : MonoBehaviour, ICard
 {
@@ -21,13 +22,18 @@ public class CardComponent : MonoBehaviour, ICard
         MyImage = GetComponent<SpriteRenderer>();
         MyImages = GetComponentsInChildren<SpriteRenderer>();
         MyInput = GetComponent<IMouseInput>();
-        Hand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
 
         Scale = new CardMotionScale(this);
         Movement = new CardMotionMovement(this);
         Rotation = new CardMotionRotation(this);
 
         StateMachine = new CardStateMachine(MainCamera, MyCardData, this);
+    }
+    
+    [Inject]
+    public void Construct(IPlayerHand playerHand)
+    {
+        Hand = playerHand;
     }
 
     private void Update()

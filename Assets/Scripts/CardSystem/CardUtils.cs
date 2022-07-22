@@ -5,13 +5,17 @@ using Card.CardPile;
 using CombatSystem;
 using Fusion;
 using Player;
+using Scriptable_Objects;
 using UnityEngine;
+using Zenject;
 using Object = UnityEngine.Object;
 
 namespace Card
 {
     public static class CardUtils
     {
+
+        
         public static void ValidateCard(this ICard card)
         {
             if (card == null) throw new ArgumentNullException("Card is null");
@@ -74,11 +78,11 @@ namespace Card
         {
             return _type switch
             {
-                CARD_TYPE.HEAVY => GlobalConfig.Instance.globalCardDataSO.heavyCardPrefab,
-                CARD_TYPE.FAST => GlobalConfig.Instance.globalCardDataSO.fastCardPrefab,
-                CARD_TYPE.DEFENSE => GlobalConfig.Instance.globalCardDataSO.defenseCardPrefab,
-                CARD_TYPE.BOND => GlobalConfig.Instance.globalCardDataSO.bondCardPrefab,
-                CARD_TYPE.SUPER => GlobalConfig.Instance.globalCardDataSO.superCardPrefab,
+                CARD_TYPE.HEAVY => GlobalConfig.Instance.GlobalCardSettings.heavyCardPrefab,
+                CARD_TYPE.FAST => GlobalConfig.Instance.GlobalCardSettings.fastCardPrefab,
+                CARD_TYPE.DEFENSE => GlobalConfig.Instance.GlobalCardSettings.defenseCardPrefab,
+                CARD_TYPE.BOND => GlobalConfig.Instance.GlobalCardSettings.bondCardPrefab,
+                CARD_TYPE.SUPER => GlobalConfig.Instance.GlobalCardSettings.superCardPrefab,
                 _ => throw new ArgumentOutOfRangeException(nameof(_type), _type, null)
             };
         }

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5db84a1745d80b4cb5bedb5860ca1f7, type: 3}
+  m_Name: SettingsInstaller
+  m_EditorClassIdentifier: 
+  dummyModeConfig: {fileID: 11400000, guid: 5cbcaae25413fb544a247be3ee6e5525, type: 2}
+  combatConfig: {fileID: 11400000, guid: 1aa5f23b028ba5648af396a020863f99, type: 2}
+  globalCardConfig: {fileID: 11400000, guid: cf818cf7922fbf547a2685d17b178add, type: 2}

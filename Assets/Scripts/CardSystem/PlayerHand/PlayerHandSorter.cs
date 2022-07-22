@@ -2,22 +2,27 @@
 using Card;
 using Card.CardPile;
 using Extensions;
+using Scriptable_Objects;
 using Tools.Extensions;
 using UnityEngine;
+using Zenject;
 
 namespace PlayerHand
 {
     [RequireComponent(typeof(IPlayerHand))]
     public class PlayerHandSorter : MonoBehaviour
     {
-        private int offsetZ => GlobalConfig.Instance.globalCardDataSO.offsetZ;
+        [Inject]
+        private  GlobalCardDataSO _globalCardData;
+        
+        private int offsetZ => _globalCardData.offsetZ;
         
         private ICardPile PlayerHand { get; set; }
 
         private void Awake()
         {
             PlayerHand = GetComponent<IPlayerHand>();
-            CardImage = GlobalConfig.Instance.globalCardDataSO.fastCardPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
+            CardImage = _globalCardData.fastCardPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
         }
 
         private void OnEnable()
@@ -38,7 +43,7 @@ namespace PlayerHand
             var _layerZ = 0;
             var _index = 0;
             var _cardsLenght = cards.Length;
-            var _spacing = GlobalConfig.Instance.globalCardDataSO.Spacing;
+            var _spacing = _globalCardData.Spacing;
             var _handWidth = CalcHandWidth(_cardsLenght, _spacing);
             var _offsetX = pivot.position.x - _handWidth / 2;
 

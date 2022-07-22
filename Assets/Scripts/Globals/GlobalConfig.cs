@@ -2,14 +2,13 @@
 using Scriptable_Objects;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Zenject;
 
-    [Serializable]
+[Serializable]
     public class GlobalConfig : Singleton<GlobalConfig>
     {
-        [FoldoutGroup("Card Parameters")] public GlobalCardDataSO globalCardDataSO;
-        [FoldoutGroup("Card Parameters")] public CombatConfigSO CombatConfigSO;
-        [FoldoutGroup("Card Parameters")] public DeckDatabaseSO DeckDatabaseSo;
         
+        public GlobalCardDataSO GlobalCardSettings;
         
         [FoldoutGroup("Card Transforms")] public Transform gameView;
         [FoldoutGroup("Card Transforms")] public Transform deckPosition;
@@ -34,14 +33,11 @@ using UnityEngine;
         [FoldoutGroup("Match")] public NormalMatchConfigSO normalMatchConfigSo;
         [FoldoutGroup("Match")] public RankedMatchConfigSO rankedMatchConfigSo;
 
-        internal BattleReferences battleReferences;
-        
-        void Awake()
+        public void Awake()
         {
-            GlobalCardData.Initialize(globalCardDataSO);
-            battleReferences = gameObject.GetComponent<BattleReferences>();
-
+            GlobalCardData.Initialize(GlobalCardSettings);
         }
+
     }
 
     public static class GlobalCardData

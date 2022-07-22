@@ -2,66 +2,64 @@
 using System.Collections.Generic;
 using Card;
 using CombatSystem.APSystem;
-using Tools.Extensions;
 using HealthSystem;
 using Player;
 using PlayerHand;
 using ToyoSystem;
 using UnityEngine;
+using Zenject;
 
 namespace CombatSystem
 {
     public class DamageSystem : MonoBehaviour
     {
-        private IPlayerHand _cardHand;
-        public IPlayerHand CardHand => _cardHand ??= this.LazyFindOfType(ref _cardHand);
         protected HealthModel PlayerHealthModel => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel;
         protected HealthModel EnemyHealthModel => PlayerNetworkManager.GetEnemy().MyPlayerHealthModel;
-        protected ApModel PlayerApModel { get; set; }
-        protected ApModel EnemyApModel { get; set; }
+
+        [Inject(Id = "PlayerAP")] private ApModel _playerApModel;
+        [Inject(Id = "EnemyAP")] private ApModel _enemyApModel;
+        private IFullToyo _fullToyo;
+        private IPlayerHand _cardHand;
+        private DamageInformation _damageInformation;
         
-        //Todo Enemy Full Toyo
-        protected IFullToyo FullToyo { get; set; }
-        protected DamageInformation DamageInformation { get; set; }
-
-        private void Start()
+        [Inject]
+        public void Construct(IPlayerHand playerHand, IFullToyo fullToyo)
         {
-            PlayerApModel = GlobalConfig.Instance.battleReferences.PlayerUI.GetComponentInChildren<ApModel>();
-            EnemyApModel = GlobalConfig.Instance.battleReferences.EnemyUI.GetComponentInChildren<ApModel>();
-            FullToyo = GlobalConfig.Instance.battleReferences.Toyo.GetComponent<IFullToyo>();
+            _fullToyo = fullToyo;
+            _cardHand = playerHand;
         }
-
+        
         void OnEnable()
         {
-            CardHand.OnCardPlayed += ProcessCardPlayed;
-            CardHand.OnNetworkCardPlayed += ProcessNetworkCardPlayed;
+            _cardHand.OnCardPlayed += ProcessCardPlayed;
+            _cardHand.OnNetworkCardPlayed += ProcessNetworkCardPlayed;
         }
 
         private void OnDisable()
         {
-            CardHand.OnCardPlayed -= ProcessCardPlayed;
-            CardHand.OnNetworkCardPlayed += ProcessNetworkCardPlayed;
+            _cardHand.OnCardPlayed -= ProcessCardPlayed;
+            _cardHand.OnNetworkCardPlayed += ProcessNetworkCardPlayed;
         }
 
         public void ProcessCardPlayed(ICard _card)
         {
-            DamageInformation = new DamageInformation(_card, FullToyo);
+            _damageInformation = new DamageInformation(_card, _fullToyo);
             ProcessCardAPCost(_card);
             ProcessCardByType(_card);
         }
         
         public void ProcessNetworkCardPlayed(ICard _card)
         {
-            DamageInformation = new DamageInformation(_card, FullToyo, true);
+            _damageInformation = new DamageInformation(_card, _fullToyo, true);
             ProcessCardByType(_card);
         }
 
         private void ProcessCardAPCost(ICard _card)
         {
             var _apCost = _card.CardData?.ApCost ?? 0;
-            _apCost += BoundSystem.GetCostMod(DamageInformation);
+            _apCost += BoundSystem.GetCostMod(_damageInformation);
             _apCost = _apCost < 0 ? 0 : _apCost;
-            PlayerApModel?.OnUseAp.Invoke(_apCost);
+            _playerApModel?.OnUseAp.Invoke(_apCost);
         }
 
         private void ProcessCardByType(ICard card)
@@ -75,7 +73,7 @@ namespace CombatSystem
                     DefenseCardProcess();
                     break;
                 case CARD_TYPE.BOND:
-                    BoundSystem.BoundCardProcess(DamageInformation, HpMod, ApMod);
+                    BoundSystem.BoundCardProcess(_damageInformation, HpMod, ApMod);
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }
@@ -95,13 +93,13 @@ namespace CombatSystem
             }
 
             //TODO: Consider hit time in the animation.
-            var _damage = DamageCalculation.CalculateDamage(DamageInformation);
+            var _damage = DamageCalculation.CalculateDamage(_damageInformation);
             for (var i = 0; i < _damage.Length; i++)
             {
-                _damage[i] *= BoundSystem.GetDamageFactor(DamageInformation);
-                if (DefenseSystem.NaturalEnemyDefense(DamageInformation))
+                _damage[i] *= BoundSystem.GetDamageFactor(_damageInformation);
+                if (DefenseSystem.NaturalEnemyDefense(_damageInformation))
                 {
-                    if (DefenseSystem.NaturalEnemyCounter(DamageInformation))
+                    if (DefenseSystem.NaturalEnemyCounter(_damageInformation))
                         ApplyEnemyCounter();
                 }
                 else
@@ -114,11 +112,11 @@ namespace CombatSystem
 
         private void DefenseCardProcess()
         {
-            if (DefenseSystem.DefenseCardSuccess(DamageInformation))
+            if (DefenseSystem.DefenseCardSuccess(_damageInformation))
             {
                 //TODO: Send defense success to the Enemy and interrupt if his attack is a fast attack
                 //TODO: If the enemy has a stronger card than the defense cards, don't check the counter-attack
-                if (DefenseSystem.CounterCardSuccess(DamageInformation))
+                if (DefenseSystem.CounterCardSuccess(_damageInformation))
                     ApplyMyCounter();
             }
             else
@@ -140,7 +138,7 @@ namespace CombatSystem
 
         private void DoDamage(float damage)
         {
-            if(DamageInformation.IsMultiplayerEnemyCard)
+            if(_damageInformation.IsMultiplayerEnemyCard)
                 PlayerHealthModel?.OnTakeDamage.Invoke(damage);
             else
                 EnemyHealthModel?.OnTakeDamage.Invoke(damage);
@@ -148,7 +146,7 @@ namespace CombatSystem
         
         private void CheckLifeSteal(float damage)
         {
-            var _lifeStealFactor = BoundSystem.GetLifeStealFactor(DamageInformation);
+            var _lifeStealFactor = BoundSystem.GetLifeStealFactor(_damageInformation);
             if (!(_lifeStealFactor > 0)) return;
             var _hpMod = damage * _lifeStealFactor;
             PlayerHealthModel?.OnGainHp.Invoke(_hpMod);
@@ -165,9 +163,9 @@ namespace CombatSystem
         public void ApMod(TOYO_TYPE toyo, float sumValue)
         {
             if (toyo == TOYO_TYPE.ALLY)
-                PlayerApModel?.OnChangeAp.Invoke((int)sumValue); 
+                _playerApModel?.OnChangeAp.Invoke((int)sumValue); 
             else
-                EnemyApModel?.OnChangeAp.Invoke((int)sumValue); 
+                _enemyApModel?.OnChangeAp.Invoke((int)sumValue); 
         }
     }
     
