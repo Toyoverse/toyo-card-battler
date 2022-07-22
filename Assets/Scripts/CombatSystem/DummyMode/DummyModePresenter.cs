@@ -162,13 +162,13 @@ namespace CombatSystem.DummyMode
         private static void PlayerRecoverHpEvent(float hp)
         {
             if (hp < PlayerNetworkEntityModel.MaxHealth)
-                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkEntityModel.MaxHealth);
+                _playerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkEntityModel.MaxHealth);
         }
         
         private static void EnemyRecoverHpEvent(float hp)
         {
             if (hp < PlayerNetworkEntityModel.MaxHealth)
-                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkEntityModel.MaxHealth);
+                _playerNetworkManager.GetEnemy().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkEntityModel.MaxHealth);
         }
 
         #region Events

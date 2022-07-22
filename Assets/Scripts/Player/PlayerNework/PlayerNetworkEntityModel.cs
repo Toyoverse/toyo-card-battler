@@ -3,7 +3,7 @@ using Fusion;
 using HealthSystem;
 using Infrastructure;
 using Multiplayer;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using ToyoSystem;
 using UnityEngine;
 using Zenject;
@@ -34,7 +34,9 @@ namespace Player
 		
 	    public BattleReferences MyBattleReferences { get; set; }
 		public PlayerRef NetworkPlayerRef { get; set; }
+		[Inject(Id="PlayerHealth")]
 		public HealthModel MyPlayerHealthModel { get; set; }
+		[Inject(Id="PlayerAP")]
 		public ApModel MyPlayerApModel { get; set; }
 		public FullToyoSO FullToyoSo { get; set; }
 
@@ -47,24 +49,22 @@ namespace Player
 	    private LevelManager _levelManager;
 		private Vector2 _lastMoveDirection; // Store the previous direction for correct hull rotation
 		private GameObject _deathExplosionInstance;
+		
+		private PlayerNetworkManager _playerNetworkManager;
+		private PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager ??= FindObjectOfType<PlayerNetworkManager>();
+		
+		[Inject]
+		public void Construct(IFullToyo fullToyo, IPlayerHand playerHand)
+		{
+			_myFullToyo = fullToyo;
+			_myPlayerHand = playerHand;
+		}
 
 		private void Awake()
 		{
 			_cc = GetComponent<NetworkCharacterControllerPrototype>();
-			MyBattleReferences = FindObjectOfType<BattleReferences>();
-			MyPlayerApModel = MyBattleReferences.PlayerUI.GetComponentInChildren<ApModel>();
-			_myFullToyo = MyBattleReferences.Toyo.GetComponent<IFullToyo>();
-			_myPlayerHand = MyBattleReferences.hand.GetComponent<IPlayerHand>();
 		}
 
-
-		private LevelManager GetLevelManager()
-		{
-			if (_levelManager == null)
-				_levelManager = FindObjectOfType<LevelManager>();
-			return _levelManager;
-		}
-		
 		public void InitNetworkState(FullToyoSO fullToyoSo)
 		{
 			PlayerState = State.New;
@@ -114,14 +114,14 @@ namespace Player
 			
 			if (PlayerID == Runner.LocalPlayer.PlayerId)
 			{
-				var playerUI = PlayerNetworkManager.Instance.PlayerUI;
+				var playerUI = PlayerNetworkManager.PlayerUI;
 				playerUI.SetActive(true);
 				MyPlayerHealthModel = playerUI.GetComponentInChildren<HealthModel>();
 				MyPlayerHealthModel.Parent = this;
 			}
 			else
 			{
-				var enemyUI = PlayerNetworkManager.Instance.EnemyUI;
+				var enemyUI = PlayerNetworkManager.EnemyUI;
 				enemyUI.SetActive(true);
 				MyPlayerHealthModel = enemyUI.GetComponentInChildren<HealthModel>();
 				IsEnemy = true;
@@ -130,7 +130,7 @@ namespace Player
 
 			if (FusionLauncher.GameMode == GameMode.Single)
 			{
-				var enemyUI = PlayerNetworkManager.Instance.EnemyUI;
+				var enemyUI = PlayerNetworkManager.EnemyUI;
 				enemyUI.SetActive(true);
 			}
 

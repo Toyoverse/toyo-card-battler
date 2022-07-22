@@ -167,6 +167,11 @@ namespace Player
         #endregion
         
     }
+    
+    public class PlayerNetworkInitializedSignal
+    {
+        public PlayerNetworkManager PlayerNetworkManager;
+    }
 
 }
 
@@ -191,7 +196,3 @@ public struct  PlayerInputData : INetworkInput
 
 }
 
-public class PlayerNetworkInitializedSignal
-{
-    public PlayerNetworkManager PlayerNetworkManager;
-}
