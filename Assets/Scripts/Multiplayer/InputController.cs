@@ -30,8 +30,8 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
 	public PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager.Value;
 	
 	//Cached Property GetComponent
-	private PlayerNetworkObject _playerNetworkObject;
-	public PlayerNetworkObject PlayerNetworkObject => this.LazyGetComponent(ref _playerNetworkObject);
+	private PlayerNetworkEntityModel _playerNetworkEntityModel;
+	public PlayerNetworkEntityModel PlayerNetworkEntityModel => this.LazyGetComponent(ref _playerNetworkEntityModel);
 
 	//Cached Property FindInterface
 	private IPlayerHand _cardHand;

@@ -10,71 +10,50 @@ using UnityEngine;
 namespace Player
 {
 	[RequireComponent(typeof(NetworkCharacterControllerPrototype))]
-    public class PlayerNetworkObject : NetworkBehaviour, IPlayer
+    public class PlayerNetworkEntityModel : NetworkBehaviour, IPlayer
     {
-	    public const float MAX_HEALTH = 100.0f;
-		[Networked(OnChanged = nameof(OnStateChanged))]
-		public State state { get; set; }
-
-		[Networked(OnChanged = nameof(OnHealthChanged))]
-		public float Health { get; set; }
-		
-		
-		public BattleReferences MyBattleReferences { get; set; }
-		public PlayerRef NetworkPlayerRef { get; set; }
-
-		public IPlayerHand MyPlayerHand;
-		public IFullToyo MyFullToyo;
-		public HealthModel MyPlayerHealthModel;
-		public ApModel MyPlayerApModel;
-		
-		//[Networked]
-		IPlayerHand IPlayer.PlayerHand => MyPlayerHand;
-        
-		//[Networked]
-		IFullToyo IPlayer.FullToyo => MyFullToyo;
-		
-		//[Networked]
-		HealthModel IPlayer.PlayerHealthModel => MyPlayerHealthModel;
-        
-		//[Networked]
-		ApModel IPlayer.PlayerApModel => MyPlayerApModel;
-
-		public FullToyoSO FullToyoSo; 
-
-		
-		public static PlayerNetworkObject local { get; set; }
-
-		public enum State
-		{
-			New,
-			Despawned,
-			Spawning,
-			Active,
-			Dead
-		}
-
-		public bool isActivated => (gameObject.activeInHierarchy && (state == State.Active || state == State.Spawning));
-		public bool isDead => state == State.Dead;
+	    public enum State
+	    {
+		    New,
+		    DeSpawned,
+		    Spawning,
+		    Active,
+		    Dead
+	    }
+	    
+	    public static PlayerNetworkEntityModel Local { get; set; }
+	    public const float MaxHealth = 100.0f;
+	    
+		public int PlayerID { get; private set; }
+		[SerializeField] 
+		private float respawnInSeconds = -1;
+		public bool IsActivated => (gameObject.activeInHierarchy && (PlayerState == State.Active || PlayerState == State.Spawning));
+		public bool IsDead => PlayerState == State.Dead;
 		public bool IsEnemy = false;
+		
+	    public BattleReferences MyBattleReferences { get; set; }
+		public PlayerRef NetworkPlayerRef { get; set; }
+		public HealthModel MyPlayerHealthModel { get; set; }
+		public ApModel MyPlayerApModel { get; set; }
+		public FullToyoSO FullToyoSo { get; set; }
 
-		public int playerID { get; private set; }
+	    private State _state;
+	    private float _health;
 
-
-		private NetworkCharacterControllerPrototype _cc;
-
-		private LevelManager _levelManager;
+	    private IPlayerHand _myPlayerHand;
+	    private IFullToyo _myFullToyo;
+	    private NetworkCharacterControllerPrototype _cc;
+	    private LevelManager _levelManager;
 		private Vector2 _lastMoveDirection; // Store the previous direction for correct hull rotation
 		private GameObject _deathExplosionInstance;
-		private float _respawnInSeconds = -1;
 
 		private void Awake()
 		{
 			_cc = GetComponent<NetworkCharacterControllerPrototype>();
 			MyBattleReferences = FindObjectOfType<BattleReferences>();
 			MyPlayerApModel = MyBattleReferences.PlayerUI.GetComponentInChildren<ApModel>();
-			MyFullToyo = MyBattleReferences.Toyo.GetComponent<IFullToyo>();
-			MyPlayerHand = MyBattleReferences.hand.GetComponent<IPlayerHand>();
+			_myFullToyo = MyBattleReferences.Toyo.GetComponent<IFullToyo>();
+			_myPlayerHand = MyBattleReferences.hand.GetComponent<IPlayerHand>();
 		}
 
 
@@ -85,35 +64,33 @@ namespace Player
 			return _levelManager;
 		}
 		
-		public void InitNetworkState(FullToyoSO fullToyoSO)
+		public void InitNetworkState(FullToyoSO fullToyoSo)
 		{
-			state = State.New;
-			FullToyoSo = fullToyoSO;
-			state = State.Spawning;
+			PlayerState = State.New;
+			FullToyoSo = fullToyoSo;
+			PlayerState = State.Spawning;
 		}
 
 		private void Update()
 		{
-			if (state == State.Spawning && !PlayerHandUtils.IsHandDrawed)
-			{
-				if (!FullToyoSo)
-					FullToyoSo = DatabaseManager.Instance.GetFullToyoFromFakeID(DatabaseManager.Instance.GetPlayerDatabaseID());
-				StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(FullToyoSo));
-				state = State.Active;
-			}
-			
+			if (PlayerState != State.Spawning || PlayerHandUtils.IsHandDrawed) return;
+			if (!FullToyoSo)
+				FullToyoSo =
+					DatabaseManager.Instance.GetFullToyoFromFakeID(DatabaseManager.Instance.GetPlayerDatabaseID());
+			StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(FullToyoSo));
+			PlayerState = State.Active;
 		}
 
 		public override void Spawned()
 		{
 			if (Object.HasInputAuthority)
-				local = this;
+				Local = this;
 
 			// Getting this here because it will revert to -1 if the player disconnects, but we still want to remember the Id we were assigned for clean-up purposes
-			playerID = Object.InputAuthority;
+			PlayerID = Object.InputAuthority;
 
 			NetworkPlayerRef = Runner.LocalPlayer;
-			MyPlayerHand.MyPlayerRef = NetworkPlayerRef;
+			_myPlayerHand.MyPlayerRef = NetworkPlayerRef;
 
 			PlayerNetworkManager.AddPlayer(this);
 
@@ -128,32 +105,29 @@ namespace Player
 		private void InitializeHealth()
 		{
 			
-			if (playerID == Runner.LocalPlayer.PlayerId)
+			if (PlayerID == Runner.LocalPlayer.PlayerId)
 			{
-				var _playerUI = PlayerNetworkManager.Instance.PlayerUI;
-				_playerUI.SetActive(true);
-				MyPlayerHealthModel = _playerUI.GetComponentInChildren<HealthModel>();
+				var playerUI = PlayerNetworkManager.Instance.PlayerUI;
+				playerUI.SetActive(true);
+				MyPlayerHealthModel = playerUI.GetComponentInChildren<HealthModel>();
 				MyPlayerHealthModel.Parent = this;
 			}
 			else
 			{
-				var _enemyUI = PlayerNetworkManager.Instance.EnemyUI;
-				_enemyUI.SetActive(true);
-				MyPlayerHealthModel = _enemyUI.GetComponentInChildren<HealthModel>();
+				var enemyUI = PlayerNetworkManager.Instance.EnemyUI;
+				enemyUI.SetActive(true);
+				MyPlayerHealthModel = enemyUI.GetComponentInChildren<HealthModel>();
 				IsEnemy = true;
 				MyPlayerHealthModel.Parent = this;
 			}
 
 			if (FusionLauncher.GameMode == GameMode.Single)
 			{
-				var _enemyUI = PlayerNetworkManager.Instance.EnemyUI;
-				_enemyUI.SetActive(true);
+				var enemyUI = PlayerNetworkManager.Instance.EnemyUI;
+				enemyUI.SetActive(true);
 			}
 
-			Health = MAX_HEALTH;
-			/*Health = MyPlayerHealth.GetHealth();
-
-			MyPlayerHealth?.OnInitialize.Invoke(MAX_HEALTH);*/
+			Health = MaxHealth;
 		}
 
 		public override void FixedUpdateNetwork()
@@ -170,7 +144,7 @@ namespace Player
 		public override void Render() { }
 
 		
-		public static void OnStateChanged(Changed<PlayerNetworkObject> changed)
+		public static void OnStateChanged(Changed<PlayerNetworkEntityModel> changed)
 		{
 			if(changed.Behaviour)
 				changed.Behaviour.OnStateChanged();
@@ -178,7 +152,7 @@ namespace Player
 		
 		public void OnStateChanged()
 		{
-			switch (state)
+			switch (PlayerState)
 			{
 				case State.Spawning:
 					//_teleportIn.StartTeleport();
@@ -195,13 +169,13 @@ namespace Player
 					_visualParent.gameObject.SetActive(false);
 					_damageVisuals.OnDeath();*/
 					break;
-				case State.Despawned:
+				case State.DeSpawned:
 					//_teleportOut.StartTeleport();
 					break;
 			}
 		}
 		
-		public static void OnHealthChanged(Changed<PlayerNetworkObject> changed)
+		public static void OnHealthChanged(Changed<PlayerNetworkEntityModel> changed)
 		{
 			if(changed.Behaviour)
 				changed.Behaviour.OnHealthChanged();
@@ -209,7 +183,7 @@ namespace Player
 
 		public void OnHealthChanged()
 		{
-			MyPlayerHealthModel?.OnChangeHp.Invoke(Health);
+			MyPlayerHealthModel?.OnChangeHp?.Invoke(Health);
 		}
 
 		public void OnComboChanged()
@@ -219,9 +193,9 @@ namespace Player
 
 		private void ResetPlayer()
 		{
-			Debug.Log($"Resetting player {playerID}, tick={Runner.Simulation.Tick}, life={Health}, hasAuthority={Object.HasStateAuthority} to state={state}");
+			Debug.Log($"Resetting player {PlayerID}, tick={Runner.Simulation.Tick}, life={Health}, hasAuthority={Object.HasStateAuthority} to state={PlayerState}");
 			//shooter.ResetAllWeapons();
-			state = State.Active;
+			PlayerState = State.Active;
 		}
 
 		public override void Despawned(NetworkRunner runner, bool hasState)
@@ -229,5 +203,28 @@ namespace Player
 			Destroy(_deathExplosionInstance);
 			PlayerNetworkManager.RemovePlayer(this);
 		}
+
+		#region Getters/Setters
+
+		[Networked(OnChanged = nameof(OnStateChanged))]
+		public State PlayerState
+		{
+			get => _state;
+			set => _state = value;
+		}
+
+		[Networked(OnChanged = nameof(OnHealthChanged))]
+		public float Health
+		{
+			get => _health;
+			set => _health = value;
+		}
+		
+		IPlayerHand IPlayer.PlayerHand => _myPlayerHand;
+		IFullToyo IPlayer.FullToyo => _myFullToyo;
+		HealthModel IPlayer.PlayerHealthModel => MyPlayerHealthModel;
+		ApModel IPlayer.PlayerApModel => MyPlayerApModel;
+		
+		#endregion
     }
 }

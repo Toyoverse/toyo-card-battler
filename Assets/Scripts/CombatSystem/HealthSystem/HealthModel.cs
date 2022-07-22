@@ -8,7 +8,7 @@ namespace HealthSystem
     public class HealthModel : MonoBehaviour
     {
         [SerializeField]
-        private PlayerNetworkObject parent;
+        private PlayerNetworkEntityModel parent;
 
         private HealthPresenter _myHealthPresenter;
 
@@ -47,8 +47,8 @@ namespace HealthSystem
         private void GainHp(float value)
         {
             var _health = Parent.Health + value;
-            if (_health > PlayerNetworkObject.MAX_HEALTH)
-                _health = PlayerNetworkObject.MAX_HEALTH;
+            if (_health > PlayerNetworkEntityModel.MaxHealth)
+                _health = PlayerNetworkEntityModel.MaxHealth;
             Parent.Health = _health;
             _myHealthPresenter.OnUpdateHealthUI?.Invoke(_health);
         }
@@ -66,7 +66,7 @@ namespace HealthSystem
         
         public HealthPresenter HealthPresenter => _myHealthPresenter;
         
-        public PlayerNetworkObject Parent
+        public PlayerNetworkEntityModel Parent
         {
             get => parent;
             set => parent = value;
