@@ -4,7 +4,7 @@ using Card;
 using CombatSystem.APSystem;
 using HealthSystem;
 using Player;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using ToyoSystem;
 using UnityEngine;
 using Zenject;
@@ -13,20 +13,27 @@ namespace CombatSystem
 {
     public class DamageSystem : MonoBehaviour
     {
-        protected HealthModel PlayerHealthModel => PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel;
-        protected HealthModel EnemyHealthModel => PlayerNetworkManager.GetEnemy().MyPlayerHealthModel;
+        
+
+        
+        protected HealthModel PlayerHealthModel => _playerNetworkManager.GetLocalPlayer().MyPlayerHealthModel;
+        protected HealthModel EnemyHealthModel => _playerNetworkManager.GetEnemy().MyPlayerHealthModel;
 
         [Inject(Id = "PlayerAP")] private ApModel _playerApModel;
         [Inject(Id = "EnemyAP")] private ApModel _enemyApModel;
         private IFullToyo _fullToyo;
         private IPlayerHand _cardHand;
         private DamageInformation _damageInformation;
+        private SignalBus _signalBus;
+        private PlayerNetworkManager _playerNetworkManager;
         
         [Inject]
-        public void Construct(IPlayerHand playerHand, IFullToyo fullToyo)
+        public void Construct(IPlayerHand playerHand, IFullToyo fullToyo, SignalBus signalBus)
         {
             _fullToyo = fullToyo;
             _cardHand = playerHand;
+            _signalBus = signalBus;
+            _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
         }
         
         void OnEnable()

@@ -5,7 +5,7 @@ using Card;
 using Fusion;
 using Fusion.Sockets;
 using Player;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using Tools.Extensions;
 
 

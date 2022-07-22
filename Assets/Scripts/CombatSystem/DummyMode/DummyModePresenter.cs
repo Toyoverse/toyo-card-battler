@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using Card.QueueSystem;
+using CardSystem.PlayerHand;
 using Player;
 using Scriptable_Objects;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Zenject;
 
 namespace CombatSystem.DummyMode
 {
     public class DummyModePresenter : MonoBehaviour
     {
+        private static SignalBus _signalBus;
+        private static PlayerNetworkManager _playerNetworkManager;
+        [Inject]
+        public static void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+            _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
+        }
+        
         public UIDocument uiDoc;
         
         private List<Toggle> _toggles;
@@ -130,33 +142,33 @@ namespace CombatSystem.DummyMode
         private static void ChangePlayerHealthEvent(bool addEvent)
         {
             if (addEvent)
-                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
+                _playerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
                     += PlayerRecoverHpEvent;
             else
-                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
+                _playerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
                     -= PlayerRecoverHpEvent;
         }
         
         private static void ChangeEnemyHealthEvent(bool addEvent)
         {
             if (addEvent)
-                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
+                _playerNetworkManager.GetEnemy().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
                     += EnemyRecoverHpEvent;
             else
-                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
+                _playerNetworkManager.GetEnemy().MyPlayerHealthModel.HealthPresenter.OnUpdateHealthUI
                     -= EnemyRecoverHpEvent;
         }
         
         private static void PlayerRecoverHpEvent(float hp)
         {
             if (hp < PlayerNetworkObject.MAX_HEALTH)
-                PlayerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkObject.MAX_HEALTH);
+                _playerNetworkManager.GetLocalPlayer().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkObject.MAX_HEALTH);
         }
         
         private static void EnemyRecoverHpEvent(float hp)
         {
             if (hp < PlayerNetworkObject.MAX_HEALTH)
-                PlayerNetworkManager.GetEnemy().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkObject.MAX_HEALTH);
+                _playerNetworkManager.GetEnemy().MyPlayerHealthModel.OnChangeHp.Invoke(PlayerNetworkObject.MAX_HEALTH);
         }
 
         #region Events

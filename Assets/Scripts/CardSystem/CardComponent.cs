@@ -2,14 +2,11 @@ using Card;
 using Card.CardStateMachine;
 using Card.CardStateMachine.States;
 using Card.CardUX;
-using Extensions;
-using Fusion;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using TMPro;
 using Tools;
 using Tools.Extensions;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 public class CardComponent : MonoBehaviour, ICard

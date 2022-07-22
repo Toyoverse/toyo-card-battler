@@ -1,6 +1,6 @@
 ﻿using System;
 using Extensions;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using Tools.Extensions;
 using UnityEngine;
 using Zenject;

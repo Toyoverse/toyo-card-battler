@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-namespace PlayerHand
+namespace CardSystem.PlayerHand
 {
     public class PlayerHandUtils : MonoBehaviour
     {

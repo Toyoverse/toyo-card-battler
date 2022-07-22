@@ -6,12 +6,22 @@ namespace Card.QueueSystem
 {
     public class ComboSystem 
     {
+        
+        private SignalBus _signalBus;
+        private PlayerNetworkManager _playerNetworkManager;
+        [Inject]
+        public  void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+            _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
+        }
+
         private int PlayerCurrentCombo { get; set; }
         private int EnemyCurrentCombo { get; set; }
         public int GetOfflinePlayerCurrentCombo() => PlayerCurrentCombo;
         public int GetOfflineEnemyCurrentCombo() => EnemyCurrentCombo;
-        public int GetNetworkedPlayerCurrentCombo() => PlayerNetworkManager.Instance.PlayerCurrentCombo;
-        public int GetNetworkedEnemyCurrentCombo() => PlayerNetworkManager.Instance.EnemyCurrentCombo;
+        public int GetNetworkedPlayerCurrentCombo() => _playerNetworkManager.PlayerCurrentCombo;
+        public int GetNetworkedEnemyCurrentCombo() => _playerNetworkManager.EnemyCurrentCombo;
 
         [Inject]
         private CombatConfigSO _combatConfig;

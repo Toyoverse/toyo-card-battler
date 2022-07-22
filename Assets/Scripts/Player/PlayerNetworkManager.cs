@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Card;
+using Card.DeckSystem;
 using Card.QueueSystem;
 using CombatSystem;
 using ExitGames.Client.Photon;
@@ -9,7 +10,9 @@ using Tools.Extensions;
 using Fusion;
 using HealthSystem;
 using Multiplayer;
+using Player;
 using UnityEngine;
+using Zenject;
 
 namespace Player
 {
@@ -30,25 +33,35 @@ namespace Player
         private static List<PlayerNetworkObject> _players;
         public List<PlayerNetworkObject> Players => _players ??= FindObjectsOfType<PlayerNetworkObject>()?.ToList();
         
-        private void Awake() => Instance = this;
+        private SignalBus _signalBus;
+
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+        }
+
+        private void Start()
+        {
+            _signalBus.Fire<PlayerNetworkInitializedSignal>(new() { PlayerNetworkManager = this });
+            SetFirstGameState(FindObjectOfType<Deck>()._allCardsID);
+        }
 
         #region Statics
         
-        public static PlayerNetworkManager Instance;
+        public void AddPlayer(PlayerNetworkObject playerNetworkObject) => Players.Add(playerNetworkObject);
+        
+        public void RemovePlayer(PlayerNetworkObject playerNetworkObject) => Players.Remove(playerNetworkObject);
 
-        public static void AddPlayer(PlayerNetworkObject playerNetworkObject) => Instance.Players.Add(playerNetworkObject);
+        public PlayerNetworkObject GetPlayer(PlayerRef playerRef) => Players.FirstOrDefault(_player => _player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
         
-        public static void RemovePlayer(PlayerNetworkObject playerNetworkObject) => Instance.Players.Remove(playerNetworkObject);
+        public PlayerNetworkObject GetLocalPlayer() => Players.FirstOrDefault(_player => !_player.IsEnemy);
+        
+        public PlayerNetworkObject GetEnemy() => Players.FirstOrDefault(_player => _player.IsEnemy);
 
-        public static PlayerNetworkObject GetPlayer(PlayerRef playerRef) => Instance.Players.FirstOrDefault(_player => _player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
+        public List<ICard> GetCardQueuePlayer() => PlayerCardQueue;
         
-        public static PlayerNetworkObject GetLocalPlayer() => Instance.Players.FirstOrDefault(_player => !_player.IsEnemy);
-        
-        public static PlayerNetworkObject GetEnemy() => Instance.Players.FirstOrDefault(_player => _player.IsEnemy);
-
-        public static List<ICard> GetCardQueuePlayer() => Instance.PlayerCardQueue;
-        
-        public static List<ICard> GetCardQueueEnemy() => Instance.EnemyCardQueue;
+        public List<ICard> GetCardQueueEnemy() => EnemyCardQueue;
         
         #endregion
 
@@ -188,3 +201,7 @@ public struct  PlayerInputData : INetworkInput
 
 }
 
+public class PlayerNetworkInitializedSignal
+{
+    public PlayerNetworkManager PlayerNetworkManager;
+}

@@ -1,4 +1,5 @@
 ﻿using System;
+using Player;
 using Scriptable_Objects;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -37,6 +38,18 @@ using Zenject;
         {
             GlobalCardData.Initialize(GlobalCardSettings);
         }
+        
+        private SignalBus _signalBus;
+        private PlayerNetworkManager _playerNetworkManager;
+        public PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager;
+
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+            _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
+        }
+
 
     }
 

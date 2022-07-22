@@ -11,6 +11,16 @@ namespace CombatSystem
         [Inject]
         private static CombatConfigSO _combatConfig;
         
+        private static SignalBus _signalBus;
+        private static PlayerNetworkManager _playerNetworkManager;
+        [Inject]
+        public static void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+            _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
+        }
+
+        
         public static float[] CalculateDamage(DamageInformation dmgInfo)
         {
             var _attackType = dmgInfo.AttackType;
@@ -105,10 +115,10 @@ namespace CombatSystem
             if (dmgInfo.CardType == CARD_TYPE.HEAVY)
                 _comboFactor = _combatConfig.comboSystemFactor;
 
-            if (PlayerNetworkManager.Instance.IsHostCardPlaying)
-                return PlayerNetworkManager.Instance.PlayerCurrentCombo / _comboFactor;
+            if (_playerNetworkManager.IsHostCardPlaying)
+                return _playerNetworkManager.PlayerCurrentCombo / _comboFactor;
             else 
-                return PlayerNetworkManager.Instance.EnemyCurrentCombo / _comboFactor;
+                return _playerNetworkManager.EnemyCurrentCombo / _comboFactor;
         }
 
         private static bool CheckCriticalHit(DamageInformation dmgInfo)

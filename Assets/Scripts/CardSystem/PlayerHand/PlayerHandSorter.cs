@@ -7,7 +7,7 @@ using Tools.Extensions;
 using UnityEngine;
 using Zenject;
 
-namespace PlayerHand
+namespace CardSystem.PlayerHand
 {
     [RequireComponent(typeof(IPlayerHand))]
     public class PlayerHandSorter : MonoBehaviour

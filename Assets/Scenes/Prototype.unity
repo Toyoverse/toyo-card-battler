@@ -970,6 +970,7 @@ MonoBehaviour:
   enemyApModel: {fileID: 1916667046}
   playerHealthModel: {fileID: 107938755}
   enemyHealthModel: {fileID: 470710298}
+  playerHand: {fileID: 1810415225}
 --- !u!114 &911246452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1358,6 +1359,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2532777998902183181, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
   m_PrefabInstance: {fileID: 2532777999524559739}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1810415225 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2532777998902183170, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
+  m_PrefabInstance: {fileID: 2532777999524559739}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810415222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0480ab670b144967a49b306550596ddf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1843173848
 GameObject:
   m_ObjectHideFlags: 0

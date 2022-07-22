@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Linq;
 using Zenject;
 
-namespace PlayerHand
+namespace CardSystem.PlayerHand
 {
     public class PlayerHand : CardPile, IPlayerHand
     {

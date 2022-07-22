@@ -5,7 +5,7 @@ using System.Threading;
 using Extensions;
 using Fusion;
 using Player;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using TMPro;
 using Tools.Extensions;
 using UnityEngine;
@@ -15,6 +15,9 @@ namespace Card.QueueSystem
 {
     public class CardQueueSystem : MonoBehaviour
     {
+
+        
+        
         public TextMeshProUGUI playerQueueSize;
         public TextMeshProUGUI enemyQueueSize;
         public TextMeshProUGUI currentCardDuration;
@@ -30,9 +33,14 @@ namespace Card.QueueSystem
         private IPlayerHand _playerHand;
         public IPlayerHand PlayerHand => _playerHand;
 
+        private SignalBus _signalBus;
+        private PlayerNetworkManager _playerNetworkManager;
         [Inject]
-        public void Construct(ComboSystem comboSystem, IPlayerHand playerHand)
+        public void Construct(ComboSystem comboSystem, IPlayerHand playerHand, SignalBus signalBus)
         {
+            _signalBus = signalBus;
+            _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
+            
             _playerHand = playerHand;
             _comboSystem = comboSystem;
         }
@@ -46,11 +54,11 @@ namespace Card.QueueSystem
             PlayerHand.OnAddCardToQueue -= AddPlayedCardToQueue;
         }
         
-        public List<ICard> GetCardQueuePlayer() => PlayerNetworkManager.Instance.PlayerCardQueue;
-        public List<ICard> GetCardQueueEnemy() => PlayerNetworkManager.Instance.EnemyCardQueue;
+        public List<ICard> GetCardQueuePlayer() => _playerNetworkManager.PlayerCardQueue;
+        public List<ICard> GetCardQueueEnemy() => _playerNetworkManager.EnemyCardQueue;
 
-        private int GetPlayerQueueSize() => PlayerNetworkManager.Instance.PlayerQueueSize;
-        private int GetEnemyQueueSize() => PlayerNetworkManager.Instance.EnemyQueueSize;
+        private int GetPlayerQueueSize() => _playerNetworkManager.PlayerQueueSize;
+        private int GetEnemyQueueSize() => _playerNetworkManager.EnemyQueueSize;
 
         public void AddToPlayerQueue(ICard _card) => GetCardQueuePlayer().Add(_card);
         public void AddToEnemyQueue(ICard _card) => GetCardQueueEnemy().Add(_card);
@@ -59,7 +67,7 @@ namespace Card.QueueSystem
         public void RemoveFromEnemyQueue(ICard _card) => GetCardQueueEnemy().Remove(_card);
 
         public float GetOfflineCurrentCardDuration() => CurrentCardDuration;
-        private float GetNetworkedCurrentCardDuration() => PlayerNetworkManager.Instance.CurrentCardDuration;
+        private float GetNetworkedCurrentCardDuration() => _playerNetworkManager.CurrentCardDuration;
 
         public void PopFromPlayerQueue()
         {
@@ -113,13 +121,13 @@ namespace Card.QueueSystem
             if (GetPlayerQueueSize() > 0)
             {
                 ComboSystem.ComboPlus(false);
-                PlayerNetworkManager.Instance.IsHostCardPlaying = true;
+                _playerNetworkManager.IsHostCardPlaying = true;
                 PopFromPlayerQueue();
             }
             else if (GetEnemyQueueSize() > 0) // Else added to avoid nullpointer because of null CardBeingExecuted - It will be fixed in the interrupt system
             {
                 ComboSystem.ComboPlus(true);
-                PlayerNetworkManager.Instance.IsHostCardPlaying = false;
+                _playerNetworkManager.IsHostCardPlaying = false;
                 PopFromEnemyQueue();
             }
         }
@@ -169,7 +177,7 @@ namespace Card.QueueSystem
         {
             if (FusionLauncher.IsServer)
             {
-                if (PlayerNetworkManager.Instance.PlayerCurrentCombo > 0)
+                if (_playerNetworkManager.PlayerCurrentCombo > 0)
                 {
                     if (!playerComboObj.activeInHierarchy)
                         playerComboObj.SetActive(true);
@@ -180,7 +188,7 @@ namespace Card.QueueSystem
                         playerComboObj.SetActive(false);
                 }
 
-                if (PlayerNetworkManager.Instance.EnemyCurrentCombo > 0)
+                if (_playerNetworkManager.EnemyCurrentCombo > 0)
                 {
                     if(!enemyComboObj.activeInHierarchy)
                         enemyComboObj.SetActive(true);
@@ -193,7 +201,7 @@ namespace Card.QueueSystem
             }
             else
             {
-                if (PlayerNetworkManager.Instance.PlayerCurrentCombo > 0)
+                if (_playerNetworkManager.PlayerCurrentCombo > 0)
                 {
                     if (!enemyComboObj.activeInHierarchy)
                         enemyComboObj.SetActive(true);
@@ -204,7 +212,7 @@ namespace Card.QueueSystem
                         enemyComboObj.SetActive(false);
                 }
 
-                if (PlayerNetworkManager.Instance.EnemyCurrentCombo > 0)
+                if (_playerNetworkManager.EnemyCurrentCombo > 0)
                 {
                     if(!playerComboObj.activeInHierarchy)
                         playerComboObj.SetActive(true);

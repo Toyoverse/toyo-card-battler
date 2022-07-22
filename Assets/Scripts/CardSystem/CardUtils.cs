@@ -14,8 +14,8 @@ namespace Card
 {
     public static class CardUtils
     {
+        private static PlayerNetworkManager _playerNetworkManager => GlobalConfig.Instance.PlayerNetworkManager;
 
-        
         public static void ValidateCard(this ICard card)
         {
             if (card == null) throw new ArgumentNullException("Card is null");
@@ -26,7 +26,7 @@ namespace Card
         
         public static void ValidateCardAP(this ICard card, PlayerRef _playerRef)
         {
-            var _player = PlayerNetworkManager.GetPlayer(_playerRef);
+            var _player = _playerNetworkManager.GetPlayer(_playerRef);
             var _ap = _player.MyPlayerApModel.Ap;
             if (card.CardData.ApCost > _ap) NotEnoughAP();
         }

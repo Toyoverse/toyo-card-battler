@@ -3,7 +3,7 @@ using Fusion;
 using HealthSystem;
 using Infrastructure;
 using Multiplayer;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using ToyoSystem;
 using UnityEngine;
 using Zenject;
@@ -13,15 +13,13 @@ namespace Player
 	[RequireComponent(typeof(NetworkCharacterControllerPrototype))]
     public class PlayerNetworkObject : NetworkBehaviour, IPlayer
     {
+	    
 	    public const float MAX_HEALTH = 100.0f;
 		[Networked(OnChanged = nameof(OnStateChanged))]
 		public State state { get; set; }
 
 		[Networked(OnChanged = nameof(OnHealthChanged))]
 		public float Health { get; set; }
-		
-		
-		public BattleReferences MyBattleReferences { get; set; }
 		public PlayerRef NetworkPlayerRef { get; set; }
 
 		public IPlayerHand MyPlayerHand;
@@ -32,20 +30,12 @@ namespace Player
 		[Inject(Id="PlayerAP")]
 		public ApModel MyPlayerApModel;
 		
-		//[Networked]
 		IPlayerHand IPlayer.PlayerHand => MyPlayerHand;
-        
-		//[Networked]
 		IFullToyo IPlayer.FullToyo => MyFullToyo;
-		
-		//[Networked]
 		HealthModel IPlayer.PlayerHealthModel => MyPlayerHealthModel;
-        
-		//[Networked]
 		ApModel IPlayer.PlayerApModel => MyPlayerApModel;
 
 		public FullToyoSO FullToyoSo; 
-
 		
 		public static PlayerNetworkObject local { get; set; }
 
@@ -67,28 +57,25 @@ namespace Player
 
 		private NetworkCharacterControllerPrototype _cc;
 
-		private LevelManager _levelManager;
 		private Vector2 _lastMoveDirection; // Store the previous direction for correct hull rotation
 		private GameObject _deathExplosionInstance;
 		private float _respawnInSeconds = -1;
 
+		private PlayerNetworkManager _playerNetworkManager;
+		private PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager ??= FindObjectOfType<PlayerNetworkManager>();
+		
+		[Inject]
+		public void Construct(IFullToyo fullToyo, IPlayerHand playerHand)
+		{
+			MyFullToyo = fullToyo;
+			MyPlayerHand = playerHand;
+		}
+
 		private void Awake()
 		{
 			_cc = GetComponent<NetworkCharacterControllerPrototype>();
-			MyBattleReferences = FindObjectOfType<BattleReferences>();
-			MyPlayerApModel = MyBattleReferences.PlayerUI.GetComponentInChildren<ApModel>();
-			MyFullToyo = MyBattleReferences.Toyo.GetComponent<IFullToyo>();
-			MyPlayerHand = MyBattleReferences.hand.GetComponent<IPlayerHand>();
 		}
 
-
-		private LevelManager GetLevelManager()
-		{
-			if (_levelManager == null)
-				_levelManager = FindObjectOfType<LevelManager>();
-			return _levelManager;
-		}
-		
 		public void InitNetworkState(FullToyoSO fullToyoSO)
 		{
 			state = State.New;
@@ -105,7 +92,6 @@ namespace Player
 				StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(FullToyoSo));
 				state = State.Active;
 			}
-			
 		}
 
 		public override void Spawned()
@@ -118,9 +104,8 @@ namespace Player
 
 			NetworkPlayerRef = Runner.LocalPlayer;
 			MyPlayerHand.MyPlayerRef = NetworkPlayerRef;
-
+			
 			PlayerNetworkManager.AddPlayer(this);
-
 			InitializeHealth();
 
 			// Auto will set proxies to InterpolationDataSources.Snapshots and State/Input authority to InterpolationDataSources.Predicted
@@ -129,25 +114,19 @@ namespace Player
 			GetComponent<NetworkCharacterControllerPrototype>().InterpolationDataSource = InterpolationDataSources.Auto;
 		}
 		
-		[Inject]
-		public void Construct(IPlayerHand playerHand)
-		{
-			MyPlayerHand = playerHand;
-		}
-
 		private void InitializeHealth()
 		{
 			
 			if (playerID == Runner.LocalPlayer.PlayerId)
 			{
-				var _playerUI = PlayerNetworkManager.Instance.PlayerUI;
+				var _playerUI = PlayerNetworkManager.PlayerUI;
 				_playerUI.SetActive(true);
 				MyPlayerHealthModel = _playerUI.GetComponentInChildren<HealthModel>();
 				MyPlayerHealthModel.Parent = this;
 			}
 			else
 			{
-				var _enemyUI = PlayerNetworkManager.Instance.EnemyUI;
+				var _enemyUI = PlayerNetworkManager.EnemyUI;
 				_enemyUI.SetActive(true);
 				MyPlayerHealthModel = _enemyUI.GetComponentInChildren<HealthModel>();
 				IsEnemy = true;
@@ -156,7 +135,7 @@ namespace Player
 
 			if (FusionLauncher.GameMode == GameMode.Single)
 			{
-				var _enemyUI = PlayerNetworkManager.Instance.EnemyUI;
+				var _enemyUI = PlayerNetworkManager.EnemyUI;
 				_enemyUI.SetActive(true);
 			}
 

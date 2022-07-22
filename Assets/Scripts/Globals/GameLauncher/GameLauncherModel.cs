@@ -3,10 +3,11 @@ using Fusion;
 using Infrastructure;
 using Multiplayer;
 using Player;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using ToyoSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Zenject;
 
 namespace Globals
 {
@@ -19,6 +20,7 @@ namespace Globals
 		[SerializeField]
 		[FormerlySerializedAs("_cardQueueSystem")] private GameObject cardQueueSystem;
 
+		private PlayerNetworkManager _playerNetworkManager => GlobalConfig.Instance.PlayerNetworkManager;
 
 		private FusionLauncher.ConnectionStatus _status = FusionLauncher.ConnectionStatus.Disconnected;
 		private NetworkRunner _runner;
@@ -36,8 +38,7 @@ namespace Globals
 
 		private void Update()
 		{
-			
-			if(!cardQueueSystem.activeSelf && PlayerNetworkManager.Instance != null && PlayerNetworkManager.Instance.IsWorldReady)
+			if(!cardQueueSystem.activeSelf && _playerNetworkManager != null && _playerNetworkManager.IsWorldReady)
 				cardQueueSystem.SetActive(true);
 		}
 
@@ -121,25 +122,9 @@ namespace Globals
 				Debug.Log($"Initializing player {playerRef.PlayerId}");
 				var _fullToyo = DatabaseManager.Instance.GetFullToyoFromFakeID(DatabaseManager.Instance.GetPlayerDatabaseID());
 				_player.InitNetworkState(_fullToyo);
-				
-				//if(playerref.PlayerId == runner.LocalPlayer.PlayerId)
-				//	StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(_fullToyo));
 
 			}
-			SetFirstGameStateDebug();
 		}
-		
-		
-
-		//Todo, replace this with getting all the cards from database
-		private void SetFirstGameStateDebug()
-		{
-			var _deck = FindObjectOfType<Deck>();
-			var _allIDS = _deck.AllCardIDS;
-			
-			PlayerNetworkManager.Instance.SetFirstGameState(_allIDS);
-		}
-
 
 		private void OnDespawnPlayer(NetworkRunner runner, PlayerRef playerRef)
 		{
