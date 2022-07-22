@@ -4,13 +4,8 @@ using System.Linq;
 using Card;
 using Card.DeckSystem;
 using Card.QueueSystem;
-using CombatSystem;
-using ExitGames.Client.Photon;
-using Tools.Extensions;
 using Fusion;
 using HealthSystem;
-using Multiplayer;
-using Player;
 using UnityEngine;
 using Zenject;
 
@@ -20,18 +15,15 @@ namespace Player
     {
         [Networked]
         public bool IsWorldReady { get; set; }
-        
         public GameObject PlayerUI => GlobalConfig.Instance.PlayerUI;
-        private HealthModel _playerHealthModel;
-        
         public GameObject EnemyUI =>  GlobalConfig.Instance.EnemyUI;
-        private HealthModel _enemyHealthModel;
-
         [Networked, Capacity(4)] public NetworkArray<GameState> LastGameStates => default;
         [Networked] public int CurrentStateID { get; set; }
-
-        private static List<PlayerNetworkObject> _players;
-        public List<PlayerNetworkObject> Players => _players ??= FindObjectsOfType<PlayerNetworkObject>()?.ToList();
+        public List<PlayerNetworkEntityModel> Players => _players ??= FindObjectsOfType<PlayerNetworkEntityModel>()?.ToList();
+        
+        private HealthModel _playerHealthModel;
+        private HealthModel _enemyHealthModel;
+        private static List<PlayerNetworkEntityModel> _players;
         
         private SignalBus _signalBus;
 
@@ -49,15 +41,15 @@ namespace Player
 
         #region Statics
         
-        public void AddPlayer(PlayerNetworkObject playerNetworkObject) => Players.Add(playerNetworkObject);
+        public void AddPlayer(PlayerNetworkEntityModel playerNetworkEntityModel) => Players.Add(playerNetworkEntityModel);
         
-        public void RemovePlayer(PlayerNetworkObject playerNetworkObject) => Players.Remove(playerNetworkObject);
+        public void RemovePlayer(PlayerNetworkEntityModel playerNetworkEntityModel) => Players.Remove(playerNetworkEntityModel);
 
-        public PlayerNetworkObject GetPlayer(PlayerRef playerRef) => Players.FirstOrDefault(_player => _player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
+        public PlayerNetworkEntityModel GetPlayer(PlayerRef playerRef) => Players.FirstOrDefault(player => player.NetworkPlayerRef.PlayerId == playerRef.PlayerId);
         
-        public PlayerNetworkObject GetLocalPlayer() => Players.FirstOrDefault(_player => !_player.IsEnemy);
+        public PlayerNetworkEntityModel GetLocalPlayer() => Players.FirstOrDefault(player => !player.IsEnemy);
         
-        public PlayerNetworkObject GetEnemy() => Players.FirstOrDefault(_player => _player.IsEnemy);
+        public PlayerNetworkEntityModel GetEnemy() => Players.FirstOrDefault(player => player.IsEnemy);
 
         public List<ICard> GetCardQueuePlayer() => PlayerCardQueue;
         
@@ -69,13 +61,13 @@ namespace Player
 
         public GameState GetCurrentGameState() => GetGameState(CurrentStateID);
         
-        private GameState GetGameState(int _currentStateID) => LastGameStates.Get(_currentStateID);
+        private GameState GetGameState(int currentStateID) => LastGameStates.Get(currentStateID);
 
-        private CardQueueSystem _cardQueueSystem;
         public CardQueueSystem CardQueueSystem => _cardQueueSystem ??= FindObjectOfType<CardQueueSystem>();
+        private CardQueueSystem _cardQueueSystem;
 
-        private List<int> AllCardIDS = new();
         public List<ICard> AllCards = new();
+        private List<int> _allCardIds = new();
 
         public List<ICard> PlayerCardQueue = new();
         public List<ICard> EnemyCardQueue = new();
@@ -89,46 +81,44 @@ namespace Player
 
         public override void FixedUpdateNetwork()
         {
-            if (Object.HasStateAuthority)
+            if (!Object.HasStateAuthority) return;
+            if (CardQueueSystem != null)
             {
-                if (CardQueueSystem != null)
-                {
-                    CurrentCardDuration = CardQueueSystem.GetOfflineCurrentCardDuration();
-                    PlayerCurrentCombo = CardQueueSystem.ComboSystem.GetOfflinePlayerCurrentCombo();
-                    EnemyCurrentCombo = CardQueueSystem.ComboSystem.GetOfflineEnemyCurrentCombo();
-                }
-
-                PlayerQueueSize = PlayerCardQueue.Count;
-                EnemyQueueSize = EnemyCardQueue.Count;
-                if(!IsWorldReady)
-                    IsWorldReady = true;
+                CurrentCardDuration = CardQueueSystem.GetOfflineCurrentCardDuration();
+                PlayerCurrentCombo = CardQueueSystem.ComboSystem.GetOfflinePlayerCurrentCombo();
+                EnemyCurrentCombo = CardQueueSystem.ComboSystem.GetOfflineEnemyCurrentCombo();
             }
+
+            PlayerQueueSize = PlayerCardQueue.Count;
+            EnemyQueueSize = EnemyCardQueue.Count;
+            if(!IsWorldReady)
+                IsWorldReady = true;
         }
 
 
         /*
          * Todo: VERY BAD -- Temporary - Changing for unity adressables next sprint
          */
-        public void SetFirstGameState(List<int> cardIDS)
+        public void SetFirstGameState(List<int> cardIds)
         {
-            AllCardIDS.AddRange(cardIDS);
-            AllCards.AddRange(CardUtils.FindCardsByIDs(cardIDS));
+            _allCardIds.AddRange(cardIds);
+            AllCards.AddRange(CardUtils.FindCardsByIDs(cardIds));
             
             var state = new GameState();
-            for (int i = 0; i < AllCardIDS.Count; i++)
-                state.AllCardsThisMatch.Set(i,AllCardIDS[i]);
+            for (int i = 0; i < _allCardIds.Count; i++)
+                state.AllCardsThisMatch.Set(i,_allCardIds[i]);
             
             NextGameState();
             LastGameStates.Set(CurrentStateID, state);
         }
         
-        public void SetGameState(PlayerInputData _playerInput)
+        public void SetGameState(PlayerInputData playerInput)
         {
             NextGameState();
             var state = new GameState
             {
-                GameStatePlayerRef = _playerInput.PlayerRef,
-                newCardId = _playerInput.PlayedCardID
+                GameStatePlayerRef = playerInput.PlayerRef,
+                NewCardId = playerInput.PlayedCardID
             };
             LastGameStates.Set(CurrentStateID, state);
             
@@ -142,10 +132,10 @@ namespace Player
         private void CheckForCardsPlayed()
         {
             if (GetCurrentGameState().GameStatePlayerRef == Runner.LocalPlayer) return;
-            var _id = GetCurrentGameState().newCardId;
-            if (_id <= 0) return;
-            var _card = CardUtils.FindCardByID(_id);
-            CardQueueSystem.AddEnemyCardToQueue(_card);
+            var id = GetCurrentGameState().NewCardId;
+            if (id <= 0) return;
+            var card = CardUtils.FindCardByID(id);
+            CardQueueSystem.AddEnemyCardToQueue(card);
         }
         
         private void NextGameState()
@@ -162,12 +152,12 @@ namespace Player
         private void PrintDebugData()
         {
             int tempGameState = 0;
-            foreach (var _state in LastGameStates)
+            foreach (var state in LastGameStates)
             {
                 Debug.LogError("CurrentState ID:" + tempGameState);
-                Debug.LogError("New Card ID:" +_state.newCardId);
-                Debug.LogError("Player ID:" +_state.GameStatePlayerRef.PlayerId);
-                foreach (var cardID in _state.AllCardsThisMatch.ToArray())
+                Debug.LogError("New Card ID:" +state.NewCardId);
+                Debug.LogError("Player ID:" +state.GameStatePlayerRef.PlayerId);
+                foreach (var cardID in state.AllCardsThisMatch.ToArray())
                     if(cardID > 0)
                         Debug.Log("Card ID:" + cardID);
                 
@@ -182,9 +172,9 @@ namespace Player
 
 public struct GameState : INetworkStruct {
 
-    private const int MAXPLAYERS = 2;
+    private const int MaxPlayers = 2;
     public PlayerRef GameStatePlayerRef;
-    public int newCardId { get; set; }
+    public int NewCardId { get; set; }
     [Networked, Capacity(60)] public NetworkArray<Int32> AllCardsThisMatch => default;
     [Networked, Capacity(2)] public NetworkArray<float> PlayersHealth => default;
 

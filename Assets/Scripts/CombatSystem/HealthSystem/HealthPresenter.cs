@@ -2,18 +2,20 @@
 using System.Collections;
 using Player;
 using TMPro;
-using Tools;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Scriptable_Objects;
+using Zenject;
 
 namespace HealthSystem
 {
     public class HealthPresenter : MonoBehaviour 
     {
         public Slider healthSlider;
-        public float uISpeed = 1.0f;
         
+        [Inject]
+        private CombatConfigSO _combatConfig;
+        private float _uISpeed;
         private IEnumerator _smoothHealthCoroutine;
         private TextMeshProUGUI _textValue;
 
@@ -22,6 +24,7 @@ namespace HealthSystem
         private void Awake()
         {
             _textValue = GetComponentInChildren<TextMeshProUGUI>();
+            _uISpeed = _combatConfig.healthUIFillSpeed;
         }
 
         private void OnEnable()
@@ -48,9 +51,9 @@ namespace HealthSystem
         {
             var _lerpTime = 0.0f;
             var _sliderValue = healthSlider.value;
-            while (_lerpTime < uISpeed)
+            while (_lerpTime < _uISpeed)
             {
-                var _newHealth = Mathf.Lerp(_sliderValue, currentHealth, _lerpTime/uISpeed);
+                var _newHealth = Mathf.Lerp(_sliderValue, currentHealth, _lerpTime/_uISpeed);
                 SetSliderValue(_newHealth);
                 _lerpTime += Time.deltaTime;
                 yield return null;
@@ -66,8 +69,8 @@ namespace HealthSystem
 
         private void SetMaxHealth()
         {
-            healthSlider.maxValue = PlayerNetworkObject.MAX_HEALTH;
-            healthSlider.value = PlayerNetworkObject.MAX_HEALTH;
+            healthSlider.maxValue = PlayerNetworkEntityModel.MaxHealth;
+            healthSlider.value = PlayerNetworkEntityModel.MaxHealth;
         }
 
         #region Getters/Setters

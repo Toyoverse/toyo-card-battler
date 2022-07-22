@@ -113,5 +113,9 @@ namespace Scriptable_Objects
         [Tooltip("TECHNIQUE multiplier used to generate COUNTER ATTACK CHANCE value after blocker success.")]
         [SerializeField] [Range(0.0f, 1.0f)] 
         public float counterTechMultiplier = 0.05f;
+
+        [Tooltip("HealthUI")] 
+        [SerializeField] [Range(0.0f, 1.0f)]
+        public float healthUIFillSpeed = 1.0f;
     }
 }

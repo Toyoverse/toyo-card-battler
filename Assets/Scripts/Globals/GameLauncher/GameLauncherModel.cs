@@ -15,8 +15,9 @@ namespace Globals
 	{
 		[SerializeField]
 		[FormerlySerializedAs("_playerNetworkManagerPrefab")] private PlayerNetworkManager playerNetworkManagerPrefab;
+		[FormerlySerializedAs("playerNetworkObjectPrefab")]
 		[SerializeField]
-		[FormerlySerializedAs("_playerPrefab")] private PlayerNetworkObject playerNetworkObjectPrefab;
+		[FormerlySerializedAs("_playerPrefab")] private PlayerNetworkEntityModel playerNetworkEntityModelPrefab;
 		[SerializeField]
 		[FormerlySerializedAs("_cardQueueSystem")] private GameObject cardQueueSystem;
 
@@ -108,17 +109,17 @@ namespace Globals
 
 		private void OnSpawnPlayer(NetworkRunner runner, PlayerRef playerRef)
 		{
-			runner.Spawn(playerNetworkObjectPrefab, Vector3.zero, Quaternion.identity, playerRef, InitNetworkState);
+			runner.Spawn(playerNetworkEntityModelPrefab, Vector3.zero, Quaternion.identity, playerRef, InitNetworkState);
 
 			if (_gameMode == GameMode.Single)
 			{
-				runner.Spawn(playerNetworkObjectPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
+				runner.Spawn(playerNetworkEntityModelPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
 			}
 			
 			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
 			{
 				
-				var _player = networkObject.gameObject.GetComponent<PlayerNetworkObject>();
+				var _player = networkObject.gameObject.GetComponent<PlayerNetworkEntityModel>();
 				Debug.Log($"Initializing player {playerRef.PlayerId}");
 				var _fullToyo = DatabaseManager.Instance.GetFullToyoFromFakeID(DatabaseManager.Instance.GetPlayerDatabaseID());
 				_player.InitNetworkState(_fullToyo);
