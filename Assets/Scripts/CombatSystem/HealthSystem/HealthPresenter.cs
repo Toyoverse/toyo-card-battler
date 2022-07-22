@@ -2,10 +2,10 @@
 using System.Collections;
 using Player;
 using TMPro;
-using Tools;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Scriptable_Objects;
+using Zenject;
 
 namespace HealthSystem
 {
@@ -13,6 +13,8 @@ namespace HealthSystem
     {
         public Slider healthSlider;
         
+        [Inject]
+        private CombatConfigSO _combatConfig;
         private float _uISpeed;
         private IEnumerator _smoothHealthCoroutine;
         private TextMeshProUGUI _textValue;
@@ -22,7 +24,7 @@ namespace HealthSystem
         private void Awake()
         {
             _textValue = GetComponentInChildren<TextMeshProUGUI>();
-            _uISpeed = GlobalConfig.Instance.CombatConfigSO.healthUIFillSpeed;
+            _uISpeed = _combatConfig.healthUIFillSpeed;
         }
 
         private void OnEnable()

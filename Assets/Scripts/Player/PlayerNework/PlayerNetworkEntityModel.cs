@@ -106,7 +106,7 @@ namespace Player
 		[Inject]
 		public void Construct(IPlayerHand playerHand)
 		{
-			MyPlayerHand = playerHand;
+			_myPlayerHand = playerHand;
 		}
 
 		private void InitializeHealth()
