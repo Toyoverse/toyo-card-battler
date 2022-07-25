@@ -134,6 +134,7 @@ namespace Card.QueueSystem
 
         private void Update()
         {
+            if (_playerNetworkManager == null) return;
             if (FusionLauncher.IsServer)
             {
                 if(CurrentCardDuration > 0.0f)

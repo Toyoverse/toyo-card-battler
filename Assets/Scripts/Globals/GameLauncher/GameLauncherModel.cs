@@ -1,28 +1,21 @@
-﻿using Card.DeckSystem;
-using Fusion;
+﻿using Fusion;
 using Infrastructure;
 using Multiplayer;
 using Player;
-using CardSystem.PlayerHand;
-using ToyoSystem;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Zenject;
 
 namespace Globals
 {
 	public class GameLauncherModel : MonoBehaviour
 	{
 		[SerializeField]
-		[FormerlySerializedAs("_playerNetworkManagerPrefab")] private PlayerNetworkManager playerNetworkManagerPrefab;
-		[FormerlySerializedAs("playerNetworkObjectPrefab")]
+		private PlayerNetworkManager playerNetworkManagerPrefab;
 		[SerializeField]
-		[FormerlySerializedAs("_playerPrefab")] private PlayerNetworkEntityModel playerNetworkEntityModelPrefab;
+		private PlayerNetworkEntityModel playerNetworkEntityModelPrefab;
 		[SerializeField]
-		[FormerlySerializedAs("_cardQueueSystem")] private GameObject cardQueueSystem;
+		private GameObject cardQueueSystem;
 
 		private PlayerNetworkManager _playerNetworkManager => GlobalConfig.Instance.PlayerNetworkManager;
-
 		private FusionLauncher.ConnectionStatus _status = FusionLauncher.ConnectionStatus.Disconnected;
 		private NetworkRunner _runner;
 		private GameMode _gameMode = GameMode.Single;
@@ -58,9 +51,9 @@ namespace Globals
 			SetGameMode(GameMode.Shared);
 		}
 
-		private void SetGameMode(GameMode gamemode)
+		private void SetGameMode(GameMode gameMode)
 		{
-			_gameMode = gamemode;
+			_gameMode = gameMode;
 		}
 
 		public void OnEnterRoom()
@@ -72,7 +65,6 @@ namespace Globals
 			LevelManager _lm = FindObjectOfType<LevelManager>();
 			_lm.launcher = _launcher;
 
-			//var text = _room.text;
 			var _text = "test";
 			_launcher.Launch(_gameMode, _text, _lm, OnConnectionStatusUpdate, OnSpawnWorld, OnSpawnPlayer, OnDespawnPlayer);
 		}
@@ -101,9 +93,10 @@ namespace Globals
 		{
 			Debug.Log("Spawning GameManager");
 			runner.Spawn(playerNetworkManagerPrefab, Vector3.zero, Quaternion.identity, null, InitNetworkState);
+			
 			void InitNetworkState(NetworkRunner runner, NetworkObject networkObject)
 			{
-				//var _playerNetworkManager = networkObject.gameObject.GetComponent<PlayerNetworkManager>();
+				
 			}
 		}
 

@@ -49,13 +49,13 @@ namespace HealthSystem
 
         private IEnumerator SmoothHealthCoroutine(float currentHealth)
         {
-            var _lerpTime = 0.0f;
-            var _sliderValue = healthSlider.value;
-            while (_lerpTime < _uISpeed)
+            var lerpTime = 0.0f;
+            var sliderValue = healthSlider.value;
+            while (lerpTime < _uISpeed)
             {
-                var _newHealth = Mathf.Lerp(_sliderValue, currentHealth, _lerpTime/_uISpeed);
-                SetSliderValue(_newHealth);
-                _lerpTime += Time.deltaTime;
+                var newHealth = Mathf.Lerp(sliderValue, currentHealth, lerpTime/_uISpeed);
+                SetSliderValue(newHealth);
+                lerpTime += Time.deltaTime;
                 yield return null;
             }
             SetSliderValue(currentHealth);

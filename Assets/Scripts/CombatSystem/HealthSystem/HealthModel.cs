@@ -7,9 +7,7 @@ namespace HealthSystem
     [RequireComponent(typeof(HealthPresenter))]
     public class HealthModel : MonoBehaviour
     {
-        [SerializeField]
-        private PlayerNetworkEntityModel parent;
-
+        private PlayerNetworkEntityModel _parent;
         private HealthPresenter _myHealthPresenter;
 
         #region CallBacks
@@ -17,6 +15,11 @@ namespace HealthSystem
         private void Awake()
         {
             _myHealthPresenter = GetComponent<HealthPresenter>();
+        }
+
+        public void InjectNetwork(PlayerNetworkEntityModel network)
+        {
+            _parent = network;
         }
 
         private void OnEnable()
@@ -68,8 +71,8 @@ namespace HealthSystem
         
         public PlayerNetworkEntityModel Parent
         {
-            get => parent;
-            set => parent = value;
+            get => _parent;
+            set => _parent = value;
         }
 
         #endregion

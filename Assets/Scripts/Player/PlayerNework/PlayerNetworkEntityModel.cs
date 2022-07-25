@@ -1,4 +1,5 @@
-﻿using CombatSystem.APSystem;
+﻿using System;
+using CombatSystem.APSystem;
 using Fusion;
 using HealthSystem;
 using Infrastructure;
@@ -32,7 +33,6 @@ namespace Player
 		public bool IsDead => PlayerState == State.Dead;
 		public bool IsEnemy = false;
 		
-	    public BattleReferences MyBattleReferences { get; set; }
 		public PlayerRef NetworkPlayerRef { get; set; }
 		[Inject(Id="PlayerHealth")]
 		public HealthModel MyPlayerHealthModel { get; set; }
@@ -63,6 +63,11 @@ namespace Player
 		private void Awake()
 		{
 			_cc = GetComponent<NetworkCharacterControllerPrototype>();
+		}
+
+		private void Start()
+		{
+			MyPlayerHealthModel.InjectNetwork(this);
 		}
 
 		public void InitNetworkState(FullToyoSO fullToyoSo)
