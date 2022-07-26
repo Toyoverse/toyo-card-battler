@@ -22,7 +22,8 @@ namespace CombatSystem.DummyMode
             _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
         }
         
-        public UIDocument uiDoc;
+        [SerializeField]
+        private UIDocument uiDoc;
         
         private List<Toggle> _toggles;
         private List<Slider> _sliders;

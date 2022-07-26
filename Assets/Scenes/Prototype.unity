@@ -895,6 +895,7 @@ GameObject:
   m_Component:
   - component: {fileID: 745712883}
   - component: {fileID: 745712884}
+  - component: {fileID: 745712885}
   m_Layer: 0
   m_Name: CardQueueSystem
   m_TagString: Untagged
@@ -929,13 +930,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2aaa18c72ba41659bbc6772b7d6fc77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &745712885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745712882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f0adbaaa99f6b419526941b16f78cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerComboObj: {fileID: 1536003820}
+  enemyComboObj: {fileID: 1927278899}
   playerQueueSize: {fileID: 1510288241}
   enemyQueueSize: {fileID: 6123726219024142811}
   currentCardDuration: {fileID: 1748753754}
   playerCurrentCombo: {fileID: 191933446}
   enemyCurrentCombo: {fileID: 1779061518}
-  playerComboObj: {fileID: 1536003820}
-  enemyComboObj: {fileID: 1927278899}
 --- !u!1 &911246450
 GameObject:
   m_ObjectHideFlags: 0

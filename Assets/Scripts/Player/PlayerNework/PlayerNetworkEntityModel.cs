@@ -49,13 +49,16 @@ namespace Player
 	    private LevelManager _levelManager;
 		private Vector2 _lastMoveDirection; // Store the previous direction for correct hull rotation
 		private GameObject _deathExplosionInstance;
-		
+
+		private SignalBus _signalBus;
 		private PlayerNetworkManager _playerNetworkManager;
-		private PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager ??= FindObjectOfType<PlayerNetworkManager>();
 		
 		[Inject]
-		public void Construct(IFullToyo fullToyo, IPlayerHand playerHand)
+		public void Construct(IFullToyo fullToyo, IPlayerHand playerHand, SignalBus signalBus)
 		{
+			_signalBus = signalBus;
+			_signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
+			
 			_myFullToyo = fullToyo;
 			_myPlayerHand = playerHand;
 		}
@@ -98,7 +101,7 @@ namespace Player
 			NetworkPlayerRef = Runner.LocalPlayer;
 			_myPlayerHand.MyPlayerRef = NetworkPlayerRef;
 
-			PlayerNetworkManager.AddPlayer(this);
+			_playerNetworkManager.AddPlayer(this);
 
 			InitializeHealth();
 
@@ -119,14 +122,14 @@ namespace Player
 			
 			if (PlayerID == Runner.LocalPlayer.PlayerId)
 			{
-				var playerUI = PlayerNetworkManager.PlayerUI;
+				var playerUI = _playerNetworkManager.PlayerUI;
 				playerUI.SetActive(true);
 				MyPlayerHealthModel = playerUI.GetComponentInChildren<HealthModel>();
 				MyPlayerHealthModel.Parent = this;
 			}
 			else
 			{
-				var enemyUI = PlayerNetworkManager.EnemyUI;
+				var enemyUI = _playerNetworkManager.EnemyUI;
 				enemyUI.SetActive(true);
 				MyPlayerHealthModel = enemyUI.GetComponentInChildren<HealthModel>();
 				IsEnemy = true;
@@ -135,7 +138,7 @@ namespace Player
 
 			if (FusionLauncher.GameMode == GameMode.Single)
 			{
-				var enemyUI = PlayerNetworkManager.EnemyUI;
+				var enemyUI = _playerNetworkManager.EnemyUI;
 				enemyUI.SetActive(true);
 			}
 
@@ -213,7 +216,7 @@ namespace Player
 		public override void Despawned(NetworkRunner runner, bool hasState)
 		{
 			Destroy(_deathExplosionInstance);
-			PlayerNetworkManager.RemovePlayer(this);
+			_playerNetworkManager.RemovePlayer(this);
 		}
 
 		#region Getters/Setters

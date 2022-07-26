@@ -63,8 +63,8 @@ namespace Player
         
         private GameState GetGameState(int currentStateID) => LastGameStates.Get(currentStateID);
 
-        public CardQueueSystem CardQueueSystem => _cardQueueSystem ??= FindObjectOfType<CardQueueSystem>();
-        private CardQueueSystem _cardQueueSystem;
+        public CardQueueSystemModel CardQueueSystemModel => _cardQueueSystemModel ??= FindObjectOfType<CardQueueSystemModel>();
+        private CardQueueSystemModel _cardQueueSystemModel;
 
         public List<ICard> AllCards = new();
         private List<int> _allCardIds = new();
@@ -82,11 +82,11 @@ namespace Player
         public override void FixedUpdateNetwork()
         {
             if (!Object.HasStateAuthority) return;
-            if (CardQueueSystem != null)
+            if (CardQueueSystemModel != null)
             {
-                CurrentCardDuration = CardQueueSystem.GetOfflineCurrentCardDuration();
-                PlayerCurrentCombo = CardQueueSystem.ComboSystem.GetOfflinePlayerCurrentCombo();
-                EnemyCurrentCombo = CardQueueSystem.ComboSystem.GetOfflineEnemyCurrentCombo();
+                CurrentCardDuration = CardQueueSystemModel.CurrentCardDuration;
+                PlayerCurrentCombo = CardQueueSystemModel.ComboSystem.GetOfflinePlayerCurrentCombo();
+                EnemyCurrentCombo = CardQueueSystemModel.ComboSystem.GetOfflineEnemyCurrentCombo();
             }
 
             PlayerQueueSize = PlayerCardQueue.Count;
@@ -135,7 +135,7 @@ namespace Player
             var id = GetCurrentGameState().NewCardId;
             if (id <= 0) return;
             var card = CardUtils.FindCardByID(id);
-            CardQueueSystem.AddEnemyCardToQueue(card);
+            CardQueueSystemModel.AddEnemyCardToQueue(card);
         }
         
         private void NextGameState()
