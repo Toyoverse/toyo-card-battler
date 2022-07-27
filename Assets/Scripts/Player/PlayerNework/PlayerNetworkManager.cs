@@ -6,6 +6,7 @@ using Card.DeckSystem;
 using Card.QueueSystem;
 using Fusion;
 using HealthSystem;
+using ServiceLocator;
 using UnityEngine;
 using Zenject;
 
@@ -15,11 +16,11 @@ namespace Player
     {
         [Networked]
         public bool IsWorldReady { get; set; }
-        public GameObject PlayerUI => GlobalConfig.Instance.PlayerUI;
-        public GameObject EnemyUI =>  GlobalConfig.Instance.EnemyUI;
-        [Networked, Capacity(4)] public NetworkArray<GameState> LastGameStates => default;
-        [Networked] public int CurrentStateID { get; set; }
-        public List<PlayerNetworkEntityModel> Players => _players ??= FindObjectsOfType<PlayerNetworkEntityModel>()?.ToList();
+        public static GameObject PlayerUI => Locator.GetGlobalConfig().PlayerUI;
+        public GameObject EnemyUI =>  Locator.GetGlobalConfig().EnemyUI;
+        [Networked, Capacity(4)] private NetworkArray<GameState> LastGameStates => default;
+        [Networked] private int CurrentStateID { get; set; }
+        private List<PlayerNetworkEntityModel> Players => _players ??= FindObjectsOfType<PlayerNetworkEntityModel>()?.ToList();
         
         private HealthModel _playerHealthModel;
         private HealthModel _enemyHealthModel;

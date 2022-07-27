@@ -1,8 +1,8 @@
 ﻿using System;
 using Card;
 using Card.CardPile;
-using Extensions;
 using Scriptable_Objects;
+using ServiceLocator;
 using Tools.Extensions;
 using UnityEngine;
 using Zenject;
@@ -106,7 +106,7 @@ namespace CardSystem.PlayerHand
 
         #region Fields and Properties
 
-        private Transform pivot => GlobalConfig.Instance.handPivot;
+        private Transform pivot => Locator.GetGlobalConfig().handPivot;
 
         private SpriteRenderer CardImage { get; set; }
         private float CardWidth => CardImage.bounds.size.x;

@@ -5,6 +5,7 @@ using CombatSystem.APSystem;
 using HealthSystem;
 using Player;
 using CardSystem.PlayerHand;
+using ServiceLocator;
 using ToyoSystem;
 using UnityEngine;
 using Zenject;
@@ -91,7 +92,7 @@ namespace CombatSystem
             var _hitListInfos = card.CardData?.HitListInfos;
             if (!(_hitListInfos?.Count > 0)) return;
 
-            if (GlobalConfig.Instance.IgnoreDamageCalculations)
+            if (Locator.GetGlobalConfig().IgnoreDamageCalculations)
             {
                 foreach (var t in _hitListInfos)
                     DoDamage(t.Damage);

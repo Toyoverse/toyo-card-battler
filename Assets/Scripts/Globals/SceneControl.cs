@@ -1,68 +1,58 @@
 using System;
 using System.Collections;
+using ServiceLocator;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class SceneControl : MonoBehaviour
 {
-    public UIDocument loadingUiDoc;
-    private Label loadingText;
-    public static SceneControl Instance;
-    public bool init = false;
+    private UIDocument _loadingUiDoc;
+    private Label _loadingText;
+    private bool _init;
 
     private void Awake()
     {
-        if (Instance != null && Instance.init)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
-            Init();
-        }
+        Init();
+        Locator.Provide(this);
     }
 
     private void Init()
     {
-        if (loadingUiDoc == null)
+        if (_loadingUiDoc == null)
         {
-            loadingUiDoc = this.gameObject.GetComponent<UIDocument>();
+            _loadingUiDoc = this.gameObject.GetComponent<UIDocument>();
         }
-        var root = loadingUiDoc.rootVisualElement;
+        var root = _loadingUiDoc.rootVisualElement;
         //loadingText = root.Query<Label>().First();
-        init = true;
+        _init = true;
     }
 
-    public static void LoadSceneAsync(int sceneIndex)
+    public void LoadSceneAsync(int sceneIndex)
     {
-        if (Instance == null)
-        {
-            Instance = InstancePrefab().GetComponent<SceneControl>();
-        }
-        Instance.StartCoroutine(LoadAsync(sceneIndex));
+        // if (Instance == null)
+        // {
+        //     Instance = InstancePrefab().GetComponent<SceneControl>();
+        // }
+        // Instance.StartCoroutine(LoadAsync(sceneIndex));
+        
+        StartCoroutine(LoadAsync(sceneIndex));
     }
 
     //Method overload to call scene by name
-    public static void LoadSceneAsync(string sceneName)
+    public void LoadSceneAsync(string sceneName)
     {
-        if (Instance == null)
-        {
-            Instance = InstancePrefab().GetComponent<SceneControl>();
-        }
-        Instance.StartCoroutine(LoadAsync(sceneName));
+        StartCoroutine(LoadAsync(sceneName));
     }
 
-    static IEnumerator LoadAsync(int sceneIndex)
+    IEnumerator LoadAsync(int sceneIndex)
     {
-        while (!Instance.init)
+        while (!_init)
         {
             yield return null;
         }
         
-        Instance.loadingUiDoc.enabled = true;
+        _loadingUiDoc.enabled = true;
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
         
         while (!asyncOperation.isDone)
@@ -73,28 +63,28 @@ public class SceneControl : MonoBehaviour
         }
         
         yield return new WaitForFixedUpdate(); /*WaitForSeconds(3);*/
-        Instance.loadingUiDoc.enabled = false;
+        _loadingUiDoc.enabled = false;
     }
     
     //Overload to call scene by name
-    static IEnumerator LoadAsync(string sceneName)
+    IEnumerator LoadAsync(string sceneName)
     {
-        while (!Instance.init)
+        while (!_init)
         {
             yield return null;
         }
         
-        Instance.loadingUiDoc.enabled = true;
+        _loadingUiDoc.enabled = true;
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
 
         while (!asyncOperation.isDone)
         {
-            Instance.loadingText.text = "Loading progress: " + (asyncOperation.progress * 100) + "%";
+            _loadingText.text = "Loading progress: " + (asyncOperation.progress * 100) + "%";
             yield return null;
         }
 
         yield return new WaitForFixedUpdate();
-        Instance.loadingUiDoc.enabled = false;
+        _loadingUiDoc.enabled = false;
     }
 
     static GameObject InstancePrefab()

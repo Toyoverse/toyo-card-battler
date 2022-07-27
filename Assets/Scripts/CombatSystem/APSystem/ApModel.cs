@@ -1,4 +1,5 @@
 using System;
+using ServiceLocator;
 using UnityEngine;
 
 namespace CombatSystem.APSystem
@@ -18,8 +19,8 @@ namespace CombatSystem.APSystem
         private void Awake()
         {
             _myApPresenter = GetComponent<ApPresenter>();
-            _timeForApRegen = GlobalConfig.Instance.timeForApRegen;
-            _partialAP = _maxAP = Ap = GlobalConfig.Instance.maxAP;
+            _timeForApRegen = Locator.GetGlobalConfig().timeForApRegen;
+            _partialAP = _maxAP = Ap = Locator.GetGlobalConfig().maxAP;
         }
 
         private void Update()

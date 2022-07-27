@@ -4,7 +4,7 @@ using System.Linq;
 using Card.CardPile;
 using Card.CardPile.Graveyard;
 using Extensions;
-using Tools.Extensions;
+using ServiceLocator;
 using ToyoSystem;
 using UnityEngine;
 using Zenject;
@@ -147,7 +147,7 @@ namespace Card.DeckSystem
                     var card = cardGo.GetComponent<ICard>();
                     card.CardData = _currentCardData;
                     AddCard(card);
-                    cardGo.transform.position = GlobalConfig.Instance.deckPosition.position;
+                    cardGo.transform.position = Locator.GetGlobalConfig().deckPosition.position;
                 }
                 _cardPackIndex++;
             }

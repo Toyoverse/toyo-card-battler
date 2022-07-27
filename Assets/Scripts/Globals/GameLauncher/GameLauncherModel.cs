@@ -2,6 +2,7 @@
 using Infrastructure;
 using Multiplayer;
 using Player;
+using ServiceLocator;
 using UnityEngine;
 
 namespace Globals
@@ -15,7 +16,7 @@ namespace Globals
 		[SerializeField]
 		private GameObject cardQueueSystem;
 
-		private PlayerNetworkManager _playerNetworkManager => GlobalConfig.Instance.PlayerNetworkManager;
+		private PlayerNetworkManager _playerNetworkManager => Locator.GetGlobalConfig().PlayerNetworkManager;
 		private FusionLauncher.ConnectionStatus _status = FusionLauncher.ConnectionStatus.Disconnected;
 		private NetworkRunner _runner;
 		private GameMode _gameMode = GameMode.Single;

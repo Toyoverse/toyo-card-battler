@@ -1,5 +1,6 @@
 using System;
 using Player;
+using ServiceLocator;
 using UnityEngine;
 
 namespace HealthSystem
@@ -17,9 +18,14 @@ namespace HealthSystem
             _myHealthPresenter = GetComponent<HealthPresenter>();
         }
 
-        public void InjectNetwork(PlayerNetworkEntityModel network)
+        private void Start()
         {
-            _parent = network;
+            //_parent = Locator.GetPlayerNetworkEntityModel();
+        }
+        
+        public void InjectPlayer(PlayerNetworkEntityModel player)
+        {
+            _parent = player;
         }
 
         private void OnEnable()

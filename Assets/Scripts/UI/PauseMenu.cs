@@ -1,5 +1,6 @@
 using System;
 using Globals;
+using ServiceLocator;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,16 +15,16 @@ public class PauseMenu : MonoBehaviour
         _uiController = this.GetComponent<UiController>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.P)) //TODO: Move this for correct local
             _uiController.EnableOrDisable(!_uiController.UiDoc.enabled);
     }
 
-    public void CallMainMenu() => SceneControl.LoadSceneAsync(0);
+    public void CallMainMenu() => Locator.GetSceneControl().LoadSceneAsync(0);
 
     public void Restart()
-        => SceneControl.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        => Locator.GetSceneControl().LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
 
     public void Host() => StartRoom(_gameLauncherModel.OnHostOptions);
 

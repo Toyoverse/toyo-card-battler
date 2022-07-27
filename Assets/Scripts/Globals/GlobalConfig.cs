@@ -1,12 +1,13 @@
 ﻿using System;
 using Player;
 using Scriptable_Objects;
+using ServiceLocator;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
 [Serializable]
-    public class GlobalConfig : Singleton<GlobalConfig>
+    public class GlobalConfig : MonoBehaviour
     {
         
         public GlobalCardDataSO GlobalCardSettings;
@@ -37,6 +38,7 @@ using Zenject;
         public void Awake()
         {
             GlobalCardData.Initialize(GlobalCardSettings);
+            Locator.Provide(this);
         }
         
         private SignalBus _signalBus;

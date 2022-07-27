@@ -5,6 +5,7 @@ using HealthSystem;
 using Infrastructure;
 using Multiplayer;
 using CardSystem.PlayerHand;
+using ServiceLocator;
 using ToyoSystem;
 using UnityEngine;
 using Zenject;
@@ -38,7 +39,8 @@ namespace Player
 		public HealthModel MyPlayerHealthModel { get; set; }
 		[Inject(Id="PlayerAP")]
 		public ApModel MyPlayerApModel { get; set; }
-		public FullToyoSO FullToyoSo { get; set; }
+
+		private FullToyoSO _fullToyoSo;
 
 	    private State _state;
 	    private float _health;
@@ -50,15 +52,12 @@ namespace Player
 		private Vector2 _lastMoveDirection; // Store the previous direction for correct hull rotation
 		private GameObject _deathExplosionInstance;
 
-		private SignalBus _signalBus;
 		private PlayerNetworkManager _playerNetworkManager;
+		private PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager ??= FindObjectOfType<PlayerNetworkManager>();
 		
 		[Inject]
-		public void Construct(IFullToyo fullToyo, IPlayerHand playerHand, SignalBus signalBus)
+		public void Construct(IFullToyo fullToyo, IPlayerHand playerHand)
 		{
-			_signalBus = signalBus;
-			_signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
-			
 			_myFullToyo = fullToyo;
 			_myPlayerHand = playerHand;
 		}
@@ -70,23 +69,23 @@ namespace Player
 
 		private void Start()
 		{
-			MyPlayerHealthModel.InjectNetwork(this);
+			MyPlayerHealthModel.InjectPlayer(this);
 		}
 
 		public void InitNetworkState(FullToyoSO fullToyoSo)
 		{
 			PlayerState = State.New;
-			FullToyoSo = fullToyoSo;
+			_fullToyoSo = fullToyoSo;
 			PlayerState = State.Spawning;
 		}
 
 		private void Update()
 		{
 			if (PlayerState != State.Spawning || PlayerHandUtils.IsHandDrawed) return;
-			if (!FullToyoSo)
-				FullToyoSo =
+			if (!_fullToyoSo)
+				_fullToyoSo =
 					DatabaseManager.Instance.GetFullToyoFromFakeID(DatabaseManager.Instance.GetPlayerDatabaseID());
-			StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(FullToyoSo));
+			StartCoroutine(FindObjectOfType<PlayerHandUtils>()?.DrawFirstHand(_fullToyoSo));
 			PlayerState = State.Active;
 		}
 
@@ -101,7 +100,7 @@ namespace Player
 			NetworkPlayerRef = Runner.LocalPlayer;
 			_myPlayerHand.MyPlayerRef = NetworkPlayerRef;
 
-			_playerNetworkManager.AddPlayer(this);
+			PlayerNetworkManager.AddPlayer(this);
 
 			InitializeHealth();
 
@@ -122,14 +121,14 @@ namespace Player
 			
 			if (PlayerID == Runner.LocalPlayer.PlayerId)
 			{
-				var playerUI = _playerNetworkManager.PlayerUI;
+				var playerUI = PlayerNetworkManager.PlayerUI;
 				playerUI.SetActive(true);
 				MyPlayerHealthModel = playerUI.GetComponentInChildren<HealthModel>();
 				MyPlayerHealthModel.Parent = this;
 			}
 			else
 			{
-				var enemyUI = _playerNetworkManager.EnemyUI;
+				var enemyUI = PlayerNetworkManager.EnemyUI;
 				enemyUI.SetActive(true);
 				MyPlayerHealthModel = enemyUI.GetComponentInChildren<HealthModel>();
 				IsEnemy = true;
@@ -138,7 +137,7 @@ namespace Player
 
 			if (FusionLauncher.GameMode == GameMode.Single)
 			{
-				var enemyUI = _playerNetworkManager.EnemyUI;
+				var enemyUI = PlayerNetworkManager.EnemyUI;
 				enemyUI.SetActive(true);
 			}
 
@@ -216,7 +215,7 @@ namespace Player
 		public override void Despawned(NetworkRunner runner, bool hasState)
 		{
 			Destroy(_deathExplosionInstance);
-			_playerNetworkManager.RemovePlayer(this);
+			PlayerNetworkManager.RemovePlayer(this);
 		}
 
 		#region Getters/Setters

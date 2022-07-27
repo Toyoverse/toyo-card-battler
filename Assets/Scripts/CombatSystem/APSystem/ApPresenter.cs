@@ -1,6 +1,6 @@
 ﻿using System;
+using ServiceLocator;
 using TMPro;
-using Tools;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +22,7 @@ namespace CombatSystem.APSystem
         private void OnEnable()
         {
             OnUpdateApUI += UpdateApUI;
-            SetMaxAP(GlobalConfig.Instance.maxAP);
+            SetMaxAP(Locator.GetGlobalConfig().maxAP);
         }
 
         private void OnDisable()

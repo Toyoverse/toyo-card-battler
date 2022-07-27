@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Linq;
 using Player;
 using Scriptable_Objects;
-using ToyoSystem;
+using ServiceLocator;
 using UnityEngine;
 
 namespace Leveling
@@ -20,14 +19,14 @@ namespace Leveling
 
         private static ToyoPartXpMilestone GetConsideredMilestone(MatchInformation matchInfo)
         {
-            foreach (var mileStone in GlobalConfig.Instance.partXpConfigSo.MileStones)
+            foreach (var mileStone in Locator.GetGlobalConfig().partXpConfigSo.MileStones)
             {
                 if (mileStone.level < matchInfo.ToyoPart.Level)
                     continue;
                 return mileStone;
             }
 
-            return GlobalConfig.Instance.partXpConfigSo.MileStones[^1];
+            return Locator.GetGlobalConfig().partXpConfigSo.MileStones[^1];
         }
 
         private static void UpdateStatsAndXp(ref MatchInformation matchInfo)
@@ -39,7 +38,7 @@ namespace Leveling
                 return;
             }
 
-            milestoneBaseValue = GlobalConfig.Instance.partXpConfigSo.BaseValue;
+            milestoneBaseValue = Locator.GetGlobalConfig().partXpConfigSo.BaseValue;
             var mileStoneValue = milestoneBaseValue * consideredMilestone.multiplier;
             if (matchInfo.ToyoPart.Experience >= mileStoneValue)
             {
@@ -73,7 +72,7 @@ namespace Leveling
         private static void UpdateLevel(ref MatchInformation matchInfo)
         {
             //TODO: Call this via a button on the workshop interface.
-            if (matchInfo.ToyoPart.Level < GlobalConfig.Instance.partXpConfigSo.MaxPartLevel)
+            if (matchInfo.ToyoPart.Level < Locator.GetGlobalConfig().partXpConfigSo.MaxPartLevel)
                 matchInfo.ToyoPart.Level++;
             else
                 Debug.Log("This piece is at maximum level, try another one.");

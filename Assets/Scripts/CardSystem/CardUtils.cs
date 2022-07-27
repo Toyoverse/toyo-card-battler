@@ -5,16 +5,15 @@ using Card.CardPile;
 using CombatSystem;
 using Fusion;
 using Player;
-using Scriptable_Objects;
+using ServiceLocator;
 using UnityEngine;
-using Zenject;
 using Object = UnityEngine.Object;
 
 namespace Card
 {
     public static class CardUtils
     {
-        private static PlayerNetworkManager _playerNetworkManager => GlobalConfig.Instance.PlayerNetworkManager;
+        private static PlayerNetworkManager _playerNetworkManager => Locator.GetGlobalConfig().PlayerNetworkManager;
 
         public static void ValidateCard(this ICard card)
         {
@@ -34,7 +33,7 @@ namespace Card
         public static void NotEnoughAP()
         {
             //Todo - UX for not enough AP
-            if (GlobalConfig.Instance.IgnoreAPCost) return;
+            if (Locator.GetGlobalConfig().IgnoreAPCost) return;
             throw new ArgumentNullException("Not Enough AP");
         }
 
@@ -45,12 +44,12 @@ namespace Card
 
         static ICard InstantiateCard(ICardPile handler, CardData cardData)
         {
-            var cardGo = Object.Instantiate(GetCardPrefabByType(cardData.CardType), GlobalConfig.Instance.deckPosition);
+            var cardGo = Object.Instantiate(GetCardPrefabByType(cardData.CardType), Locator.GetGlobalConfig().deckPosition);
             cardGo.name = "Card_" +cardData.toyoPart +"_"+cardData.CardName;
             var card = cardGo.GetComponent<ICard>();
             card.CardData = cardData;
             handler.AddCard(card);
-            cardGo.transform.position = GlobalConfig.Instance.deckPosition.position;
+            cardGo.transform.position = Locator.GetGlobalConfig().deckPosition.position;
             return card;
         }
         
@@ -78,11 +77,11 @@ namespace Card
         {
             return _type switch
             {
-                CARD_TYPE.HEAVY => GlobalConfig.Instance.GlobalCardSettings.heavyCardPrefab,
-                CARD_TYPE.FAST => GlobalConfig.Instance.GlobalCardSettings.fastCardPrefab,
-                CARD_TYPE.DEFENSE => GlobalConfig.Instance.GlobalCardSettings.defenseCardPrefab,
-                CARD_TYPE.BOND => GlobalConfig.Instance.GlobalCardSettings.bondCardPrefab,
-                CARD_TYPE.SUPER => GlobalConfig.Instance.GlobalCardSettings.superCardPrefab,
+                CARD_TYPE.HEAVY => Locator.GetGlobalConfig().GlobalCardSettings.heavyCardPrefab,
+                CARD_TYPE.FAST => Locator.GetGlobalConfig().GlobalCardSettings.fastCardPrefab,
+                CARD_TYPE.DEFENSE => Locator.GetGlobalConfig().GlobalCardSettings.defenseCardPrefab,
+                CARD_TYPE.BOND => Locator.GetGlobalConfig().GlobalCardSettings.bondCardPrefab,
+                CARD_TYPE.SUPER => Locator.GetGlobalConfig().GlobalCardSettings.superCardPrefab,
                 _ => throw new ArgumentOutOfRangeException(nameof(_type), _type, null)
             };
         }

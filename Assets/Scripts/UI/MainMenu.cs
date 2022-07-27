@@ -1,6 +1,5 @@
+using ServiceLocator;
 using UnityEngine;
-using UnityEditor;
-using UnityEngine.UIElements;
 
 public class MainMenu : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class MainMenu : MonoBehaviour
     
     public void Play()
     {
-        SceneControl.LoadSceneAsync(1);
+        Locator.GetSceneControl().LoadSceneAsync(1);
     }
 
     public void Options(bool on)
