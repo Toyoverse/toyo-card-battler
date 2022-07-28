@@ -15,6 +15,9 @@ namespace Card.CardStateMachine
             HoverState = new CardHover(handler, this, CardDataValue);
             DrawState = new CardDraw(handler, this, CardDataValue);
             IdleState = new CardIdle(handler, this, CardDataValue);
+            QueueState = new CardQueue(handler, this, CardDataValue);
+            DestroyState = new CardDestroy(handler, this, CardDataValue);
+            ConflictState = new CardConflict(handler, this, CardDataValue);
 
             RegisterState(DisableState);
             RegisterState(DiscardState);
@@ -22,6 +25,9 @@ namespace Card.CardStateMachine
             RegisterState(HoverState);
             RegisterState(DrawState);
             RegisterState(IdleState);
+            RegisterState(QueueState);
+            RegisterState(DestroyState);
+            RegisterState(ConflictState);
 
             Initialize();
         }
@@ -34,6 +40,9 @@ namespace Card.CardStateMachine
         private CardHover HoverState { get; }
         private CardDraw DrawState { get; }
         private CardIdle IdleState { get; }
+        private CardQueue QueueState { get; }
+        private CardDestroy DestroyState { get; }
+        private CardConflict ConflictState { get; }
         private CardData CardDataValue { get; }
 
         #endregion
@@ -68,6 +77,21 @@ namespace Card.CardStateMachine
         public void Enable()
         {
             PushState<CardIdle>();
+        }
+
+        public void Conflict()
+        {
+            PushState<CardConflict>();
+        }
+
+        public void Queue()
+        {
+            PushState<CardQueue>();
+        }
+
+        public void PlayDestroyAnimation()
+        {
+            PushState<CardDestroy>();
         }
 
         public void Unselect()

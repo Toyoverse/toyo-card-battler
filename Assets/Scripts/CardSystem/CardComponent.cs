@@ -130,6 +130,21 @@ public class CardComponent : MonoBehaviour, ICard
         StateMachine.Draw();
     }
 
+    public void Conflict()
+    {
+        StateMachine.Conflict();
+    }
+    
+    public void Queue()
+    {
+        StateMachine.Queue();
+    }
+
+    public void PlayDestroyAnimation()
+    {
+        StateMachine.PlayDestroyAnimation();
+    }
+
     public void Discard()
     {
         StateMachine.Discard();
