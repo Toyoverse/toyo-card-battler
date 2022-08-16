@@ -59,3 +59,9 @@ sysinfo.txt
 # If the source bank files are kept outside of the StreamingAssets folder then these can be ignored.
 # Log files can be ignored.
 fmod_editor.log
+
+/Assets/Plugins/FMOD/Resources/FMODStudioSettings.asset
+/Assets/Plugins/FMOD/platforms/mac/lib/fmodstudio.bundle/Contents
+/Assets/Plugins/FMOD/platforms/mac/lib/fmodstudioL.bundle/Contents
+/Assets/Plugins/FMOD/platforms/mac/lib/resonanceaudio.bundle/Contents
+/UserSettings/Layouts/default-2021.dwlt

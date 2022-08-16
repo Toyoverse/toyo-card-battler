@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Player;
 using Scriptable_Objects;
+using ServiceLocator;
 using ToyoSystem;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -60,70 +61,70 @@ namespace Leveling
 
         private static float GetPlayerXpInWin(MatchInformation matchInfo)
             => matchInfo.isRanked
-                ? GlobalConfig.Instance.rankedMatchConfigSo.winConfig.playerXPSum +
-                  (matchInfo.MmrLevel * GlobalConfig.Instance.rankedMatchConfigSo.winConfig.playerXpMmrMultiplier)
-                : matchInfo.MmrLevel + GlobalConfig.Instance.normalMatchConfigSo.winConfig.playerXPSum;
+                ? Locator.GetGlobalConfig().rankedMatchConfigSo.winConfig.playerXPSum +
+                  (matchInfo.MmrLevel * Locator.GetGlobalConfig().rankedMatchConfigSo.winConfig.playerXpMmrMultiplier)
+                : matchInfo.MmrLevel + Locator.GetGlobalConfig().normalMatchConfigSo.winConfig.playerXPSum;
 
         private static float GetPlayerXpInLose(MatchInformation matchInfo)
             => matchInfo.isRanked
-                ? GlobalConfig.Instance.rankedMatchConfigSo.loseConfig.playerXPSum +
-                  (matchInfo.MmrLevel * GlobalConfig.Instance.rankedMatchConfigSo.loseConfig.playerXpMmrMultiplier)
-                : matchInfo.MmrLevel + GlobalConfig.Instance.normalMatchConfigSo.loseConfig.playerXPSum;
+                ? Locator.GetGlobalConfig().rankedMatchConfigSo.loseConfig.playerXPSum +
+                  (matchInfo.MmrLevel * Locator.GetGlobalConfig().rankedMatchConfigSo.loseConfig.playerXpMmrMultiplier)
+                : matchInfo.MmrLevel + Locator.GetGlobalConfig().normalMatchConfigSo.loseConfig.playerXPSum;
 
         private static float GetPartXpInWin(MatchInformation matchInfo)
             => matchInfo.isRanked
-                ? matchInfo.MmrLevel / GlobalConfig.Instance.rankedMatchConfigSo.winConfig.partDivider
-                : matchInfo.MmrLevel * GlobalConfig.Instance.normalMatchConfigSo.winConfig.partMultiplier;
+                ? matchInfo.MmrLevel / Locator.GetGlobalConfig().rankedMatchConfigSo.winConfig.partDivider
+                : matchInfo.MmrLevel * Locator.GetGlobalConfig().normalMatchConfigSo.winConfig.partMultiplier;
 
         private static float GetPartXpInLose(MatchInformation matchInfo)
             => matchInfo.isRanked
-                ? matchInfo.MmrLevel / GlobalConfig.Instance.rankedMatchConfigSo.loseConfig.partDivider
-                : (float)Math.Ceiling(matchInfo.MmrLevel * GlobalConfig.Instance.normalMatchConfigSo.loseConfig.partMultiplier);
+                ? matchInfo.MmrLevel / Locator.GetGlobalConfig().rankedMatchConfigSo.loseConfig.partDivider
+                : (float)Math.Ceiling(matchInfo.MmrLevel * Locator.GetGlobalConfig().normalMatchConfigSo.loseConfig.partMultiplier);
 
         private static float GetRankedXpInWin(MatchInformation matchInfo)
             => GetActiveLeague(matchInfo).xpWonPerMatch +
-                   (float)Math.Floor(matchInfo.MmrLevel / GlobalConfig.Instance.rankedMatchConfigSo.winConfig.rankXpMmrDivider);
+                   (float)Math.Floor(matchInfo.MmrLevel / Locator.GetGlobalConfig().rankedMatchConfigSo.winConfig.rankXpMmrDivider);
 
         private static float GetRankedXpInLose(MatchInformation matchInfo)
             => - GetActiveLeague(matchInfo).xpLostPerMatch +
-               (float)Math.Floor(matchInfo.MmrLevel / GlobalConfig.Instance.rankedMatchConfigSo.loseConfig.rankXpMmrDivider);
+               (float)Math.Floor(matchInfo.MmrLevel / Locator.GetGlobalConfig().rankedMatchConfigSo.loseConfig.rankXpMmrDivider);
 
         private static float GetBoundInWin(MatchInformation matchInfo)
             => matchInfo.playerBet * GetActiveLeague(matchInfo).betRate;
 
         private static float GetMmrStreakInWin(MatchInformation matchInfo)
             => matchInfo.isRanked
-                ? matchInfo.MmrStreak * GlobalConfig.Instance.rankedMatchConfigSo.winConfig.mmrStreakMultiplier
-                : matchInfo.MmrStreak * GlobalConfig.Instance.normalMatchConfigSo.winConfig.mmrStreakMultiplier;
+                ? matchInfo.MmrStreak * Locator.GetGlobalConfig().rankedMatchConfigSo.winConfig.mmrStreakMultiplier
+                : matchInfo.MmrStreak * Locator.GetGlobalConfig().normalMatchConfigSo.winConfig.mmrStreakMultiplier;
 
         private static float GetMmrStreakInLose(MatchInformation matchInfo)
             => matchInfo.isRanked
-                ? matchInfo.MmrStreak * GlobalConfig.Instance.rankedMatchConfigSo.loseConfig.mmrStreakMultiplier
-                : matchInfo.MmrStreak * GlobalConfig.Instance.normalMatchConfigSo.loseConfig.mmrStreakMultiplier;
+                ? matchInfo.MmrStreak * Locator.GetGlobalConfig().rankedMatchConfigSo.loseConfig.mmrStreakMultiplier
+                : matchInfo.MmrStreak * Locator.GetGlobalConfig().normalMatchConfigSo.loseConfig.mmrStreakMultiplier;
         
         private static League GetActiveLeague(MatchInformation matchInfo)
-            => GlobalConfig.Instance.rankingXpConfigSo.Leagues.FirstOrDefault(league => league.leagueRank == matchInfo.Ranking);
+            => Locator.GetGlobalConfig().rankingXpConfigSo.Leagues.FirstOrDefault(league => league.leagueRank == matchInfo.Ranking);
 
         private static int GetPremiumTokensInWin(ref MatchInformation matchInfo)
         {
-            var _tokens4Bound = GlobalConfig.Instance.normalMatchConfigSo.premiumTokens4Bound;
+            var _tokens4Bound = Locator.GetGlobalConfig().normalMatchConfigSo.premiumTokens4Bound;
             if (matchInfo.PremiumBattleTokens >= _tokens4Bound)
             {
                 matchInfo.Bound++;
                 return matchInfo.PremiumBattleTokens - _tokens4Bound;
             }
             else 
-                return matchInfo.PremiumBattleTokens + GlobalConfig.Instance.normalMatchConfigSo.winConfig.premiumTokensSum;
+                return matchInfo.PremiumBattleTokens + Locator.GetGlobalConfig().normalMatchConfigSo.winConfig.premiumTokensSum;
         }
 
         private static int GetPremiumTokensInLose(MatchInformation matchInfo)
-            => matchInfo.PremiumBattleTokens - GlobalConfig.Instance.normalMatchConfigSo.loseConfig.premiumTokensSum > 0
-                    ? matchInfo.PremiumBattleTokens - GlobalConfig.Instance.normalMatchConfigSo.loseConfig.premiumTokensSum
+            => matchInfo.PremiumBattleTokens - Locator.GetGlobalConfig().normalMatchConfigSo.loseConfig.premiumTokensSum > 0
+                    ? matchInfo.PremiumBattleTokens - Locator.GetGlobalConfig().normalMatchConfigSo.loseConfig.premiumTokensSum
                     : 0;
 
         private static void CheckUnlockRewards(MatchInformation matchInfo, int oldLevel)
         {
-            foreach (var reward in GlobalConfig.Instance.playerXpConfigSo.Rewards)
+            foreach (var reward in Locator.GetGlobalConfig().playerXpConfigSo.Rewards)
             {
                 if(reward.level <= oldLevel)
                     continue;

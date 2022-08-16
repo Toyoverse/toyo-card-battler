@@ -4,7 +4,7 @@ using Card;
 using Card.CardPile;
 using Fusion;
 
-namespace PlayerHand
+namespace CardSystem.PlayerHand
 {
     public interface IPlayerHand : ICardPile
     {

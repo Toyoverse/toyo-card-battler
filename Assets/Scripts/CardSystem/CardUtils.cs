@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSystem;
 using Card.CardPile;
 using CombatSystem;
 using Fusion;
 using Player;
-using ToyoSystem;
+using ServiceLocator;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -14,6 +13,8 @@ namespace Card
 {
     public static class CardUtils
     {
+        private static PlayerNetworkManager _playerNetworkManager => Locator.GetGlobalConfig().PlayerNetworkManager;
+
         public static void ValidateCard(this ICard card)
         {
             if (card == null) throw new ArgumentNullException("Card is null");
@@ -24,15 +25,15 @@ namespace Card
         
         public static void ValidateCardAP(this ICard card, PlayerRef _playerRef)
         {
-            var _player = PlayerNetworkManager.GetPlayer(_playerRef);
-            var _ap = _player.MyPlayerAP.GetAP();
+            var _player = _playerNetworkManager.GetPlayer(_playerRef);
+            var _ap = _player.MyPlayerApModel.Ap;
             if (card.CardData.ApCost > _ap) NotEnoughAP();
         }
 
         public static void NotEnoughAP()
         {
             //Todo - UX for not enough AP
-            if (GlobalConfig.Instance.IgnoreAPCost) return;
+            if (Locator.GetGlobalConfig().IgnoreAPCost) return;
             throw new ArgumentNullException("Not Enough AP");
         }
 
@@ -43,12 +44,12 @@ namespace Card
 
         static ICard InstantiateCard(ICardPile handler, CardData cardData)
         {
-            var cardGo = Object.Instantiate(GetCardPrefabByType(cardData.CardType), GlobalConfig.Instance.deckPosition);
+            var cardGo = Object.Instantiate(GetCardPrefabByType(cardData.CardType), Locator.GetGlobalConfig().deckPosition);
             cardGo.name = "Card_" +cardData.toyoPart +"_"+cardData.CardName;
             var card = cardGo.GetComponent<ICard>();
             card.CardData = cardData;
             handler.AddCard(card);
-            cardGo.transform.position = GlobalConfig.Instance.deckPosition.position;
+            cardGo.transform.position = Locator.GetGlobalConfig().deckPosition.position;
             return card;
         }
         
@@ -76,11 +77,11 @@ namespace Card
         {
             return _type switch
             {
-                CARD_TYPE.HEAVY => GlobalConfig.Instance.globalCardDataSO.heavyCardPrefab,
-                CARD_TYPE.FAST => GlobalConfig.Instance.globalCardDataSO.fastCardPrefab,
-                CARD_TYPE.DEFENSE => GlobalConfig.Instance.globalCardDataSO.defenseCardPrefab,
-                CARD_TYPE.BOND => GlobalConfig.Instance.globalCardDataSO.bondCardPrefab,
-                CARD_TYPE.SUPER => GlobalConfig.Instance.globalCardDataSO.superCardPrefab,
+                CARD_TYPE.HEAVY => Locator.GetGlobalConfig().GlobalCardSettings.heavyCardPrefab,
+                CARD_TYPE.FAST => Locator.GetGlobalConfig().GlobalCardSettings.fastCardPrefab,
+                CARD_TYPE.DEFENSE => Locator.GetGlobalConfig().GlobalCardSettings.defenseCardPrefab,
+                CARD_TYPE.BOND => Locator.GetGlobalConfig().GlobalCardSettings.bondCardPrefab,
+                CARD_TYPE.SUPER => Locator.GetGlobalConfig().GlobalCardSettings.superCardPrefab,
                 _ => throw new ArgumentOutOfRangeException(nameof(_type), _type, null)
             };
         }

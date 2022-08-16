@@ -1,4 +1,5 @@
 using Player;
+using ServiceLocator;
 
 namespace Leveling
 {
@@ -14,16 +15,16 @@ namespace Leveling
 
         private static int GetConsideredMilestone(MatchInformation matchInfo)
         {
-            foreach (var mileStone in GlobalConfig.Instance.playerXpConfigSo.MileStones)
+            foreach (var mileStone in Locator.GetGlobalConfig().playerXpConfigSo.MileStones)
             {
                 if (mileStone.level < matchInfo.Level)
                     continue;
-                return (int)(GlobalConfig.Instance.playerXpConfigSo.BaseValue 
-                       * mileStone.multiplier);
+                return (int)(Locator.GetGlobalConfig().playerXpConfigSo.BaseValue 
+                             * mileStone.multiplier);
             }
 
-            return (int)(GlobalConfig.Instance.playerXpConfigSo.BaseValue 
-                   * GlobalConfig.Instance.playerXpConfigSo.MileStones[^1].multiplier);
+            return (int)(Locator.GetGlobalConfig().playerXpConfigSo.BaseValue 
+                         * Locator.GetGlobalConfig().playerXpConfigSo.MileStones[^1].multiplier);
         }
 
         private static void UpdateLevelAndXp(ref MatchInformation matchInfo)

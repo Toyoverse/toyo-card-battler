@@ -2,13 +2,12 @@ using Card;
 using Card.CardStateMachine;
 using Card.CardStateMachine.States;
 using Card.CardUX;
-using Extensions;
-using Fusion;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using TMPro;
 using Tools;
+using Tools.Extensions;
 using UnityEngine;
-using UnityEngine.UI;
+using Zenject;
 
 public class CardComponent : MonoBehaviour, ICard
 {
@@ -20,13 +19,18 @@ public class CardComponent : MonoBehaviour, ICard
         MyImage = GetComponent<SpriteRenderer>();
         MyImages = GetComponentsInChildren<SpriteRenderer>();
         MyInput = GetComponent<IMouseInput>();
-        Hand = GlobalConfig.Instance.battleReferences.hand.GetComponent<IPlayerHand>();
 
         Scale = new CardMotionScale(this);
         Movement = new CardMotionMovement(this);
         Rotation = new CardMotionRotation(this);
 
         StateMachine = new CardStateMachine(MainCamera, MyCardData, this);
+    }
+    
+    [Inject]
+    public void Construct(IPlayerHand playerHand)
+    {
+        Hand = playerHand;
     }
 
     private void Update()
@@ -124,6 +128,21 @@ public class CardComponent : MonoBehaviour, ICard
     public void Draw()
     {
         StateMachine.Draw();
+    }
+
+    public void Conflict()
+    {
+        StateMachine.Conflict();
+    }
+    
+    public void Queue()
+    {
+        StateMachine.Queue();
+    }
+
+    public void PlayDestroyAnimation()
+    {
+        StateMachine.PlayDestroyAnimation();
     }
 
     public void Discard()

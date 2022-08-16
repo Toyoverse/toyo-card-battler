@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Extensions
+namespace Tools.Extensions
 {
     /// <summary>
     ///     Extension methods for UnityEngine.Transform.

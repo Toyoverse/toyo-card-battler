@@ -1,11 +1,16 @@
 using System;
+using Scriptable_Objects;
 using UnityEngine;
+using Zenject;
 using Random = UnityEngine.Random;
 
 namespace CombatSystem
 {
-    public class DefenseSystem : MonoBehaviour
+    public static class DefenseSystem
     {
+        [Inject]
+        private static CombatConfigSO _combatConfig;
+        
         public static bool DefenseCardSuccess(DamageInformation dmgInfo)
             => GetDefenseChance(dmgInfo) >= Random.Range(0, 100);
 
@@ -26,8 +31,8 @@ namespace CombatSystem
             var _enemyAnalysis = dmgInfo.EnemyToyoStats[TOYO_STAT.ANALYSIS];
             _enemyAnalysis *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.ANALYSIS);
 
-            _defChance += ((_tech * GlobalConfig.Instance.CombatConfigSO.techDefMultiplier)
-                           - (_enemyAnalysis * GlobalConfig.Instance.CombatConfigSO.analysisMultiplier));
+            _defChance += ((_tech * _combatConfig.techDefMultiplier)
+                           - (_enemyAnalysis * _combatConfig.analysisMultiplier));
             return _defChance;
         }
 
@@ -40,8 +45,8 @@ namespace CombatSystem
             var _enemySpeed = dmgInfo.EnemyToyoStats[TOYO_STAT.SPEED];
             _enemySpeed *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.SPEED);
 
-            _defChance += ((_agility * GlobalConfig.Instance.CombatConfigSO.agilityDefMultiplier)
-                           - (_enemySpeed * GlobalConfig.Instance.CombatConfigSO.speedMultiplier));
+            _defChance += ((_agility * _combatConfig.agilityDefMultiplier)
+                           - (_enemySpeed * _combatConfig.speedMultiplier));
             return _defChance;
         }
 
@@ -55,29 +60,29 @@ namespace CombatSystem
 
         private static float GetCounterChanceInBlock(DamageInformation dmgInfo)
         {
-            var _counterChance = GlobalConfig.Instance.CombatConfigSO.baseCounterChance;
+            var _counterChance = _combatConfig.baseCounterChance;
             var _tech = dmgInfo.ToyoStats[TOYO_STAT.TECHNIQUE];
             _tech *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.TECHNIQUE);
 
             var _luck = dmgInfo.ToyoStats[TOYO_STAT.LUCK];
             _luck *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.LUCK);
 
-            _counterChance += ((_tech * GlobalConfig.Instance.CombatConfigSO.counterTechMultiplier)
-                               + (_luck * GlobalConfig.Instance.CombatConfigSO.counterLuckFactor));
+            _counterChance += ((_tech * _combatConfig.counterTechMultiplier)
+                               + (_luck * _combatConfig.counterLuckFactor));
             return _counterChance;
         }
 
         private static float GetCounterChanceInDodge(DamageInformation dmgInfo)
         {
-            var _counterChance = GlobalConfig.Instance.CombatConfigSO.baseCounterChance;
+            var _counterChance = _combatConfig.baseCounterChance;
             var _agility = dmgInfo.ToyoStats[TOYO_STAT.AGILITY];
             _agility *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.AGILITY);
 
             var _lucky = dmgInfo.ToyoStats[TOYO_STAT.LUCK];
             _lucky *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.LUCK);
 
-            _counterChance += ((_agility * GlobalConfig.Instance.CombatConfigSO.counterAgilityMultiplier)
-                               + (_lucky * GlobalConfig.Instance.CombatConfigSO.counterLuckFactor));
+            _counterChance += ((_agility * _combatConfig.counterAgilityMultiplier)
+                               + (_lucky * _combatConfig.counterLuckFactor));
             return _counterChance;
         }
 
@@ -107,8 +112,8 @@ namespace CombatSystem
             var _enemyAnalysis = dmgInfo.ToyoStats[TOYO_STAT.ANALYSIS];
             _enemyAnalysis *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.ANALYSIS);
 
-            _defChance += ((_tech * GlobalConfig.Instance.CombatConfigSO.techDefMultiplier)
-                           - (_enemyAnalysis * GlobalConfig.Instance.CombatConfigSO.analysisMultiplier));
+            _defChance += ((_tech * _combatConfig.techDefMultiplier)
+                           - (_enemyAnalysis * _combatConfig.analysisMultiplier));
             return _defChance;
         }
 
@@ -121,8 +126,8 @@ namespace CombatSystem
             var _enemySpeed = dmgInfo.ToyoStats[TOYO_STAT.SPEED];
             _enemySpeed *= BoundSystem.GetFactorInEnemyBuffs(dmgInfo, TOYO_STAT.SPEED);
 
-            _defChance += ((_agility * GlobalConfig.Instance.CombatConfigSO.agilityDefMultiplier)
-                           - (_enemySpeed * GlobalConfig.Instance.CombatConfigSO.speedMultiplier));
+            _defChance += ((_agility * _combatConfig.agilityDefMultiplier)
+                           - (_enemySpeed * _combatConfig.speedMultiplier));
             return _defChance;
         }
 
@@ -136,29 +141,29 @@ namespace CombatSystem
 
         private static float GetEnemyCounterChanceInBlock(DamageInformation dmgInfo)
         {
-            var _counterChance = GlobalConfig.Instance.CombatConfigSO.baseCounterChance;
+            var _counterChance = _combatConfig.baseCounterChance;
             var _tech = dmgInfo.EnemyToyoStats[TOYO_STAT.TECHNIQUE];
             _tech *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.TECHNIQUE);
 
             var _luck = dmgInfo.EnemyToyoStats[TOYO_STAT.LUCK];
             _luck *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.LUCK);
 
-            _counterChance += ((_tech * GlobalConfig.Instance.CombatConfigSO.counterTechMultiplier)
-                               + (_luck * GlobalConfig.Instance.CombatConfigSO.counterLuckFactor));
+            _counterChance += ((_tech * _combatConfig.counterTechMultiplier)
+                               + (_luck * _combatConfig.counterLuckFactor));
             return _counterChance;
         }
 
         private static float GetEnemyCounterChanceInDodge(DamageInformation dmgInfo)
         {
-            var _counterChance = GlobalConfig.Instance.CombatConfigSO.baseCounterChance;
+            var _counterChance = _combatConfig.baseCounterChance;
             var _agility = dmgInfo.EnemyToyoStats[TOYO_STAT.AGILITY];
             _agility *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.AGILITY);
 
             var _lucky = dmgInfo.EnemyToyoStats[TOYO_STAT.LUCK];
             _lucky *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.LUCK);
 
-            _counterChance += ((_agility * GlobalConfig.Instance.CombatConfigSO.counterAgilityMultiplier)
-                               + (_lucky * GlobalConfig.Instance.CombatConfigSO.counterLuckFactor));
+            _counterChance += ((_agility * _combatConfig.counterAgilityMultiplier)
+                               + (_lucky * _combatConfig.counterLuckFactor));
             return _counterChance;
         }
     }

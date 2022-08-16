@@ -1,15 +1,16 @@
 ﻿using System;
+using Player;
 using Scriptable_Objects;
+using ServiceLocator;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Zenject;
 
-    [Serializable]
-    public class GlobalConfig : Singleton<GlobalConfig>
+[Serializable]
+    public class GlobalConfig : MonoBehaviour
     {
-        [FoldoutGroup("Card Parameters")] public GlobalCardDataSO globalCardDataSO;
-        [FoldoutGroup("Card Parameters")] public CombatConfigSO CombatConfigSO;
-        [FoldoutGroup("Card Parameters")] public DeckDatabaseSO DeckDatabaseSo;
         
+        public GlobalCardDataSO GlobalCardSettings;
         
         [FoldoutGroup("Card Transforms")] public Transform gameView;
         [FoldoutGroup("Card Transforms")] public Transform deckPosition;
@@ -34,14 +35,24 @@ using UnityEngine;
         [FoldoutGroup("Match")] public NormalMatchConfigSO normalMatchConfigSo;
         [FoldoutGroup("Match")] public RankedMatchConfigSO rankedMatchConfigSo;
 
-        internal BattleReferences battleReferences;
-        
-        void Awake()
+        public void Awake()
         {
-            GlobalCardData.Initialize(globalCardDataSO);
-            battleReferences = gameObject.GetComponent<BattleReferences>();
-
+            GlobalCardData.Initialize(GlobalCardSettings);
+            Locator.Provide(this);
         }
+        
+        private SignalBus _signalBus;
+        private PlayerNetworkManager _playerNetworkManager;
+        public PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager;
+
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+            _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
+        }
+
+
     }
 
     public static class GlobalCardData

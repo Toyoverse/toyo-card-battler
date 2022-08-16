@@ -1,7 +1,7 @@
-﻿using APSystem;
+﻿using CombatSystem.APSystem;
 using Fusion;
 using HealthSystem;
-using PlayerHand;
+using CardSystem.PlayerHand;
 using ToyoSystem;
 
 namespace Player
@@ -10,9 +10,8 @@ namespace Player
     {
         IPlayerHand PlayerHand { get; }
         IFullToyo FullToyo { get; }
-        IHealth PlayerHealth { get; }
-        IAp PlayerAP { get; }
-        BattleReferences MyBattleReferences { get; set; }
+        HealthModel PlayerHealthModel { get; }
+        ApModel PlayerApModel { get; }
         PlayerRef NetworkPlayerRef { get; set; }
 
     }

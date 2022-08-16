@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8248949545595963740}
   - component: {fileID: 566165332236869870}
   - component: {fileID: 7939651432486730645}
+  - component: {fileID: 8785353592991647049}
   m_Layer: 0
   m_Name: PlayerNetworkObject
   m_TagString: Untagged
@@ -50,11 +51,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _state: 0
-  _life: 0
-  _lives: 0
-  _score: 0
-  _ready:
-    _value: 0
+  _Health: 0
+  MyPlayerHealthModel: {fileID: 0}
+  MyPlayerApModel: {fileID: 0}
+  FullToyoSo: {fileID: 0}
+  IsEnemy: 0
 --- !u!114 &1996170898940310987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +147,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _mouseRayMask:
-    serializedVersion: 2
-    m_Bits: 0
+--- !u!114 &8785353592991647049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996170898940310980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 717a02054ef2699498e6bd4234fd7995, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _containerSource: 0

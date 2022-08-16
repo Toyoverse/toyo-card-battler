@@ -3,11 +3,13 @@ using Card;
 using Card.DeckSystem;
 using Extensions;
 using Fusion;
+using Tools.Extensions;
 using ToyoSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
-namespace PlayerHand
+namespace CardSystem.PlayerHand
 {
     public class PlayerHandUtils : MonoBehaviour
     {
@@ -18,10 +20,17 @@ namespace PlayerHand
         private int Count { get; set; }
 
         private IPlayerHand _playerHand;
-        public IPlayerHand PlayerHand => _playerHand ??= this.LazyFindOfType(ref _playerHand);
+        public IPlayerHand PlayerHand => _playerHand;
         
         private IDeck _deck;
-        public IDeck Deck => _deck ??= this.LazyFindOfType(ref _deck);
+        public IDeck Deck => _deck;
+
+        [Inject]
+        public void Construct(IDeck deck, IPlayerHand playerHand)
+        {
+            _playerHand = playerHand;
+            _deck = deck;
+        }
 
         #endregion
 

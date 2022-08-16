@@ -1,5 +1,6 @@
 using Player;
 using Scriptable_Objects;
+using ServiceLocator;
 
 namespace Leveling
 {
@@ -18,15 +19,15 @@ namespace Leveling
 
         private static void SetActualAndNextLeague(MatchInformation matchInfo)
         {
-            for (var i = 0; i < GlobalConfig.Instance.rankingXpConfigSo.Leagues.Length; i++)
+            for (var i = 0; i < Locator.GetGlobalConfig().rankingXpConfigSo.Leagues.Length; i++)
             {
-                var league = GlobalConfig.Instance.rankingXpConfigSo.Leagues[i];
+                var league = Locator.GetGlobalConfig().rankingXpConfigSo.Leagues[i];
                 if (league.leagueRank != matchInfo.Ranking)
                     continue;
                 
                 actualLeague = league;
-                nextLeague = (league == GlobalConfig.Instance.rankingXpConfigSo.Leagues[^1]) 
-                    ? null : GlobalConfig.Instance.rankingXpConfigSo.Leagues[i+1];
+                nextLeague = (league == Locator.GetGlobalConfig().rankingXpConfigSo.Leagues[^1]) 
+                    ? null : Locator.GetGlobalConfig().rankingXpConfigSo.Leagues[i+1];
                 break;
             }
         }
@@ -38,7 +39,7 @@ namespace Leveling
         {
             if (nextLeague == null)
                 return;
-            var _xpNeeded = nextLeague.baseMultiplier * GlobalConfig.Instance.rankingXpConfigSo.BaseValue;
+            var _xpNeeded = nextLeague.baseMultiplier * Locator.GetGlobalConfig().rankingXpConfigSo.BaseValue;
             if (matchInfo.Experience >= _xpNeeded)
                 matchInfo.Ranking = nextLeague.leagueRank;
         }
