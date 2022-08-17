@@ -46,7 +46,12 @@ namespace Card.QueueSystem
                 if(_currentCardDuration > 0.0f)
                     _currentCardDuration -= Time.deltaTime;
                 else
+                {
+                    //Todo, with the interrupt system, implement the destroy animation as well
+                    //_cardBeingExecuted?.Discard();
                     _cardBeingExecuted = null;
+                }
+                    
 
                 if (_cardBeingExecuted == null)
                 {
@@ -82,6 +87,7 @@ namespace Card.QueueSystem
             _cardBeingExecuted = GetCardQueuePlayer().First();
             if (_cardBeingExecuted == null) return;
             RemoveFromPlayerQueue(_cardBeingExecuted);
+            _cardBeingExecuted.Conflict();
             _playerHand.OnCardPlayed?.Invoke(_cardBeingExecuted);
             SetCurrentCardDuration();
         }
@@ -91,6 +97,7 @@ namespace Card.QueueSystem
             _cardBeingExecuted = GetCardQueueEnemy().First();
             if (_cardBeingExecuted == null) return;
             RemoveFromEnemyQueue(_cardBeingExecuted);
+            _cardBeingExecuted.Conflict();
             _playerHand.OnNetworkCardPlayed?.Invoke(_cardBeingExecuted);
             SetCurrentCardDuration();
         }
@@ -103,6 +110,7 @@ namespace Card.QueueSystem
                 return;
             }
             AddToPlayerQueue(_card);
+            _card.Queue();
         }
         
         public void AddEnemyCardToQueue(ICard _card)
@@ -113,6 +121,7 @@ namespace Card.QueueSystem
                 return;
             }
             AddToEnemyQueue(_card);
+            _card.Queue();
         }
 
         /*
@@ -136,14 +145,14 @@ namespace Card.QueueSystem
 
         private void CallUpdateUI()
         {
-            var playerQueueSize = GetPlayerQueueSize().ToString();
-            var enemyQueueSize = GetEnemyQueueSize().ToString();
-            var playerCurrentCombo = GePlayerCurrentCombo().ToString();
-            var enemyCurrentCombo = GetEnemyCurrentCombo().ToString();
+            var _playerQueueSize = GetPlayerQueueSize().ToString();
+            var _enemyQueueSize = GetEnemyQueueSize().ToString();
+            var _playerCurrentCombo = GePlayerCurrentCombo().ToString();
+            var _enemyCurrentCombo = GetEnemyCurrentCombo().ToString();
             var currentCardDuration = Mathf.Round(GetNetworkedCurrentCardDuration()).ToString();
             
             _myCardQueueSystemPresenter.OnUpdateUI?.Invoke(
-                playerQueueSize, enemyQueueSize, playerCurrentCombo, enemyCurrentCombo, currentCardDuration);
+                _playerQueueSize, _enemyQueueSize, _playerCurrentCombo, _enemyCurrentCombo, currentCardDuration);
             
             CallActiveComboUI();
         }

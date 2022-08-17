@@ -1,23 +1,25 @@
 ﻿using Card.CardStateMachine.States;
 using Patterns.StateMachine;
 using UnityEngine;
+using Zenject;
 
 namespace Card.CardStateMachine
 {
     public class CardStateMachine : BaseStateMachine
     {
-        public CardStateMachine(Camera camera, CardData cardData, ICard handler = null) : base(handler)
+        public CardStateMachine(Camera camera, CardData cardData, SignalBus signalBus, ICard handler = null) : base(handler)
         {
             CardDataValue = cardData;
-            DisableState = new CardDisable(handler, this, CardDataValue);
-            DiscardState = new CardDiscard(handler, this, CardDataValue);
-            DragState = new CardDrag(camera, handler, this, CardDataValue);
-            HoverState = new CardHover(handler, this, CardDataValue);
-            DrawState = new CardDraw(handler, this, CardDataValue);
-            IdleState = new CardIdle(handler, this, CardDataValue);
-            QueueState = new CardQueue(handler, this, CardDataValue);
-            DestroyState = new CardDestroy(handler, this, CardDataValue);
-            ConflictState = new CardConflict(handler, this, CardDataValue);
+            DisableState = new CardDisable(handler, this, signalBus, CardDataValue);
+            DiscardState = new CardDiscard(handler, this, signalBus,  CardDataValue);
+            DragState = new CardDrag(camera, handler, this, signalBus,  CardDataValue);
+            HoverState = new CardHover(handler, this, signalBus,  CardDataValue);
+            DrawState = new CardDraw(handler, this, signalBus,  CardDataValue);
+            IdleState = new CardIdle(handler, this, signalBus,  CardDataValue);
+            QueueState = new CardQueue(handler, this, signalBus,  CardDataValue);
+            DestroyState = new CardDestroy(handler, this, signalBus,  CardDataValue);
+            ConflictState = new CardConflict(handler, this, signalBus,  CardDataValue);
+            BlockState = new CardBlock(handler, this, signalBus,  CardDataValue);
 
             RegisterState(DisableState);
             RegisterState(DiscardState);
@@ -28,6 +30,7 @@ namespace Card.CardStateMachine
             RegisterState(QueueState);
             RegisterState(DestroyState);
             RegisterState(ConflictState);
+            RegisterState(BlockState);
 
             Initialize();
         }
@@ -43,6 +46,7 @@ namespace Card.CardStateMachine
         private CardQueue QueueState { get; }
         private CardDestroy DestroyState { get; }
         private CardConflict ConflictState { get; }
+        private CardBlock BlockState { get; }
         private CardData CardDataValue { get; }
 
         #endregion
@@ -97,6 +101,11 @@ namespace Card.CardStateMachine
         public void Unselect()
         {
             Enable();
+        }
+        
+        public void BlockUsage()
+        {
+            PushState<CardBlock>();
         }
 
         #endregion

@@ -34,6 +34,9 @@ public class CardData : UniqueScriptableObject
     
     [SerializeField] [Range(0f, 20.0f)] [Tooltip("Duration in seconds")]
     public float CardDuration = 2f;
+
+    [SerializeField] [Range(0f, 2.0f)] [Tooltip("Duration before the attack")]
+    public float AttackBuffer = 0.2f;
     
     //[SerializeField]
     //public Animation AttackAnimation;
@@ -58,8 +61,8 @@ public class CardData : UniqueScriptableObject
 [Serializable]
 public class HitListInfo
 {
-    [SerializeField][Range(0, 500)]
-    public int FrameToHit;
+    [SerializeField][MinMaxSlider(0,5)]
+    public Vector2 SecondToHit;
     
     [SerializeField][Range(0, 1000.0f)]
     public float Damage;

@@ -1,7 +1,9 @@
 using System;
+using DG.Tweening;
 using Player;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Card.QueueSystem
 {
@@ -16,6 +18,9 @@ namespace Card.QueueSystem
         public TextMeshProUGUI playerCurrentCombo;
         public TextMeshProUGUI enemyCurrentCombo;
 
+        public RawImage playerCardStatus;
+        public RawImage enemyCardStatus;
+
         private void OnEnable()
         {
             OnUpdateUI += UpdateUI;
@@ -26,6 +31,20 @@ namespace Card.QueueSystem
         {
             OnUpdateUI -= UpdateUI;
             OnActivateComboUI -= ActiveComboUI;
+        }
+
+        private void SetCardBuffer(bool isPlayer) => SetCardStatus(isPlayer, Color.gray);
+        
+        private void SetCardActive(bool isPlayer) => SetCardStatus(isPlayer, Color.blue);
+        
+        private void SetCardHit(bool isPlayer) => SetCardStatus(isPlayer, Color.red);
+        
+        private void SetCardStatus(bool isPlayer, Color color) //Change status dot colors to simulate validation process
+        {
+            if (isPlayer)
+                playerCardStatus.DOColor(color, 0.0f);
+            else
+                enemyCardStatus.DOColor(color, 0.0f);
         }
 
         private void UpdateUI(string playerQueueSize, string enemyQueueSize,
@@ -105,6 +124,14 @@ namespace Card.QueueSystem
 
         public Action<string, string, string, string, string> OnUpdateUI { get; set; }
         public Action<PlayerNetworkManager> OnActivateComboUI { get; set; }
+        
+        public class UpdateCardStatusSignal
+        {
+            public bool IsPlayer;
+            public CARD_STATUS CardStatus;
+            
+            
+        }
 
         #endregion
     }

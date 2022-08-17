@@ -16,7 +16,7 @@ public class CardComponent : MonoBehaviour, ICard
         MyTransform = transform;
         MyCollider = GetComponent<Collider>();
         MyRigidbody = GetComponent<Rigidbody>();
-        MyImage = GetComponent<SpriteRenderer>();
+        MyImage = GetComponentInChildren<SpriteRenderer>();
         MyImages = GetComponentsInChildren<SpriteRenderer>();
         MyInput = GetComponent<IMouseInput>();
 
@@ -24,13 +24,14 @@ public class CardComponent : MonoBehaviour, ICard
         Movement = new CardMotionMovement(this);
         Rotation = new CardMotionRotation(this);
 
-        StateMachine = new CardStateMachine(MainCamera, MyCardData, this);
+        StateMachine = new CardStateMachine(MainCamera, MyCardData, _signalBus, this);
     }
     
     [Inject]
-    public void Construct(IPlayerHand playerHand)
+    public void Construct(IPlayerHand playerHand, SignalBus signalBus)
     {
         Hand = playerHand;
+        _signalBus = signalBus;
     }
 
     private void Update()
@@ -39,6 +40,7 @@ public class CardComponent : MonoBehaviour, ICard
         Movement?.Update();
         Rotation?.Update();
         Scale?.Update();
+        cardStateMachineStringDebug = StateMachine?.Current.ToString();
     }
 
     #region Properties
@@ -56,6 +58,8 @@ public class CardComponent : MonoBehaviour, ICard
     public bool IsDragging => StateMachine.IsCurrent<CardDrag>();
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
+
+    [SerializeField] private string cardStateMachineStringDebug;
 
     [Header("Card Settings")] [SerializeField] private TextMeshPro MyDamageValue;
     [SerializeField] private TextMeshPro MyApCost;
@@ -86,6 +90,7 @@ public class CardComponent : MonoBehaviour, ICard
     private Rigidbody MyRigidbody { get; set; }
     private IMouseInput MyInput { get; set; }
     private IPlayerHand Hand { get; set; }
+    private SignalBus _signalBus;
 
     public bool IsPlayer => transform.CloserEdge(MainCamera, Screen.width, Screen.height) == 1;
 
@@ -97,6 +102,11 @@ public class CardComponent : MonoBehaviour, ICard
     public void Disable()
     {
         StateMachine.Disable();
+    }
+    
+    public void BlockUsage()
+    {
+        StateMachine.BlockUsage();
     }
 
     public void Enable()
@@ -134,13 +144,13 @@ public class CardComponent : MonoBehaviour, ICard
     {
         StateMachine.Conflict();
     }
-    
+
     public void Queue()
     {
         StateMachine.Queue();
     }
 
-    public void PlayDestroyAnimation()
+    public void Destroy()
     {
         StateMachine.PlayDestroyAnimation();
     }

@@ -57,6 +57,11 @@ public enum TOYO_PIECE
     L_FOOT = 9
 }
 
+public enum CARD_STATUS
+{
+    BUFFER = 0, ACTIVE = 1, HIT = 2
+}
+
 public enum TOYO_RARITY
 {
     COMMON = 0,

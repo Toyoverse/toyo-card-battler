@@ -44,7 +44,7 @@ namespace CardSystem.PlayerHand
             card.ValidateCard();
 
             SelectedCard = card;
-            DisableCards();
+            BlockCards();
             NotifyCardSelected();
         }
 
@@ -60,10 +60,10 @@ namespace CardSystem.PlayerHand
 
         public void Unselect() => UnselectCard(SelectedCard);
 
-        private void DisableCards()
+        private void BlockCards()
         {
             foreach (var otherCard in Cards)
-                otherCard.Disable();
+                otherCard.BlockUsage();
         }
 
         private void EnableCards()

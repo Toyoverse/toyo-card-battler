@@ -4,12 +4,13 @@ using Patterns.StateMachine;
 using Tools.Extensions;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 namespace Card.CardStateMachine.States
 {
     public class CardHover : CardBaseState
     {
-        public CardHover(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler, stateMachine,
+        public CardHover(ICard handler, BaseStateMachine stateMachine, SignalBus signalBus, CardData cardData) : base(handler, stateMachine, signalBus,
             cardData)
         {
         }
