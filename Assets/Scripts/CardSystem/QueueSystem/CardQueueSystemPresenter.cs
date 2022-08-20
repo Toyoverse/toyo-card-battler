@@ -25,26 +25,30 @@ namespace Card.QueueSystem
         {
             OnUpdateUI += UpdateUI;
             OnActivateComboUI += ActiveComboUI;
+            OnCardStatusChange += SetCardStatus;
         }
 
         private void OnDisable()
         {
             OnUpdateUI -= UpdateUI;
             OnActivateComboUI -= ActiveComboUI;
+            OnCardStatusChange -= SetCardStatus;
         }
 
-        private void SetCardBuffer(bool isPlayer) => SetCardStatus(isPlayer, Color.gray);
-        
-        private void SetCardActive(bool isPlayer) => SetCardStatus(isPlayer, Color.blue);
-        
-        private void SetCardHit(bool isPlayer) => SetCardStatus(isPlayer, Color.red);
-        
-        private void SetCardStatus(bool isPlayer, Color color) //Change status dot colors to simulate validation process
+        private void SetCardStatus(bool isPlayer, CARD_STATUS cardStatus)
         {
+            var _color = cardStatus switch
+            {
+                CARD_STATUS.BUFFER => Color.gray,
+                CARD_STATUS.ACTIVE => Color.blue,
+                CARD_STATUS.HIT => Color.red,
+                CARD_STATUS.DISABLE => Color.clear,
+                _ => throw new ArgumentOutOfRangeException(nameof(cardStatus), cardStatus, null)
+            };
             if (isPlayer)
-                playerCardStatus.DOColor(color, 0.0f);
+                playerCardStatus.DOColor(_color, 0.0f);
             else
-                enemyCardStatus.DOColor(color, 0.0f);
+                enemyCardStatus.DOColor(_color, 0.0f);
         }
 
         private void UpdateUI(string playerQueueSize, string enemyQueueSize,
@@ -124,12 +128,12 @@ namespace Card.QueueSystem
 
         public Action<string, string, string, string, string> OnUpdateUI { get; set; }
         public Action<PlayerNetworkManager> OnActivateComboUI { get; set; }
-        
+        public Action<bool, CARD_STATUS> OnCardStatusChange { get; set; }
+
         public class UpdateCardStatusSignal
         {
-            public bool IsPlayer;
-            public CARD_STATUS CardStatus;
-            
+            public bool IsPlayer = false;
+            public CARD_STATUS CardStatus = CARD_STATUS.BUFFER;
             
         }
 

@@ -47,8 +47,8 @@ namespace Card.QueueSystem
                     _currentCardDuration -= Time.deltaTime;
                 else
                 {
-                    //Todo, with the interrupt system, implement the destroy animation as well
-                    //_cardBeingExecuted?.Discard();
+                    //Todo, with the interrupt system, implement the destroy animation state as well
+                    _cardBeingExecuted?.Discard();
                     _cardBeingExecuted = null;
                 }
                     
@@ -72,6 +72,7 @@ namespace Card.QueueSystem
         {
             _signalBus = signalBus;
             _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
+            _signalBus.Subscribe<CardQueueSystemPresenter.UpdateCardStatusSignal>(x => _myCardQueueSystemPresenter.OnCardStatusChange.Invoke(x.IsPlayer, x.CardStatus));
             
             _playerHand = playerHand;
             _comboSystem = comboSystem;

@@ -1,4 +1,6 @@
-﻿using Card.QueueSystem;
+﻿using System.Diagnostics;
+using System.Linq;
+using Card.QueueSystem;
 using DefaultNamespace;
 using Patterns.StateMachine;
 using UnityEngine;
@@ -13,15 +15,16 @@ namespace Card.CardStateMachine.States
         {
         }
         
-        private float _cardDuration;
+        private float _currentCardDuration;
         private float _attackBuffer;
         private bool _canExecuteAttack;
-        private CARD_STATUS _currentStatus = CARD_STATUS.BUFFER;
+        private CARD_STATUS _currentStatus = CARD_STATUS.DISABLE;
+        private bool IsFinalAttackBufferTime => CardData.CardDuration  - _currentCardDuration <= CardData.AttackBuffer;
 
         public override void OnEnterState()
         {
             _attackBuffer = CardData.AttackBuffer;
-            _cardDuration = 0f;
+            _currentCardDuration = 0f;
             _canExecuteAttack = false;
             FireSignalOnStatusChange(CARD_STATUS.BUFFER);
             
@@ -30,27 +33,35 @@ namespace Card.CardStateMachine.States
 
         public override void OnUpdate()
         {
+            ProcessAttackBuffer();
+            
+            if (_canExecuteAttack && _currentCardDuration < CardData.CardDuration)
+                ValidadeCardHits();
+            
+            if (IsFinalAttackBufferTime)
+                StartLastAttackBuffer();
+            
+            _currentCardDuration += Time.deltaTime;
+        }
+        
+        private void ProcessAttackBuffer()
+        {
             if (_attackBuffer <= 0)
                 _canExecuteAttack = true;
             else
                 _attackBuffer -= Time.deltaTime;
+        }
 
-            if (_canExecuteAttack)
-            {
-                if (_cardDuration < CardData.CardDuration)
-                {
-                    _cardDuration += Time.deltaTime;
+        private void ValidadeCardHits() => FireSignalOnStatusChange(CheckForActiveHitsOnThisFrame() ? CARD_STATUS.HIT : CARD_STATUS.ACTIVE);
 
-                    foreach (var _hitListInfo in CardData.HitListInfos)
-                    {
-                        if (_hitListInfo.SecondToHit[0] >= _cardDuration && _hitListInfo.SecondToHit[1] < _cardDuration)
-                            FireSignalOnStatusChange(CARD_STATUS.HIT);
-                        else
-                            FireSignalOnStatusChange(CARD_STATUS.ACTIVE);
-                    }
-                }
-            }
+        private bool CheckForActiveHitsOnThisFrame() => CardData.HitListInfos.Any(hitListInfo => _currentCardDuration >= hitListInfo.SecondToHit[0] 
+                                                                                                && _currentCardDuration < hitListInfo.SecondToHit[1]);
 
+        private void StartLastAttackBuffer()
+        {
+            _canExecuteAttack = false;
+            _attackBuffer = CardData.AttackBuffer;
+            FireSignalOnStatusChange(CARD_STATUS.BUFFER);
         }
 
         private void FireSignalOnStatusChange(CARD_STATUS cardStatus)
@@ -79,6 +90,7 @@ namespace Card.CardStateMachine.States
 
         public override void OnExitState()
         {
+            FireSignalOnStatusChange(CARD_STATUS.DISABLE);
         }
         
         

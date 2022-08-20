@@ -43,7 +43,7 @@ namespace Card.DeckSystem
             Cards.Add(_card);
             _card.transform.SetParent(transform);
             _card.transform.position = transform.position;
-            _card.Disable();
+            //_card.Disable();
             if(!_allCardsID.Contains(_card.CardID))
                 _allCardsID.Add(_card.CardID);
             NotifyPileChange();

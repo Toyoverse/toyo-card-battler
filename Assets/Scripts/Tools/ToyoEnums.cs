@@ -59,7 +59,7 @@ public enum TOYO_PIECE
 
 public enum CARD_STATUS
 {
-    BUFFER = 0, ACTIVE = 1, HIT = 2
+    BUFFER = 0, ACTIVE = 1, HIT = 2, DISABLE = 3
 }
 
 public enum TOYO_RARITY

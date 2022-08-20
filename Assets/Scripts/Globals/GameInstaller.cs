@@ -34,6 +34,7 @@ namespace Globals
             SignalBusInstaller.Install(Container);
             
             Container.DeclareSignal<PlayerNetworkInitializedSignal>();
+            Container.DeclareSignal<CardQueueSystemPresenter.UpdateCardStatusSignal>();
 
         }
     }

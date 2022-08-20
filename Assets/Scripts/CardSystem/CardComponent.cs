@@ -7,6 +7,7 @@ using TMPro;
 using Tools;
 using Tools.Extensions;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 public class CardComponent : MonoBehaviour, ICard
@@ -23,8 +24,7 @@ public class CardComponent : MonoBehaviour, ICard
         Scale = new CardMotionScale(this);
         Movement = new CardMotionMovement(this);
         Rotation = new CardMotionRotation(this);
-
-        StateMachine = new CardStateMachine(MainCamera, MyCardData, _signalBus, this);
+        
     }
     
     [Inject]
@@ -36,22 +36,32 @@ public class CardComponent : MonoBehaviour, ICard
 
     private void Update()
     {
-        StateMachine?.Update();
+        if (StateMachine == null)
+        {
+            StateMachine = new CardStateMachine(MainCamera, _cardData, _signalBus, this);
+            Disable();
+        }
+        else
+        {
+            StateMachine.Update();
+            cardStateMachineStringDebug = StateMachine?.Current.ToString();
+        }
+        
         Movement?.Update();
         Rotation?.Update();
         Scale?.Update();
-        cardStateMachineStringDebug = StateMachine?.Current.ToString();
+        
     }
 
     #region Properties
 
-    public CardData MyCardData;
+    [FormerlySerializedAs("MyCardData")] public CardData _cardData;
 
     private CardStateMachine StateMachine { get; set; }
-    public string Name => MyCardData.CardName ?? "NoName";
+    public string Name => _cardData.CardName ?? "NoName";
     public int CardID
     {
-        get => MyCardData.Id;
+        get => _cardData.Unique_Card_ID;
         set => _ = value;
     }
 
@@ -67,13 +77,13 @@ public class CardComponent : MonoBehaviour, ICard
     public MonoBehaviour MonoBehavior => this;
     public CardData CardData
     {
-        get => MyCardData;
+        get => _cardData;
         set
         {
-            MyCardData = value;
-            DamageValue.text = MyCardData.HitListInfos.Count > 0 
-                ? MyCardData.HitListInfos[0].Damage.ToString() : "0"; //Todo consider all damages
-            APCost.text = MyCardData.ApCost.ToString();
+            _cardData = value;
+            DamageValue.text = _cardData.HitListInfos.Count > 0 
+                ? _cardData.HitListInfos[0].Damage.ToString() : "0"; //Todo consider all damages
+            APCost.text = _cardData.ApCost.ToString();
         }
     }
 

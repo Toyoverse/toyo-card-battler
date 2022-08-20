@@ -26,7 +26,7 @@ namespace Tools.Editor
             }
                 
             
-            EditorGUI.EndProperty();
+            //EditorGUI.EndProperty();
             GUI.color = Color.white;
             GUI.enabled = true;
         }
