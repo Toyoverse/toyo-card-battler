@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template 5
   m_EditorClassIdentifier: 
-  Id: 6
+  Unique_Card_ID: 6
   CardName: Defense-Dodge_Template
   CardType: 0
   DefenseType: 1
@@ -20,7 +20,8 @@ MonoBehaviour:
   ApCost: 2
   AttackType: 0
   AttackSubType: 0
-  CardDuration: 5
+  CardDuration: 0.5
+  AttackBuffer: 0.5
   ApplyEffect: 0
   EffectName: 
   EffectData:
@@ -28,5 +29,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   HitListInfos:
-  - FrameToHit: 1
+  - SecondToHit: {x: 2.923059, y: 3.550383}
     Damage: 20
+  - SecondToHit: {x: 1.72363, y: 2.4189746}
+    Damage: 0
+  - SecondToHit: {x: 0.73364764, y: 1.2875663}
+    Damage: 0

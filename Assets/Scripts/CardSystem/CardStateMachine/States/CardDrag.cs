@@ -3,13 +3,14 @@ using Extensions;
 using Patterns.StateMachine;
 using Tools.Extensions;
 using UnityEngine;
+using Zenject;
 
 namespace Card.CardStateMachine.States
 {
     public class CardDrag : CardBaseState
     {
-        public CardDrag(Camera camera, ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler,
-            stateMachine, cardData)
+        public CardDrag(Camera camera, ICard handler, BaseStateMachine stateMachine,SignalBus signalBus, CardData cardData) : base(handler,
+            stateMachine, signalBus, cardData)
         {
             MyCamera = camera;
         }
@@ -40,6 +41,8 @@ namespace Card.CardStateMachine.States
         public override void OnEnterState()
         {
             Handler.Movement.StopMotion();
+            
+            DisableCollision();
 
             StartEuler = Handler.transform.eulerAngles;
 
@@ -50,6 +53,8 @@ namespace Card.CardStateMachine.States
 
         public override void OnExitState()
         {
+            EnableCollision();
+            
             if (Handler.transform)
             {
                 Handler.RotateTo(StartEuler, GlobalCardData.RotationSpeed);

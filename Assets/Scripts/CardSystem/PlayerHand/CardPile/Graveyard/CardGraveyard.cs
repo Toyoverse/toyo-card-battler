@@ -35,8 +35,8 @@ namespace Card.CardPile.Graveyard
 
             Cards.Add(card);
             card.transform.SetParent(transform);
-            card.gameObject.SetActive(false);
-            card.Discard();
+            //card.gameObject.SetActive(false);
+            card.Disable();
             NotifyPileChange();
         }
 

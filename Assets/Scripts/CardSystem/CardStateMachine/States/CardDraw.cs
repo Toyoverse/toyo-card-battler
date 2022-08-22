@@ -1,12 +1,13 @@
 ﻿using DefaultNamespace;
 using Patterns.StateMachine;
 using UnityEngine;
+using Zenject;
 
 namespace Card.CardStateMachine.States
 {
     public class CardDraw : CardBaseState
     {
-        public CardDraw(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler, stateMachine,
+        public CardDraw(ICard handler, BaseStateMachine stateMachine,SignalBus signalBus, CardData cardData) : base(handler, stateMachine, signalBus,
             cardData)
         {
         }

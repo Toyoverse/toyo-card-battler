@@ -101,15 +101,15 @@ namespace ToyoSystem
             
             foreach (var _toyoIDData in _listToyoData)
             {
-                if (CountEachPart.ContainsKey(_toyoIDData.Id))
+                if (CountEachPart.ContainsKey(_toyoIDData.Unique_Card_ID))
                 {
-                    var _value = CountEachPart[_toyoIDData.Id];
+                    var _value = CountEachPart[_toyoIDData.Unique_Card_ID];
                     _value++;
-                    CountEachPart[_toyoIDData.Id] = _value;
+                    CountEachPart[_toyoIDData.Unique_Card_ID] = _value;
                 }
                 else
                 {
-                    CountEachPart.Add(_toyoIDData.Id, 1);
+                    CountEachPart.Add(_toyoIDData.Unique_Card_ID, 1);
                 }
             }
 
