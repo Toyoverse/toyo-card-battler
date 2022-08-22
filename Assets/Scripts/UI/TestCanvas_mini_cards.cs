@@ -197,6 +197,8 @@ public class TestCanvas_mini_cards : MonoBehaviour
             
         }
     }
+    
+    
 
     private void OnLeftStatusCheck() //Change status dot colors to simulate validation process
     {

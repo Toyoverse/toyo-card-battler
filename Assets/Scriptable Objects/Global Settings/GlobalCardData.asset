@@ -18,7 +18,7 @@ MonoBehaviour:
   HoverSpeed: 15
   HoverHeight: 3
   Height: 0
-  Spacing: 2.2
+  Spacing: -0.8
   FullAngle: 0
   RotationSpeed: 20
   RotationSpeedEnemy: 500

@@ -1,13 +1,14 @@
 ﻿using DefaultNamespace;
 using Patterns.StateMachine;
 using UnityEngine;
+using Zenject;
 
 namespace Card.CardStateMachine.States
 {
     public class CardDiscard : CardBaseState
     {
-        public CardDiscard(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler,
-            stateMachine, cardData)
+        public CardDiscard(ICard handler, BaseStateMachine stateMachine,SignalBus signalBus, CardData cardData) : base(handler,
+            stateMachine, signalBus, cardData)
         {
         }
 
@@ -15,7 +16,7 @@ namespace Card.CardStateMachine.States
 
         public override void OnEnterState()
         {
-            Disable();
+            BlockUsage();
             SetScale();
             SetRotation();
         }

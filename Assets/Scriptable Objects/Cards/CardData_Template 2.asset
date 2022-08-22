@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template 2
   m_EditorClassIdentifier: 
-  Id: 3
+  Unique_Card_ID: 3
   CardName: Fast-Cyber_Template
   CardType: 0
   DefenseType: 0
@@ -21,6 +21,7 @@ MonoBehaviour:
   AttackType: 0
   AttackSubType: 4
   CardDuration: 5
+  AttackBuffer: 0.5
   ApplyEffect: 0
   EffectName: 
   EffectData:
@@ -28,5 +29,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   HitListInfos:
-  - FrameToHit: 1
-    Damage: 8
+  - SecondToHit: {x: 0.83971715, y: 1.3700647}
+    Damage: 75
+  - SecondToHit: {x: 2.7136123, y: 3.5150266}
+    Damage: 112

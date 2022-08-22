@@ -1,29 +1,32 @@
 ﻿using DefaultNamespace;
 using Extensions;
 using Patterns.StateMachine;
+using Zenject;
 
 namespace Card.CardStateMachine.States
 {
     public abstract class CardBaseState : IState
     {
 
-        protected CardBaseState(ICard handler, BaseStateMachine stateMachine, CardData cardData)
+        protected CardBaseState(ICard handler, BaseStateMachine stateMachine, SignalBus signalBus, CardData cardData)
         {
             StateMachine = stateMachine;
             Handler = handler;
             CardData = cardData;
+            SignalBus = signalBus;
             IsInitialized = true;
         }
 
 
         protected ICard Handler { get; }
+        protected SignalBus SignalBus { get; }
         protected BaseStateMachine StateMachine { get; }
         protected CardData CardData { get; }
         public bool IsInitialized { get; }
 
         #region Functions
 
-        protected void Enable()
+        protected void EnableUsage()
         {
             if (Handler.Collider)
                 EnableCollision();
@@ -34,7 +37,7 @@ namespace Card.CardStateMachine.States
             RemoveAllTransparency();
         }
 
-        protected virtual void Disable()
+        protected virtual void BlockUsage()
         {
             DisableCollision();
             Handler.Rigidbody.Sleep();

@@ -16,5 +16,9 @@ namespace Card
         void Hover();
         void Draw();
         void Discard();
+        void Queue();
+        void Conflict();
+        void Destroy();
+        void BlockUsage();
     }
 }

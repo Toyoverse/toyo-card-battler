@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template 3
   m_EditorClassIdentifier: 
-  Id: 4
+  Unique_Card_ID: 4
   CardName: Heavy-Physical_Template
   CardType: 0
   DefenseType: 0
@@ -21,6 +21,7 @@ MonoBehaviour:
   AttackType: 1
   AttackSubType: 0
   CardDuration: 5
+  AttackBuffer: 0.5
   ApplyEffect: 0
   EffectName: 
   EffectData:
@@ -28,5 +29,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   HitListInfos:
-  - FrameToHit: 1
-    Damage: 11
+  - SecondToHit: {x: 1.2639953, y: 2.0536242}
+    Damage: 30
+  - SecondToHit: {x: 3.0907485, y: 3.644667}
+    Damage: 37
