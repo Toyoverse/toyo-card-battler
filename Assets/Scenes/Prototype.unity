@@ -4513,6 +4513,18 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1355754466711202708, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1355754466711202708, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1355754466711202708, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -27.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2532777998327517698, guid: 750da83e9e6a0c54c993ea691ad0d9af, type: 3}
       propertyPath: m_Name
       value: BattleReferences
