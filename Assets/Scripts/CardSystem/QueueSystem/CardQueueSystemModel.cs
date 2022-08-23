@@ -89,7 +89,6 @@ namespace Card.QueueSystem
             if (_cardBeingExecuted == null) return;
             RemoveFromPlayerQueue(_cardBeingExecuted);
             _cardBeingExecuted.Conflict();
-            _playerHand.OnCardPlayed?.Invoke(_cardBeingExecuted);
             SetCurrentCardDuration();
         }
 
@@ -99,7 +98,7 @@ namespace Card.QueueSystem
             if (_cardBeingExecuted == null) return;
             RemoveFromEnemyQueue(_cardBeingExecuted);
             _cardBeingExecuted.Conflict();
-            _playerHand.OnNetworkCardPlayed?.Invoke(_cardBeingExecuted);
+            //_playerHand.OnNetworkCardPlayed?.Invoke(_cardBeingExecuted);
             SetCurrentCardDuration();
         }
 
