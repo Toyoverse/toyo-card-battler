@@ -68,7 +68,7 @@ namespace Card.DeckSystem
         public void InitializeFullToyo(FullToyoSO fullToyoSo)
         {
             FullToyo.InitializeToyoDebug(this, fullToyoSo);
-            InitializeDeckFromToyo();
+            //InitializeDeckFromToyo(); //Todo change to this when implemented from database
             return; //Todo Get Toyo from Database
             
         }

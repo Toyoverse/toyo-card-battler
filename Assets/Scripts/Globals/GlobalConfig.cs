@@ -72,6 +72,8 @@ using Zenject;
         public static float FullAngle;
         public static float Height;
         public static float MovementSpeed;
+        public static int HandSize;
+        public static bool AutomaticDraw;
 
 
         public static void Initialize(GlobalCardDataSO _cardDataSO)
@@ -91,5 +93,7 @@ using Zenject;
             FullAngle = _cardDataSO.FullAngle;
             Height = _cardDataSO.Height;
             MovementSpeed = _cardDataSO.MovementSpeed;
+            AutomaticDraw = _cardDataSO.automaticDrawCards;
+            HandSize = _cardDataSO.handSize;
         }
     }
