@@ -31,7 +31,6 @@ namespace Card.CardStateMachine.States
                 EnableUsage();
             }
 
-            MakeRenderNormal();
             Handler.ScaleTo(DefaultSize, GlobalCardData.ScaleSpeed);
         }
 

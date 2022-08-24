@@ -96,7 +96,6 @@ namespace Card.CardStateMachine.States
 
         public override void OnEnterState()
         {
-            MakeRenderFirst();
             SubscribeInput();
             CachePreviousValues();
             SetScale();

@@ -1,4 +1,5 @@
-﻿using Fusion;
+﻿using CardSystem.PlayerHand;
+using Fusion;
 using Patterns.StateMachine;
 
 namespace Card
@@ -20,5 +21,6 @@ namespace Card
         void Conflict();
         void Destroy();
         void BlockUsage();
+        
     }
 }

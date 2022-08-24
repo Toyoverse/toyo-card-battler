@@ -91,14 +91,6 @@ namespace CardSystem.PlayerHand
             set => OnCardPlayed = value;
         }
         
-        private event Action<ICard> OnNetworkCardPlayed = card => { };
-
-        Action<ICard> IPlayerHand.OnNetworkCardPlayed
-        {
-            get => OnNetworkCardPlayed;
-            set => OnNetworkCardPlayed = value;
-        }
-
         private event Action<ICard> OnCardSelected = card => { };
 
         Action<ICard> IPlayerHand.OnCardSelected

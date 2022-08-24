@@ -119,6 +119,7 @@ public class CardComponent : MonoBehaviour, ICard
         StateMachine.BlockUsage();
     }
 
+
     public void Enable()
     {
         StateMachine.Enable();
@@ -209,6 +210,7 @@ public class CardComponent : MonoBehaviour, ICard
     Collider ICardComponents.Collider => MyCollider;
     Rigidbody ICardComponents.Rigidbody => MyRigidbody;
     IMouseInput ICardComponents.Input => MyInput;
-
+    IPlayerHand ICardComponents.PlayerHand => Hand;
+    
     #endregion
 }

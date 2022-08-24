@@ -68,6 +68,9 @@ namespace Card.CardStateMachine.States
         {
             if (cardStatus != _currentStatus)
             {
+                if(cardStatus == CARD_STATUS.HIT)
+                    Handler.PlayerHand.OnCardPlayed?.Invoke(Handler);
+                
                 _currentStatus = cardStatus;
                 SignalBus.Fire<CardQueueSystemPresenter.UpdateCardStatusSignal>(new() 
                 { 

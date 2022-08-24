@@ -10,7 +10,6 @@ namespace CardSystem.PlayerHand
     {
         List<ICard> Cards { get; }
         Action<ICard> OnCardPlayed { get; set; }
-        Action<ICard> OnNetworkCardPlayed { get; set; }
         Action<ICard> OnCardSelected { get; set; }
         Action<ICard> OnAddCardToQueue { get; set; }
         void PlaySelected();
