@@ -30,8 +30,8 @@ MonoBehaviour:
   - {fileID: 0}
   HitListInfos:
   - SecondToHit: {x: 2.923059, y: 3.550383}
-    Damage: 20
+    Damage: 1
   - SecondToHit: {x: 1.72363, y: 2.4189746}
-    Damage: 0
+    Damage: 1
   - SecondToHit: {x: 0.73364764, y: 1.2875663}
-    Damage: 0
+    Damage: 1

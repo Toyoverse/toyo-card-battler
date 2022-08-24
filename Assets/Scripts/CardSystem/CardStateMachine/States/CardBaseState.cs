@@ -33,7 +33,6 @@ namespace Card.CardStateMachine.States
             if (Handler.Rigidbody)
                 Handler.Rigidbody.Sleep();
 
-            MakeRenderNormal();
             RemoveAllTransparency();
         }
 
@@ -41,7 +40,6 @@ namespace Card.CardStateMachine.States
         {
             DisableCollision();
             Handler.Rigidbody.Sleep();
-            MakeRenderNormal();
             foreach (var renderer in Handler.Images)
             {
                 var myColor = renderer.color;
@@ -69,30 +67,6 @@ namespace Card.CardStateMachine.States
                     _myColor.a = 1;
                     _renderer.color = _myColor;
                 }
-        }
-
-        /// <summary>
-        ///     Renders the textures in the first layer. Each card state is responsible to handle its own layer activity.
-        /// </summary>
-        protected virtual void MakeRenderFirst()
-        {
-            return; //Todo Fix Text
-            for (var i = 0; i < Handler.Images.Length; i++)
-                Handler.Images[i].sortingOrder = GlobalCardData.LayerToRenderTop;
-        }
-
-        /// <summary>
-        ///     Renders the textures in the regular layer. Each card state is responsible to handle its own layer activity.
-        /// </summary>
-        protected virtual void MakeRenderNormal()
-        {
-            return; //Todo Fix Text
-            for (var i = 0; i < Handler.Images.Length; i++)
-                if (Handler.Images[i])
-                    Handler.Images[i].sortingOrder = GlobalCardData.LayerToRenderNormal;
-        
-
-            
         }
 
         #endregion

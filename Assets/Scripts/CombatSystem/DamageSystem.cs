@@ -40,30 +40,24 @@ namespace CombatSystem
         void OnEnable()
         {
             _cardHand.OnCardPlayed += ProcessCardPlayed;
-            _cardHand.OnNetworkCardPlayed += ProcessNetworkCardPlayed;
+            _cardHand.OnAddCardToQueue += ProcessCardAPCost;
         }
 
         private void OnDisable()
         {
             _cardHand.OnCardPlayed -= ProcessCardPlayed;
-            _cardHand.OnNetworkCardPlayed += ProcessNetworkCardPlayed;
+            _cardHand.OnAddCardToQueue -= ProcessCardAPCost;
         }
 
         public void ProcessCardPlayed(ICard _card)
         {
             _damageInformation = new DamageInformation(_card, _fullToyo);
-            ProcessCardAPCost(_card);
             ProcessCardByType(_card);
         }
         
-        public void ProcessNetworkCardPlayed(ICard _card)
-        {
-            _damageInformation = new DamageInformation(_card, _fullToyo, true);
-            ProcessCardByType(_card);
-        }
-
         private void ProcessCardAPCost(ICard _card)
         {
+            _damageInformation = new DamageInformation(_card, _fullToyo);
             var _apCost = _card.CardData?.ApCost ?? 0;
             _apCost += BoundSystem.GetCostMod(_damageInformation);
             _apCost = _apCost < 0 ? 0 : _apCost;
