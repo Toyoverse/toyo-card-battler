@@ -46,6 +46,7 @@ namespace CardSystem.PlayerHand
         private void OnDisable()
         {
             _playerHand.OnAddCardToQueue -= AutomaticDrawCard;
+            IsHandDrawed = false;
         }
 
         private void AutomaticDrawCard(ICard card)

@@ -1,5 +1,6 @@
 using System;
 using Scriptable_Objects;
+using ServiceLocator;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -8,8 +9,7 @@ namespace CombatSystem
 {
     public static class DefenseSystem
     {
-        [Inject]
-        private static CombatConfigSO _combatConfig;
+        private static CombatConfigSO _combatConfig => Locator.GetGlobalConfig().CombatConfig;
         
         public static bool DefenseCardSuccess(DamageInformation dmgInfo)
             => GetDefenseChance(dmgInfo) >= Random.Range(0, 100);

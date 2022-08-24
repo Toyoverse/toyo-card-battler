@@ -35,6 +35,7 @@ namespace Globals
             
             Container.DeclareSignal<PlayerNetworkInitializedSignal>();
             Container.DeclareSignal<CardQueueSystemPresenter.UpdateCardStatusSignal>();
+            Container.DeclareSignal<EndMatchSignal>();
 
         }
     }

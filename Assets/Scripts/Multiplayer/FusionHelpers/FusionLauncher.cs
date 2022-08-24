@@ -76,7 +76,7 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
 
         SetConnectionStatus(ConnectionStatus.Connecting, "");
         
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         if (Runner == null)
             Runner = gameObject.AddComponent<NetworkRunner>();
@@ -153,6 +153,22 @@ public class FusionLauncher : MonoBehaviour, IFusionLauncher
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
+        SetConnectionStatus(ConnectionStatus.Disconnected, "disconnected");
+
+        // TODO: This cleanup should be handled by the ClearPools call below, but currently Fusion is not returning pooled objects on shutdown, so...
+        // Destroy all NOs
+        NetworkObject[] nos = FindObjectsOfType<NetworkObject>();
+        for (int i = 0; i < nos.Length; i++)
+            Destroy(nos[i].gameObject);
+			
+        //PlayerManager.ResetPlayerManager();
+
+        // Reset the object pools
+        Pool.ClearPools();
+            
+        if(Runner!=null && Runner.gameObject)
+            Destroy(Runner.gameObject);
+    
         SetConnectionStatus(ConnectionStatus.Disconnected, "");
     }
 
