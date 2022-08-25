@@ -20,7 +20,7 @@ MonoBehaviour:
   APValue: 0
   statToChange: 0
   changeStatFactor: 0
-  nextCardDamageFactor: 1
-  nextCardCostMod: -1
-  lifeStealFactor: 0.2
+  nextCardDamageFactor: 0
+  nextCardCostMod: 0
+  lifeStealFactor: 0
   excludedTypes: 

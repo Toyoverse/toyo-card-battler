@@ -10,26 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
-  m_Name: CardData_Template 3
+  m_Name: 05CardData_MenacingFog
   m_EditorClassIdentifier: 
-  Unique_Card_ID: 4
-  CardName: Heavy-Physical_Template
-  CardType: 0
-  DefenseType: 0
+  Unique_Card_ID: 5
+  CardName: Menacing Fog
+  CardType: 2
+  DefenseType: 1
   CardImage: {fileID: 0}
-  ApCost: 4
+  ApCost: 1
   AttackType: 1
   AttackSubType: 0
-  CardDuration: 5
+  CardDuration: 2.5
   AttackBuffer: 0.5
-  ApplyEffect: 0
-  EffectName: 
+  ApplyEffect: 1
+  EffectName: Bleed
   EffectData:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  HitListInfos:
-  - SecondToHit: {x: 1.2639953, y: 2.0536242}
-    Damage: 1
-  - SecondToHit: {x: 3.0907485, y: 3.644667}
-    Damage: 1
+  - {fileID: 11400000, guid: 4d1b05aa4803cd34182193172b78dc88, type: 2}
+  HitListInfos: []

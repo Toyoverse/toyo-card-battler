@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EffectType: 1
   Toyo: 0
-  temporary: 0
-  duration: 5
-  HPValue: 10
-  APValue: 2
-  statToChange: 9
-  changeStatFactor: 2
-  nextCardDamageFactor: -0.9
+  temporary: 1
+  duration: 2
+  HPValue: 0
+  APValue: 0
+  statToChange: 0
+  changeStatFactor: 0
+  nextCardDamageFactor: 0
   nextCardCostMod: -1
   lifeStealFactor: 0
   excludedTypes: 00000000010000000200000003000000
