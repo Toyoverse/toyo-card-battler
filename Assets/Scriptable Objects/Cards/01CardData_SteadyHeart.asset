@@ -20,12 +20,10 @@ MonoBehaviour:
   ApCost: 2
   AttackType: 0
   AttackSubType: 0
-  CardDuration: 4
+  CardDuration: 1.7
   AttackBuffer: 0.5
   ApplyEffect: 1
-  EffectName: Test_Effects
+  EffectName: Inspire
   EffectData:
-  - {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
-  HitListInfos:
-  - SecondToHit: {x: 2.6752422, y: 3.324286}
-    Damage: 1
+  - {fileID: 11400000, guid: 60dcd46eb742fcc4a9bc26db7f96a3e9, type: 2}
+  HitListInfos: []

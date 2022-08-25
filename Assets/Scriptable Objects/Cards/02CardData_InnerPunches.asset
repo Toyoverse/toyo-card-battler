@@ -10,24 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
-  m_Name: CardData_Template 1
+  m_Name: 02CardData_InnerPunches
   m_EditorClassIdentifier: 
   Unique_Card_ID: 2
-  CardName: Fast-Physical_Template
+  CardName: Inner Punches
   CardType: 1
   DefenseType: 0
   CardImage: {fileID: 0}
-  ApCost: 2
-  AttackType: 1
+  ApCost: 3
+  AttackType: 0
   AttackSubType: 0
-  CardDuration: 5
+  CardDuration: 1.8
   AttackBuffer: 0.5
   ApplyEffect: 0
   EffectName: 
   EffectData:
   - {fileID: 0}
   HitListInfos:
-  - SecondToHit: {x: 1.0047143, y: 2.0064821}
+  - SecondToHit: {x: 0.6, y: 1.2}
     Damage: 1
-  - SecondToHit: {x: 3.0200353, y: 3.5150266}
+  - SecondToHit: {x: 1.2, y: 1.8}
+    Damage: 1
+  - SecondToHit: {x: 1.8, y: 3}
     Damage: 1
