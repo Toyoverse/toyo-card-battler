@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
-  m_Name: CardData_Template 5
+  m_Name: CardData_Template
   m_EditorClassIdentifier: 
   Unique_Card_ID: 6
   CardName: Defense-Dodge_Template
