@@ -10,19 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
-  m_Name: CardData_Template
+  m_Name: 14CardData_RageSeal
   m_EditorClassIdentifier: 
-  Unique_Card_ID: 0
-  CardName: 
-  CardType: 0
+  Unique_Card_ID: 14
+  CardName: Rage Seal
+  CardType: 3
   DefenseType: 0
   CardImage: {fileID: 0}
-  ApCost: 0
+  ApCost: 2
   AttackType: 1
   AttackSubType: 0
-  CardDuration: 0.5
+  CardDuration: 1.7
   AttackBuffer: 0.5
-  ApplyEffect: 0
-  EffectName: 
-  EffectData: []
+  ApplyEffect: 1
+  EffectName: Berserk + Strengthened
+  EffectData:
+  - {fileID: 11400000, guid: bded6779936fadb41a1d4ec0849984e6, type: 2}
+  - {fileID: 11400000, guid: d2e5d983ee6bc8744b0e2ef6e69b0c2c, type: 2}
   HitListInfos: []

@@ -10,19 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
-  m_Name: CardData_Template
+  m_Name: 07CardData_LaserMind
   m_EditorClassIdentifier: 
-  Unique_Card_ID: 0
-  CardName: 
-  CardType: 0
-  DefenseType: 0
+  Unique_Card_ID: 7
+  CardName: Laser Mind
+  CardType: 1
+  DefenseType: 1
   CardImage: {fileID: 0}
-  ApCost: 0
-  AttackType: 1
+  ApCost: 2
+  AttackType: 0
   AttackSubType: 0
-  CardDuration: 0.5
+  CardDuration: 2
   AttackBuffer: 0.5
   ApplyEffect: 0
   EffectName: 
   EffectData: []
-  HitListInfos: []
+  HitListInfos:
+  - SecondToHit: {x: 500, y: 502}
+    Damage: 1
+  - SecondToHit: {x: 800, y: 802}
+    Damage: 1
+  - SecondToHit: {x: 1100, y: 1102}
+    Damage: 1
+  - SecondToHit: {x: 1400, y: 1402}
+    Damage: 1

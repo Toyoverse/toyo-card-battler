@@ -10,19 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
-  m_Name: CardData_Template
+  m_Name: 12CardData_LaughingRush
   m_EditorClassIdentifier: 
-  Unique_Card_ID: 0
-  CardName: 
+  Unique_Card_ID: 12
+  CardName: Laughing Rush
   CardType: 0
   DefenseType: 0
   CardImage: {fileID: 0}
-  ApCost: 0
+  ApCost: 3
   AttackType: 1
   AttackSubType: 0
-  CardDuration: 0.5
+  CardDuration: 2
   AttackBuffer: 0.5
   ApplyEffect: 0
   EffectName: 
   EffectData: []
-  HitListInfos: []
+  HitListInfos:
+  - SecondToHit: {x: 1, y: 1.3}
+    Damage: 1
