@@ -43,7 +43,7 @@ namespace Card.DeckSystem
             Cards.Add(_card);
             _card.transform.SetParent(transform);
             _card.transform.position = transform.position;
-            _card.gameObject.SetActive(false);
+            //_card.Disable();
             if(!_allCardsID.Contains(_card.CardID))
                 _allCardsID.Add(_card.CardID);
             NotifyPileChange();
@@ -68,7 +68,7 @@ namespace Card.DeckSystem
         public void InitializeFullToyo(FullToyoSO fullToyoSo)
         {
             FullToyo.InitializeToyoDebug(this, fullToyoSo);
-            InitializeDeckFromToyo();
+            //InitializeDeckFromToyo(); //Todo change to this when implemented from database
             return; //Todo Get Toyo from Database
             
         }

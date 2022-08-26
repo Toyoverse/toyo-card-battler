@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Card;
 using Card.DeckSystem;
 using Extensions;
 using Fusion;
+using ServiceLocator;
 using Tools.Extensions;
 using ToyoSystem;
 using UnityEngine;
@@ -36,6 +38,25 @@ namespace CardSystem.PlayerHand
 
         #region Unitycallbacks
 
+        private void OnEnable()
+        {
+            _playerHand.OnAddCardToQueue += AutomaticDrawCard;
+        }
+        
+        private void OnDisable()
+        {
+            _playerHand.OnAddCardToQueue -= AutomaticDrawCard;
+            IsHandDrawed = false;
+        }
+
+        private void AutomaticDrawCard(ICard card)
+        {
+            if (!Locator.GetGlobalConfig().GlobalCardSettings.automaticDrawCards) return;
+            
+            while(_playerHand.Cards.Count < Locator.GetGlobalConfig().GlobalCardSettings.handSize)
+                DrawCard();
+        }
+
         public IEnumerator DrawFirstHand(FullToyoSO fullToyoSo)
         {
             while (!FusionLauncher.IsConnected && FusionLauncher.GameMode != GameMode.Single)
@@ -45,7 +66,7 @@ namespace CardSystem.PlayerHand
             Deck?.ShuffleDeck();
             yield return new WaitForSeconds(1f);
             //starting cards
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < Locator.GetGlobalConfig().GlobalCardSettings.handSize; i++)
             {
                 yield return new WaitForSeconds(0.2f);
                 DrawCard();

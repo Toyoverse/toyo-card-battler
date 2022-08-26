@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using CardSystem.PlayerHand;
 using UnityEngine;
 
 namespace Card.CardUX
@@ -27,7 +28,7 @@ namespace Card.CardUX
 
         public void Update()
         {
-            if (!IsOperating)
+            if (!IsOperating || !PlayerHandUtils.IsHandDrawed)
                 return;
 
             if (CheckFinalState())

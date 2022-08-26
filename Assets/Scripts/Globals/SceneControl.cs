@@ -22,8 +22,8 @@ public class SceneControl : MonoBehaviour
         if (_loadingUiDoc == null)
         {
             _loadingUiDoc = this.gameObject.GetComponent<UIDocument>();
+            var _ = _loadingUiDoc?.rootVisualElement;
         }
-        var root = _loadingUiDoc.rootVisualElement;
         //loadingText = root.Query<Label>().First();
         _init = true;
     }
@@ -51,8 +51,8 @@ public class SceneControl : MonoBehaviour
         {
             yield return null;
         }
-        
-        _loadingUiDoc.enabled = true;
+        if(_loadingUiDoc)
+            _loadingUiDoc.enabled = true;
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
         
         while (!asyncOperation.isDone)
@@ -63,7 +63,8 @@ public class SceneControl : MonoBehaviour
         }
         
         yield return new WaitForFixedUpdate(); /*WaitForSeconds(3);*/
-        _loadingUiDoc.enabled = false;
+        if(_loadingUiDoc)
+            _loadingUiDoc.enabled = false;
     }
     
     //Overload to call scene by name

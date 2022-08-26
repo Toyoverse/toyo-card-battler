@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using CardSystem.PlayerHand;
+using TMPro;
 using Tools;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace Card
         Collider Collider { get; }
         Rigidbody Rigidbody { get; }
         IMouseInput Input { get; }
+        IPlayerHand PlayerHand { get; }
         MonoBehaviour MonoBehavior { get; }
         GameObject gameObject { get; }
         Transform transform { get; }

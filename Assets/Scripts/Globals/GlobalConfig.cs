@@ -20,6 +20,7 @@ using Zenject;
         [FoldoutGroup("Game Parameters")] public GameObject UI;
         [FoldoutGroup("Game Parameters")] public GameObject PlayerUI;
         [FoldoutGroup("Game Parameters")] public GameObject EnemyUI;
+        [FoldoutGroup("Game Parameters")] public CombatConfigSO CombatConfig;
         
         [FoldoutGroup("Temp Settings")] public int maxAP;
         [FoldoutGroup("Temp Settings")] public float timeForApRegen = 20.0f;
@@ -34,6 +35,8 @@ using Zenject;
         
         [FoldoutGroup("Match")] public NormalMatchConfigSO normalMatchConfigSo;
         [FoldoutGroup("Match")] public RankedMatchConfigSO rankedMatchConfigSo;
+        
+        
 
         public void Awake()
         {
@@ -46,9 +49,10 @@ using Zenject;
         public PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager;
 
         [Inject]
-        public void Construct(SignalBus signalBus)
+        public void Construct(SignalBus signalBus, CombatConfigSO combatConfig)
         {
             _signalBus = signalBus;
+            CombatConfig = combatConfig;
             _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
         }
 
@@ -72,6 +76,8 @@ using Zenject;
         public static float FullAngle;
         public static float Height;
         public static float MovementSpeed;
+        public static int HandSize;
+        public static bool AutomaticDraw;
 
 
         public static void Initialize(GlobalCardDataSO _cardDataSO)
@@ -91,5 +97,7 @@ using Zenject;
             FullAngle = _cardDataSO.FullAngle;
             Height = _cardDataSO.Height;
             MovementSpeed = _cardDataSO.MovementSpeed;
+            AutomaticDraw = _cardDataSO.automaticDrawCards;
+            HandSize = _cardDataSO.handSize;
         }
     }

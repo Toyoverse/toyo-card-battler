@@ -2,12 +2,13 @@
 using Patterns.StateMachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 namespace Card.CardStateMachine.States
 {
     public class CardIdle : CardBaseState
     {
-        public CardIdle(ICard handler, BaseStateMachine stateMachine, CardData cardData) : base(handler, stateMachine,
+        public CardIdle(ICard handler, BaseStateMachine stateMachine, SignalBus signalBus, CardData cardData) : base(handler, stateMachine, signalBus,
             cardData)
         {
             DefaultSize = Handler.transform.localScale;
@@ -23,14 +24,13 @@ namespace Card.CardStateMachine.States
             if (Handler.Movement.IsOperating)
             {
                 DisableCollision();
-                Handler.Movement.OnFinishMotion += Enable;
+                Handler.Movement.OnFinishMotion += EnableUsage;
             }
             else
             {
-                Enable();
+                EnableUsage();
             }
 
-            MakeRenderNormal();
             Handler.ScaleTo(DefaultSize, GlobalCardData.ScaleSpeed);
         }
 
@@ -38,7 +38,7 @@ namespace Card.CardStateMachine.States
         {
             Handler.Input.OnPointerDown -= OnPointerDown;
             Handler.Input.OnPointerEnter -= OnPointerEnter;
-            Handler.Movement.OnFinishMotion -= Enable;
+            Handler.Movement.OnFinishMotion -= EnableUsage;
         }
 
         private void OnPointerEnter(PointerEventData obj)

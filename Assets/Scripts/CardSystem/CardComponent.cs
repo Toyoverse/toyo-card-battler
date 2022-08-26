@@ -7,6 +7,7 @@ using TMPro;
 using Tools;
 using Tools.Extensions;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 public class CardComponent : MonoBehaviour, ICard
@@ -16,40 +17,51 @@ public class CardComponent : MonoBehaviour, ICard
         MyTransform = transform;
         MyCollider = GetComponent<Collider>();
         MyRigidbody = GetComponent<Rigidbody>();
-        MyImage = GetComponent<SpriteRenderer>();
+        MyImage = GetComponentInChildren<SpriteRenderer>();
         MyImages = GetComponentsInChildren<SpriteRenderer>();
         MyInput = GetComponent<IMouseInput>();
 
         Scale = new CardMotionScale(this);
         Movement = new CardMotionMovement(this);
         Rotation = new CardMotionRotation(this);
-
-        StateMachine = new CardStateMachine(MainCamera, MyCardData, this);
+        
     }
     
     [Inject]
-    public void Construct(IPlayerHand playerHand)
+    public void Construct(IPlayerHand playerHand, SignalBus signalBus)
     {
         Hand = playerHand;
+        _signalBus = signalBus;
     }
 
     private void Update()
     {
-        StateMachine?.Update();
+        if (StateMachine == null)
+        {
+            StateMachine = new CardStateMachine(MainCamera, _cardData, _signalBus, this);
+            Disable();
+        }
+        else
+        {
+            StateMachine.Update();
+            cardStateMachineStringDebug = StateMachine?.Current.ToString();
+        }
+        
         Movement?.Update();
         Rotation?.Update();
         Scale?.Update();
+        
     }
 
     #region Properties
 
-    public CardData MyCardData;
+    [FormerlySerializedAs("MyCardData")] public CardData _cardData;
 
     private CardStateMachine StateMachine { get; set; }
-    public string Name => MyCardData.CardName ?? "NoName";
+    public string Name => _cardData.CardName ?? "NoName";
     public int CardID
     {
-        get => MyCardData.Id;
+        get => _cardData.Unique_Card_ID;
         set => _ = value;
     }
 
@@ -57,19 +69,21 @@ public class CardComponent : MonoBehaviour, ICard
     public bool IsHovering => StateMachine.IsCurrent<CardHover>();
     public bool IsDisabled => StateMachine.IsCurrent<CardDisable>();
 
+    [SerializeField] private string cardStateMachineStringDebug;
+
     [Header("Card Settings")] [SerializeField] private TextMeshPro MyDamageValue;
     [SerializeField] private TextMeshPro MyApCost;
     
     public MonoBehaviour MonoBehavior => this;
     public CardData CardData
     {
-        get => MyCardData;
+        get => _cardData;
         set
         {
-            MyCardData = value;
-            DamageValue.text = MyCardData.HitListInfos.Count > 0 
-                ? MyCardData.HitListInfos[0].Damage.ToString() : "0"; //Todo consider all damages
-            APCost.text = MyCardData.ApCost.ToString();
+            _cardData = value;
+            DamageValue.text = _cardData.HitListInfos.Count > 0 
+                ? _cardData.HitListInfos[0].Damage.ToString() : "0"; //Todo consider all damages
+            APCost.text = _cardData.ApCost.ToString();
         }
     }
 
@@ -86,6 +100,7 @@ public class CardComponent : MonoBehaviour, ICard
     private Rigidbody MyRigidbody { get; set; }
     private IMouseInput MyInput { get; set; }
     private IPlayerHand Hand { get; set; }
+    private SignalBus _signalBus;
 
     public bool IsPlayer => transform.CloserEdge(MainCamera, Screen.width, Screen.height) == 1;
 
@@ -98,6 +113,12 @@ public class CardComponent : MonoBehaviour, ICard
     {
         StateMachine.Disable();
     }
+    
+    public void BlockUsage()
+    {
+        StateMachine.BlockUsage();
+    }
+
 
     public void Enable()
     {
@@ -134,13 +155,13 @@ public class CardComponent : MonoBehaviour, ICard
     {
         StateMachine.Conflict();
     }
-    
+
     public void Queue()
     {
         StateMachine.Queue();
     }
 
-    public void PlayDestroyAnimation()
+    public void Destroy()
     {
         StateMachine.PlayDestroyAnimation();
     }
@@ -189,6 +210,7 @@ public class CardComponent : MonoBehaviour, ICard
     Collider ICardComponents.Collider => MyCollider;
     Rigidbody ICardComponents.Rigidbody => MyRigidbody;
     IMouseInput ICardComponents.Input => MyInput;
-
+    IPlayerHand ICardComponents.PlayerHand => Hand;
+    
     #endregion
 }

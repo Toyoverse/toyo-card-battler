@@ -44,7 +44,7 @@ namespace CardSystem.PlayerHand
             card.ValidateCard();
 
             SelectedCard = card;
-            DisableCards();
+            BlockCards();
             NotifyCardSelected();
         }
 
@@ -60,10 +60,10 @@ namespace CardSystem.PlayerHand
 
         public void Unselect() => UnselectCard(SelectedCard);
 
-        private void DisableCards()
+        private void BlockCards()
         {
             foreach (var otherCard in Cards)
-                otherCard.Disable();
+                otherCard.BlockUsage();
         }
 
         private void EnableCards()
@@ -91,14 +91,6 @@ namespace CardSystem.PlayerHand
             set => OnCardPlayed = value;
         }
         
-        private event Action<ICard> OnNetworkCardPlayed = card => { };
-
-        Action<ICard> IPlayerHand.OnNetworkCardPlayed
-        {
-            get => OnNetworkCardPlayed;
-            set => OnNetworkCardPlayed = value;
-        }
-
         private event Action<ICard> OnCardSelected = card => { };
 
         Action<ICard> IPlayerHand.OnCardSelected

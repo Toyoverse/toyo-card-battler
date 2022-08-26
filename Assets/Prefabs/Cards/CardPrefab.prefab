@@ -109,8 +109,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294942499
-  m_fontColor: {r: 0.13679248, g: 0.623619, b: 1, a: 1}
+    rgba: 16752419
+  m_fontColor: {r: 0.13679248, g: 0.623619, b: 1, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -281,8 +281,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190335
-  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
+    rgba: 255
+  m_fontColor: {r: 1, g: 0, b: 0, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -395,7 +395,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604785be252a46f48b98e7d72e26805b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MyCardData: {fileID: 11400000, guid: fef01b6e1602a274bba125e09907449d, type: 2}
+  _cardData: {fileID: 11400000, guid: fef01b6e1602a274bba125e09907449d, type: 2}
+  cardStateMachineStringDebug: 
   MyDamageValue: {fileID: 2308547270820100536}
   MyApCost: {fileID: 923691416496571748}
 --- !u!114 &8932913532635961749

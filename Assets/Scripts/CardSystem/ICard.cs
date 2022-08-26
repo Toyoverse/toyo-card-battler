@@ -1,4 +1,5 @@
-﻿using Fusion;
+﻿using CardSystem.PlayerHand;
+using Fusion;
 using Patterns.StateMachine;
 
 namespace Card
@@ -16,5 +17,10 @@ namespace Card
         void Hover();
         void Draw();
         void Discard();
+        void Queue();
+        void Conflict();
+        void Destroy();
+        void BlockUsage();
+        
     }
 }

@@ -1,44 +1,45 @@
 ﻿using DefaultNamespace;
 using Extensions;
 using Patterns.StateMachine;
+using Zenject;
 
 namespace Card.CardStateMachine.States
 {
     public abstract class CardBaseState : IState
     {
 
-        protected CardBaseState(ICard handler, BaseStateMachine stateMachine, CardData cardData)
+        protected CardBaseState(ICard handler, BaseStateMachine stateMachine, SignalBus signalBus, CardData cardData)
         {
             StateMachine = stateMachine;
             Handler = handler;
             CardData = cardData;
+            SignalBus = signalBus;
             IsInitialized = true;
         }
 
 
         protected ICard Handler { get; }
+        protected SignalBus SignalBus { get; }
         protected BaseStateMachine StateMachine { get; }
         protected CardData CardData { get; }
         public bool IsInitialized { get; }
 
         #region Functions
 
-        protected void Enable()
+        protected void EnableUsage()
         {
             if (Handler.Collider)
                 EnableCollision();
             if (Handler.Rigidbody)
                 Handler.Rigidbody.Sleep();
 
-            MakeRenderNormal();
             RemoveAllTransparency();
         }
 
-        protected virtual void Disable()
+        protected virtual void BlockUsage()
         {
             DisableCollision();
             Handler.Rigidbody.Sleep();
-            MakeRenderNormal();
             foreach (var renderer in Handler.Images)
             {
                 var myColor = renderer.color;
@@ -66,30 +67,6 @@ namespace Card.CardStateMachine.States
                     _myColor.a = 1;
                     _renderer.color = _myColor;
                 }
-        }
-
-        /// <summary>
-        ///     Renders the textures in the first layer. Each card state is responsible to handle its own layer activity.
-        /// </summary>
-        protected virtual void MakeRenderFirst()
-        {
-            return; //Todo Fix Text
-            for (var i = 0; i < Handler.Images.Length; i++)
-                Handler.Images[i].sortingOrder = GlobalCardData.LayerToRenderTop;
-        }
-
-        /// <summary>
-        ///     Renders the textures in the regular layer. Each card state is responsible to handle its own layer activity.
-        /// </summary>
-        protected virtual void MakeRenderNormal()
-        {
-            return; //Todo Fix Text
-            for (var i = 0; i < Handler.Images.Length; i++)
-                if (Handler.Images[i])
-                    Handler.Images[i].sortingOrder = GlobalCardData.LayerToRenderNormal;
-        
-
-            
         }
 
         #endregion

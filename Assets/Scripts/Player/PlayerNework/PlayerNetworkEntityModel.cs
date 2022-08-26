@@ -52,14 +52,17 @@ namespace Player
 		private Vector2 _lastMoveDirection; // Store the previous direction for correct hull rotation
 		private GameObject _deathExplosionInstance;
 
+		private SignalBus _signalBus;
+		
 		private PlayerNetworkManager _playerNetworkManager;
 		private PlayerNetworkManager PlayerNetworkManager => _playerNetworkManager ??= FindObjectOfType<PlayerNetworkManager>();
 		
 		[Inject]
-		public void Construct(IFullToyo fullToyo, IPlayerHand playerHand)
+		public void Construct(IFullToyo fullToyo, IPlayerHand playerHand, SignalBus signalBus)
 		{
 			_myFullToyo = fullToyo;
 			_myPlayerHand = playerHand;
+			_signalBus = signalBus;
 		}
 
 		private void Awake()
@@ -139,6 +142,8 @@ namespace Player
 			{
 				var enemyUI = PlayerNetworkManager.EnemyUI;
 				enemyUI.SetActive(true);
+				if (IsEnemy)
+					PlayerState = State.Active;
 			}
 
 			Health = MaxHealth;
@@ -176,6 +181,7 @@ namespace Player
 					//_teleportIn.EndTeleport();
 					break;
 				case State.Dead:
+					_signalBus.Fire<EndMatchSignal>(new());
 					/*_deathExplosionInstance.transform.position = transform.position;
 					_deathExplosionInstance.SetActive(false); // dirty fix to reactivate the death explosion if the particlesystem is still active
 					_deathExplosionInstance.SetActive(true);
@@ -198,6 +204,8 @@ namespace Player
 		public void OnHealthChanged()
 		{
 			MyPlayerHealthModel?.OnChangeHp?.Invoke(Health);
+			if (Health <= 0.0f && PlayerState == State.Active)
+				PlayerState = State.Dead;
 		}
 
 		public void OnComboChanged()
