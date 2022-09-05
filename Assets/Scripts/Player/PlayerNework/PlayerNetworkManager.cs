@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Card;
@@ -22,8 +23,6 @@ namespace Player
         [Networked] private int CurrentStateID { get; set; }
         private List<PlayerNetworkEntityModel> Players => _players ??= FindObjectsOfType<PlayerNetworkEntityModel>()?.ToList();
         
-        private HealthModel _playerHealthModel;
-        private HealthModel _enemyHealthModel;
         private static List<PlayerNetworkEntityModel> _players;
         
         private SignalBus _signalBus;
@@ -37,6 +36,7 @@ namespace Player
         private void Start()
         {
             _signalBus.Fire<PlayerNetworkInitializedSignal>(new() { PlayerNetworkManager = this });
+            _signalBus.Subscribe<EndMatchSignal>(EndMatch);
             SetFirstGameState(FindObjectOfType<Deck>()._allCardsID);
         }
 
@@ -83,6 +83,7 @@ namespace Player
         public override void FixedUpdateNetwork()
         {
             if (!Object.HasStateAuthority) return;
+
             if (CardQueueSystemModel != null)
             {
                 CurrentCardDuration = CardQueueSystemModel.CurrentCardDuration;
@@ -92,14 +93,23 @@ namespace Player
 
             PlayerQueueSize = PlayerCardQueue.Count;
             EnemyQueueSize = EnemyCardQueue.Count;
+
             if(!IsWorldReady)
                 IsWorldReady = true;
         }
 
+        private void EndMatch()
+        {
+            StartCoroutine(EndMatchCoroutine());
+        }
+        
+        IEnumerator EndMatchCoroutine()
+        {
+            yield return new WaitForSeconds(10f); 
+            Runner.Shutdown();
+            Locator.GetSceneControl().LoadSceneAsync(0);
+        }
 
-        /*
-         * Todo: VERY BAD -- Temporary - Changing for unity adressables next sprint
-         */
         public void SetFirstGameState(List<int> cardIds)
         {
             _allCardIds.AddRange(cardIds);
@@ -172,6 +182,11 @@ namespace Player
     public class PlayerNetworkInitializedSignal
     {
         public PlayerNetworkManager PlayerNetworkManager;
+    }
+
+    public class EndMatchSignal
+    {
+        
     }
 
 }

@@ -34,9 +34,15 @@ namespace Scriptable_Objects
 
             LayerToRenderNormal = 0;
             LayerToRenderTop = 1;
+
+            handSize = 5;
+            automaticDrawCards = true;
         }
 
         #endregion
+
+        [BoxGroup("Gameplay Settings")] public int handSize;
+        [BoxGroup("Gameplay Settings")] public bool automaticDrawCards;
 
         #region Disable
 

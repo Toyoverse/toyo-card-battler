@@ -1,5 +1,6 @@
 ﻿using System;
 using CardSystem.PlayerHand;
+using ServiceLocator;
 using Tools;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,12 +18,14 @@ namespace Card
         private void Awake()
         {
             Input = GetComponent<IMouseInput>();
+            
             Input.OnPointerClick += DrawCard;
         }
 
         private void DrawCard(PointerEventData obj)
         {
-            _drawer.DrawCard();
+            if(!Locator.GetGlobalConfig().GlobalCardSettings.automaticDrawCards)
+                _drawer.DrawCard();
         }
     }
 }

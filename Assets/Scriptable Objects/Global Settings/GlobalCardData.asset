@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17b4255a53b34b6693f48582feaac1ee, type: 3}
   m_Name: GlobalCardData
   m_EditorClassIdentifier: 
+  handSize: 5
+  automaticDrawCards: 1
   DisabledAlpha: 0.5
   HoverRotation: 0
   HoverScale: 1.3

@@ -33,7 +33,7 @@ namespace Globals
 
 		private void Update()
 		{
-			if(!cardQueueSystem.activeSelf && _playerNetworkManager != null && _playerNetworkManager.IsWorldReady)
+			if(cardQueueSystem && !cardQueueSystem.activeSelf && _playerNetworkManager != null && _playerNetworkManager.IsWorldReady)
 				cardQueueSystem.SetActive(true);
 		}
 

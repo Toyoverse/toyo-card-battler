@@ -12,21 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8933334f31e8aad43b1f3431e158752f, type: 3}
   m_Name: CardData_Template
   m_EditorClassIdentifier: 
-  Unique_Card_ID: 1
-  CardName: Bound_Template
-  CardType: 3
+  Unique_Card_ID: 0
+  CardName: 
+  CardType: 0
   DefenseType: 0
   CardImage: {fileID: 0}
-  ApCost: 4
-  AttackType: 0
+  ApCost: 0
+  AttackType: 1
   AttackSubType: 0
-  CardDuration: 5
+  CardDuration: 0.5
   AttackBuffer: 0.5
-  ApplyEffect: 1
-  EffectName: Test_Effects
-  EffectData:
-  - {fileID: 11400000, guid: 81da7ff21c91bb0459c4b874420d65d9, type: 2}
-  - {fileID: 11400000, guid: fcf9bee22234ca147930b6e540c792e1, type: 2}
-  HitListInfos:
-  - SecondToHit: {x: 2.6752422, y: 3.324286}
-    Damage: 5
+  ApplyEffect: 0
+  EffectName: 
+  EffectData: []
+  HitListInfos: []

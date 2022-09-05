@@ -1,6 +1,7 @@
 ﻿using System;
 using Player;
 using Scriptable_Objects;
+using ServiceLocator;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -8,19 +9,9 @@ namespace CombatSystem
 {
     public static class DamageCalculation
     {
-        [Inject]
-        private static CombatConfigSO _combatConfig;
-        
-        private static SignalBus _signalBus;
-        private static PlayerNetworkManager _playerNetworkManager;
-        [Inject]
-        public static void Construct(SignalBus signalBus)
-        {
-            _signalBus = signalBus;
-            _signalBus.Subscribe<PlayerNetworkInitializedSignal>(x => _playerNetworkManager = x.PlayerNetworkManager);
-        }
+        private static CombatConfigSO CombatConfig => Locator.GetGlobalConfig().CombatConfig;
+        private static PlayerNetworkManager PlayerNetworkManager => Locator.GetGlobalConfig().PlayerNetworkManager;
 
-        
         public static float[] CalculateDamage(DamageInformation dmgInfo)
         {
             var _attackType = dmgInfo.AttackType;
@@ -78,7 +69,7 @@ namespace CombatSystem
             var _hitVar = GetHitVariation(dmgInfo, _criticalHit, hitIndex);
             
             var _damageResult = _multiplier * ((_sum + _comboFactor) * _hitVar * damage);
-            var _maxDefFactor = _combatConfig.maxDefenseFactor;
+            var _maxDefFactor = CombatConfig.maxDefenseFactor;
             _enemyDef = _enemyDef > (_damageResult / _maxDefFactor) ? 
                 (_damageResult / _maxDefFactor) : _enemyDef;
             _damageResult -= _enemyDef;
@@ -91,16 +82,16 @@ namespace CombatSystem
             switch (type)
             {
                 case CARD_TYPE.FAST:
-                    _sum = _combatConfig.fastCardSumFactor;
-                    _multiplier = _combatConfig.fastCardMultiplierFactor;
+                    _sum = CombatConfig.fastCardSumFactor;
+                    _multiplier = CombatConfig.fastCardMultiplierFactor;
                     break;
                 case CARD_TYPE.HEAVY:
-                    _sum = _combatConfig.heavyCardSumFactor;
-                    _multiplier = _combatConfig.heavyCardMultiplierFactor;
+                    _sum = CombatConfig.heavyCardSumFactor;
+                    _multiplier = CombatConfig.heavyCardMultiplierFactor;
                     break;
                 case CARD_TYPE.SUPER:
-                    _sum = _combatConfig.superCardSumFactor;
-                    _multiplier = _combatConfig.superCardMultiplierFactor;
+                    _sum = CombatConfig.superCardSumFactor;
+                    _multiplier = CombatConfig.superCardMultiplierFactor;
                     break;
                 case CARD_TYPE.DEFENSE:
                 case CARD_TYPE.BOND:
@@ -113,12 +104,12 @@ namespace CombatSystem
         {
             var _comboFactor = 1;
             if (dmgInfo.CardType == CARD_TYPE.HEAVY)
-                _comboFactor = _combatConfig.comboSystemFactor;
+                _comboFactor = CombatConfig.comboSystemFactor;
 
-            if (_playerNetworkManager.IsHostCardPlaying)
-                return _playerNetworkManager.PlayerCurrentCombo / _comboFactor;
+            if (PlayerNetworkManager.IsHostCardPlaying)
+                return PlayerNetworkManager.PlayerCurrentCombo / _comboFactor;
             else 
-                return _playerNetworkManager.EnemyCurrentCombo / _comboFactor;
+                return PlayerNetworkManager.EnemyCurrentCombo / _comboFactor;
         }
 
         private static bool CheckCriticalHit(DamageInformation dmgInfo)
@@ -130,10 +121,10 @@ namespace CombatSystem
             _luck *= BoundSystem.GetMultiplierInMyBuffs(dmgInfo, TOYO_STAT.LUCK);
 
             var _criticalChance =
-            (_precision * _combatConfig.criticalPrecisionFactor)
-            + (_luck * _combatConfig.criticalLuckFactor);
+            (_precision * CombatConfig.criticalPrecisionFactor)
+            + (_luck * CombatConfig.criticalLuckFactor);
 
-            var _maxCritical = _combatConfig.maxCriticalChance;
+            var _maxCritical = CombatConfig.maxCriticalChance;
             _criticalChance = _criticalChance > _maxCritical ? _maxCritical : _criticalChance;
 
             return Random.Range(0, 100) <= _criticalChance;
@@ -151,18 +142,18 @@ namespace CombatSystem
 
             var _enemyDef = dmgInfo.AttackType == ATTACK_TYPE.PHYSICAL ?
                 (_enemyResistance * 
-                 _combatConfig.enemyResistanceMultiplier) : 
+                 CombatConfig.enemyResistanceMultiplier) : 
                 (_enemyResilience *
-                 _combatConfig.enemyResilienceMultiplier);
+                 CombatConfig.enemyResilienceMultiplier);
             if (criticalHit)
-                _enemyDef *= _combatConfig.defenseInCriticalMultiplier;
+                _enemyDef *= CombatConfig.defenseInCriticalMultiplier;
 
             return _enemyDef;
         }
 
         private static float GetHitVariation(DamageInformation dmgInfo, bool criticalHit, int hitIndex)
             => criticalHit ? dmgInfo.HitVariation[hitIndex].Damage 
-                            * _combatConfig.criticalDamageModifier 
+                            * CombatConfig.criticalDamageModifier 
                             : dmgInfo.HitVariation[hitIndex].Damage;
     }
 }

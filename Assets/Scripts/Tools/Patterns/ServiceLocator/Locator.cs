@@ -9,7 +9,7 @@ namespace ServiceLocator
     {
         private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         
         private static SceneControl _sceneControlService;
