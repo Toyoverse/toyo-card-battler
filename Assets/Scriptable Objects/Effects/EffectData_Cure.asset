@@ -19,7 +19,7 @@ MonoBehaviour:
   HPValue: 1
   APValue: 0
   statToChange: 0
-  changeStatFactor: 0
+  changeStatFactor: 10
   nextCardDamageFactor: 0
   nextCardCostMod: 0
   lifeStealFactor: 0

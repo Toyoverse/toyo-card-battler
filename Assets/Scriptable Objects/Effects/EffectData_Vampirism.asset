@@ -22,5 +22,5 @@ MonoBehaviour:
   changeStatFactor: 0
   nextCardDamageFactor: 0
   nextCardCostMod: 0
-  lifeStealFactor: 1
+  lifeStealFactor: 10
   excludedTypes: 
